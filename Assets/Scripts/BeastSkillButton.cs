@@ -25,15 +25,21 @@ public class BeastSkillButton : MonoBehaviour
 
         button.interactable = beast.CanUseSkill;
 
-        string text = beast.IsSkillReady
-            ? "READY"
-            : beast.CooldownRemaining.ToString("0.0") + "s";
+        string text;
+        if (beast.IsDoubleBounceActive)
+            text = "ACTIVE";
+        else if (beast.IsSkillReady)
+            text = "READY";
+        else
+            text = "COOLDOWN  " + Mathf.CeilToInt(beast.CooldownRemaining) + "s";
+
+        string label = BeastRoster.GetAbilityName(beast.ActiveBeast).ToUpper() + "\n" + text;
 
         if (cooldownText != null)
-            cooldownText.text = text;
+            cooldownText.text = label;
 
         if (legacyCooldownText != null)
-            legacyCooldownText.text = text;
+            legacyCooldownText.text = label;
     }
 
     public void OnSkillPressed()

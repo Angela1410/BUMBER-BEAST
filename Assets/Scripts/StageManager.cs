@@ -15,6 +15,8 @@ public class StageManager : MonoBehaviour
     public float barrierY = -3.5f;
     public float barrierContactOffset = 0.35f;
     public TMPro.TMP_Text barrierHealthText;
+    public TMPro.TMP_Text winTitleText;
+    public TMPro.TMP_Text loseTitleText;
 
     private bool stageFinished = false;
     private int barrierHealth;
@@ -27,8 +29,6 @@ public class StageManager : MonoBehaviour
         GameObject barrierObject = GameObject.Find("Square");
         if (barrierObject != null)
         {
-            barrierObject.transform.localScale = new Vector3(5.6f, 0.3f, 1f);
-
             Collider2D barrierCollider = barrierObject.GetComponent<Collider2D>();
             if (barrierCollider != null)
                 barrierCollider.isTrigger = true;
@@ -46,6 +46,12 @@ public class StageManager : MonoBehaviour
                 barrierHealthText = barrierTextObject.GetComponent<TMP_Text>();
         }
 
+        if (winTitleText == null && winPanel != null)
+            winTitleText = winPanel.GetComponentInChildren<TMP_Text>();
+
+        if (loseTitleText == null && losePanel != null)
+            loseTitleText = losePanel.GetComponentInChildren<TMP_Text>();
+
         UpdateBarrierText();
     }
 
@@ -57,14 +63,21 @@ public class StageManager : MonoBehaviour
         if (waveManager != null)
         {
             if (EnemyReachedBarrier())
+            {
                 StageFailed();
-            else if (waveManager.IsComplete)
+                return;
+            }
+
+            if (waveManager.IsComplete && !HasActiveBoss())
+            {
                 StageComplete();
+                return;
+            }
 
             return;
         }
 
-        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        Enemy[] enemies = FindObjectsByType<Enemy>();
 
         // WIN
         if (enemies.Length == 0)
@@ -74,18 +87,33 @@ public class StageManager : MonoBehaviour
         }
 
         // LOSE
-        if (launchController != null && launchController.launchesLeft <= 0)
+        if (launchController != null && !launchController.unlimitedLaunches && launchController.launchesLeft <= 0)
         {
             StageFailed();
         }
     }
 
+    bool HasActiveBoss()
+    {
+        foreach (Enemy enemy in FindObjectsByType<Enemy>())
+        {
+            if (enemy != null && enemy.isBoss)
+                return true;
+        }
+
+        return false;
+    }
+
     bool EnemyReachedBarrier()
     {
-        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        Enemy[] enemies = FindObjectsByType<Enemy>();
+        bool barrierDestroyed = false;
 
         foreach (Enemy enemy in enemies)
         {
+            if (enemy == null || enemy.HasReachedBarrier)
+                continue;
+
             Collider2D enemyCollider = enemy.GetComponent<Collider2D>();
             float enemyBottom = enemyCollider != null
                 ? enemyCollider.bounds.min.y
@@ -93,16 +121,22 @@ public class StageManager : MonoBehaviour
 
             if (enemyBottom <= barrierY + barrierContactOffset)
             {
+                enemy.MarkBarrierReached();
                 barrierHealth--;
-                Destroy(enemy);
                 UpdateBarrierText();
 
+                if (enemy != null)
+                    Destroy(enemy.gameObject);
+
                 if (barrierHealth <= 0)
-                    return true;
+                {
+                    barrierDestroyed = true;
+                    break;
+                }
             }
         }
 
-        return false;
+        return barrierDestroyed;
     }
 
     void UpdateBarrierText()
@@ -119,7 +153,22 @@ public class StageManager : MonoBehaviour
             GameProgress.Instance.CompleteStage(stageNumber, stageReward);
 
         if (winPanel != null)
+        {
+            if (winTitleText == null)
+                winTitleText = winPanel.GetComponentInChildren<TMP_Text>();
+
+            if (winTitleText != null)
+            {
+                if (stageNumber == 4)
+                    winTitleText.text = "WILDROOT THICKET COMPLETE";
+                else if (stageNumber % 4 == 0)
+                    winTitleText.text = stageNumber >= 20 ? "CAMPAIGN COMPLETE" : "CHAPTER COMPLETE";
+                else
+                    winTitleText.text = "STAGE COMPLETE";
+            }
+
             winPanel.SetActive(true);
+        }
     }
 
     void StageFailed()
@@ -127,7 +176,15 @@ public class StageManager : MonoBehaviour
         stageFinished = true;
 
         if (losePanel != null)
+        {
+            if (loseTitleText == null)
+                loseTitleText = losePanel.GetComponentInChildren<TMP_Text>();
+
+            if (loseTitleText != null)
+                loseTitleText.text = "BARRIER DESTROYED";
+
             losePanel.SetActive(true);
+        }
     }
 
     public void RetryStage()
@@ -137,9 +194,35 @@ public class StageManager : MonoBehaviour
 
     public void NextStage()
     {
-        if (Application.CanStreamedLevelBeLoaded("GameHub"))
+        if (stageNumber % 4 == 0 && Application.CanStreamedLevelBeLoaded("GameHub"))
+        {
             SceneManager.LoadScene("GameHub");
-        else
-            Debug.LogError("GameHub is missing from Build Settings. Run Bumper Beast > Build Full Game.");
+            return;
+        }
+
+        int nextStageNumber = stageNumber + 1;
+        string nextSceneName = GameHubController.GetStageSceneName(nextStageNumber);
+
+        if (Application.CanStreamedLevelBeLoaded(nextSceneName))
+        {
+            SceneManager.LoadScene(nextSceneName);
+            return;
+        }
+
+        if (Application.CanStreamedLevelBeLoaded("GameHub"))
+        {
+            SceneManager.LoadScene("GameHub");
+            return;
+        }
+
+        if (stageNumber >= 4)
+        {
+            Debug.Log("Wildroot Thicket complete. Returning to the chapter hub.");
+            if (Application.CanStreamedLevelBeLoaded("GameHub"))
+                SceneManager.LoadScene("GameHub");
+            return;
+        }
+
+        Debug.LogError("No valid next stage or hub scene is available in Build Settings.");
     }
 }

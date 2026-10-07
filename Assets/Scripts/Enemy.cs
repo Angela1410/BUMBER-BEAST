@@ -4,17 +4,17 @@ using TMPro;
 
 public class Enemy : MonoBehaviour
 {
-    public int maxHealth = 1;
+    public int maxHealth = 3;
     public ElementType element = ElementType.Grass;
+    public bool isBoss = false;
+    public string bossName = "Boss";
+    public bool HasReachedBarrier { get; private set; }
 
-    public float moveSpeed = 0.3f;
+    public float moveSpeed = 0.5f;
     public TMP_Text bossHealthText;
     public int waveHealthBonus;
     public float waveSpeedMultiplier = 1f;
     public float hitFlashDuration = 0.08f;
-    public float barrierAvoidanceDistance = 1.6f;
-    public float barrierSideSpeed = 2f;
-    public float barrierRouteMargin = 0.15f;
 
     private int currentHealth;
     private SpriteRenderer sr;
@@ -23,13 +23,14 @@ public class Enemy : MonoBehaviour
     private Coroutine rootRoutine;
     private float baseMoveSpeed;
     private Rigidbody2D body;
-    private Collider2D barrierObstacle;
+    private Transform[] routeWaypoints;
+    private int currentRouteIndex;
+    private float routeLaneOffset;
 
     void Awake()
     {
         baseMoveSpeed = moveSpeed;
         body = GetComponent<Rigidbody2D>();
-        FindBarrierObstacle();
     }
 
     void OnValidate()
@@ -56,7 +57,56 @@ public class Enemy : MonoBehaviour
             originalColor = sr.color;
         }
 
+        if (isBoss && bossHealthText == null)
+        {
+            GameObject bossTextObject = GameObject.Find("BossHealthText");
+            if (bossTextObject != null)
+                bossHealthText = bossTextObject.GetComponent<TMP_Text>();
+        }
+
         UpdateHealthText();
+    }
+
+    public void SetBoss(string bossNameText, int bossHealth = 0, float bossSpeedMultiplier = 1f)
+    {
+        isBoss = true;
+        bossName = string.IsNullOrEmpty(bossNameText) ? bossName : bossNameText;
+        waveHealthBonus = bossHealth;
+        waveSpeedMultiplier = bossSpeedMultiplier;
+
+        if (bossHealthText == null)
+        {
+            GameObject bossTextObject = GameObject.Find("BossHealthText");
+            if (bossTextObject != null)
+                bossHealthText = bossTextObject.GetComponent<TMP_Text>();
+        }
+
+        if (bossHealthText != null)
+            bossHealthText.enabled = true;
+
+        ApplyWaveStats();
+        UpdateHealthText();
+    }
+
+    void OnDestroy()
+    {
+        if (!isBoss || bossHealthText == null)
+            return;
+
+        bossHealthText.text = string.Empty;
+        bossHealthText.enabled = false;
+    }
+
+    public void MarkBarrierReached()
+    {
+        HasReachedBarrier = true;
+    }
+
+    public void SetRoute(Transform[] waypoints, float laneOffset = 0f)
+    {
+        routeWaypoints = waypoints;
+        currentRouteIndex = 0;
+        routeLaneOffset = laneOffset;
     }
 
     public void ApplyWaveData(ElementType assignedElement, int healthBonus, float speedMultiplier)
@@ -95,8 +145,7 @@ public class Enemy : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 direction = GetMovementDirection();
-        float speed = direction.y == 0f ? Mathf.Max(moveSpeed, barrierSideSpeed) : moveSpeed;
-        Vector2 nextPosition = (Vector2)transform.position + direction * speed * Time.fixedDeltaTime;
+        Vector2 nextPosition = (Vector2)transform.position + direction * moveSpeed * Time.fixedDeltaTime;
 
         if (body != null && body.bodyType == RigidbodyType2D.Kinematic)
             body.MovePosition(nextPosition);
@@ -104,40 +153,39 @@ public class Enemy : MonoBehaviour
             transform.position = nextPosition;
     }
 
-    void FindBarrierObstacle()
-    {
-        GameObject barrier = GameObject.Find("Square");
-        barrierObstacle = barrier != null ? barrier.GetComponent<Collider2D>() : null;
-    }
-
     Vector2 GetMovementDirection()
     {
-        if (barrierObstacle == null)
+        while (routeWaypoints != null && currentRouteIndex < routeWaypoints.Length)
         {
-            FindBarrierObstacle();
-            return Vector2.down;
+            Transform waypoint = routeWaypoints[currentRouteIndex];
+            if (waypoint == null)
+            {
+                currentRouteIndex++;
+                continue;
+            }
+
+            Vector2 laneWaypoint = (Vector2)waypoint.position + Vector2.right * routeLaneOffset;
+            Vector2 toWaypoint = laneWaypoint - (Vector2)transform.position;
+
+            // If the enemy is close enough to the waypoint, move to the next one
+            if (toWaypoint.sqrMagnitude <= 0.04f)
+            {
+                currentRouteIndex++;
+                continue;
+            }
+
+            return toWaypoint.normalized;
         }
 
-        Bounds barrierBounds = barrierObstacle.bounds;
-        Collider2D enemyCollider = GetComponent<Collider2D>();
-        Bounds enemyBounds = enemyCollider != null
-            ? enemyCollider.bounds
-            : new Bounds(transform.position, Vector3.one);
+        // STRICT ROUTING FALLBACK:
+        // If the enemy has no route, or has reached the end of its route, it stops moving.
+        // We log a warning so you immediately know if a stage layout is missing a route assignment.
+        if (routeWaypoints == null || routeWaypoints.Length == 0)
+        {
+            Debug.LogWarning(gameObject.name + " was spawned without a route and cannot move! Check your WaveManager or Stage configuration.");
+        }
 
-        bool approachingBarrier = enemyBounds.min.y <= barrierBounds.max.y + barrierAvoidanceDistance &&
-            enemyBounds.max.y > barrierBounds.max.y - 0.05f;
-        bool overlapsBarrierX = enemyBounds.max.x > barrierBounds.min.x &&
-            enemyBounds.min.x < barrierBounds.max.x;
-
-        if (!approachingBarrier || !overlapsBarrierX)
-            return Vector2.down;
-
-        float leftRouteX = barrierBounds.min.x - enemyBounds.extents.x - barrierRouteMargin;
-        float rightRouteX = barrierBounds.max.x + enemyBounds.extents.x + barrierRouteMargin;
-        float direction = Mathf.Abs(transform.position.x - leftRouteX) <=
-            Mathf.Abs(transform.position.x - rightRouteX) ? -1f : 1f;
-
-        return Vector2.right * direction;
+        return Vector2.zero;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -240,8 +288,24 @@ public class Enemy : MonoBehaviour
 
     void UpdateHealthText()
     {
-        if (bossHealthText != null)
-            bossHealthText.text = "HP: " + currentHealth + " / " + (maxHealth + waveHealthBonus);
+        if (isBoss)
+        {
+            if (bossHealthText == null)
+            {
+                GameObject bossTextObject = GameObject.Find("BossHealthText");
+                if (bossTextObject != null)
+                    bossHealthText = bossTextObject.GetComponent<TMP_Text>();
+            }
+
+            if (bossHealthText != null)
+            {
+                bossHealthText.enabled = true;
+                string label = string.IsNullOrEmpty(bossName) ? "BOSS" : bossName.ToUpper();
+                bossHealthText.text = label + " HP: " + currentHealth + " / " + (maxHealth + waveHealthBonus);
+            }
+
+            return;
+        }
     }
 
     IEnumerator FlashOnHit()

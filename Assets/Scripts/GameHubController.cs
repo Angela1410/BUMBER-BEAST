@@ -66,6 +66,17 @@ public class GameHubController : MonoBehaviour
 
     public void ContinueToNextStage()
     {
+        if (GameProgress.Instance == null)
+        {
+            EnsureProgress();
+        }
+
+        if (GameProgress.Instance == null)
+            return;
+
+        if (GameProgress.Instance.HighestUnlockedStage > stageCount)
+            return;
+
         int nextStage = Mathf.Clamp(GameProgress.Instance.HighestUnlockedStage, 1, stageCount);
         LoadStage(nextStage);
     }
@@ -120,11 +131,40 @@ public class GameHubController : MonoBehaviour
         if (unlockedText != null)
             unlockedText.text = "UNLOCKED: " + GameProgress.Instance.HighestUnlockedStage + " / " + stageCount;
 
+        Button continueButton = GameObject.Find("ContinueButton")?.GetComponent<Button>();
+        if (continueButton != null)
+        {
+            bool campaignComplete = GameProgress.Instance.HighestUnlockedStage > stageCount;
+            continueButton.interactable = !campaignComplete;
+
+            Text continueLabel = continueButton.GetComponentInChildren<Text>();
+            if (continueLabel != null)
+                continueLabel.text = campaignComplete ? "ALL CHAPTERS COMPLETE" : "CONTINUE";
+        }
+
         if (shopText != null)
         {
-            shopText.text = "LAUNCH POWER LV " + GameProgress.Instance.LaunchPowerLevel +
-                "\nSKILL COOLDOWN LV " + GameProgress.Instance.SkillCooldownLevel +
-                "\nSELECTED: " + BeastRoster.GetName(GameProgress.Instance.SelectedBeast);
+            if (GameProgress.Instance.HighestClearedStage >= 4 && !GameProgress.Instance.IsBeastUnlocked(BeastId.Thistle))
+            {
+                shopText.text = "WILDROOT THICKET COMPLETE" +
+                    "\nTHISTLE RECRUITMENT OPEN: " + BeastRoster.GetPrice(BeastId.Thistle) + " COINS" +
+                    "\nLAUNCH POWER LV " + GameProgress.Instance.LaunchPowerLevel +
+                    "\nSKILL COOLDOWN LV " + GameProgress.Instance.SkillCooldownLevel +
+                    "\nSELECTED: " + BeastRoster.GetName(GameProgress.Instance.SelectedBeast);
+            }
+            else if (GameProgress.Instance.HighestClearedStage >= 4 && GameProgress.Instance.IsBeastUnlocked(BeastId.Thistle))
+            {
+                shopText.text = "THISTLE UNLOCKED" +
+                    "\nLAUNCH POWER LV " + GameProgress.Instance.LaunchPowerLevel +
+                    "\nSKILL COOLDOWN LV " + GameProgress.Instance.SkillCooldownLevel +
+                    "\nSELECTED: " + BeastRoster.GetName(GameProgress.Instance.SelectedBeast);
+            }
+            else
+            {
+                shopText.text = "LAUNCH POWER LV " + GameProgress.Instance.LaunchPowerLevel +
+                    "\nSKILL COOLDOWN LV " + GameProgress.Instance.SkillCooldownLevel +
+                    "\nSELECTED: " + BeastRoster.GetName(GameProgress.Instance.SelectedBeast);
+            }
         }
 
         Text launchLabel = GameObject.Find("BuyLaunchPower")?.GetComponentInChildren<Text>();
@@ -159,14 +199,6 @@ public class GameHubController : MonoBehaviour
             }
         }
 
-        if (shopText != null)
-        {
-            shopText.text += "\n\nCHAPTER RESCUES" +
-                "\nThistle: clear stage 4" +
-                "\nMossback: clear stage 8" +
-                "\nVoltis: clear stage 12" +
-                "\nRipple: clear stage 16";
-        }
     }
 
     void EnsureProgress()

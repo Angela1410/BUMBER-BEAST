@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class LaunchController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class LaunchController : MonoBehaviour
     public int launchesLeft;
     public float launchPower = 3.6f;
     public float maxDragDistance = 2.5f;
-    public float maxLaunchSpeed = 9f;
+    public float maxLaunchSpeed = 15f;
     public TMP_Text launchesText;
 
     private Rigidbody2D rb;
@@ -20,25 +21,28 @@ public class LaunchController : MonoBehaviour
 
     void Start()
     {
-        launchesLeft = maxLaunches;
+        unlimitedLaunches = true;
+        launchesLeft = Mathf.Max(0, maxLaunches);
         if (GameProgress.Instance != null)
             launchPower += GameProgress.Instance.LaunchPowerLevel * 0.75f;
 
         rb = GetComponent<Rigidbody2D>();
+        beastController = GetComponent<BeastController>();
         if (GameProgress.Instance != null)
         {
             GameProgress.Instance.ApplySelectedBeast(gameObject);
             GameProgress.Instance.ApplySelectedBeastVisual(gameObject);
+            if (beastController != null)
+                beastController.SetActiveBeast(GameProgress.Instance.SelectedBeast);
         }
         aimLine = GetComponentInChildren<LineRenderer>();
-        beastController = GetComponent<BeastController>();
         UpdateLaunchText();
 
         if (aimLine != null)
-{
-    aimLine.positionCount = 2;
-    aimLine.enabled = false;
-}
+        {
+            aimLine.positionCount = 2;
+            aimLine.enabled = false;
+        }
     }
 
     void OnValidate()
@@ -54,11 +58,14 @@ public class LaunchController : MonoBehaviour
         if (beastController != null && beastController.State != BeastState.AtPad)
             return;
 
-        if (rb.linearVelocity.magnitude > 0.1f)
-    return;
+        if (rb != null && rb.linearVelocity.magnitude > 0.1f)
+            return;
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+                return;
+
             dragStart = GetMouseWorldPosition();
             isDragging = true;
 
@@ -126,12 +133,17 @@ public class LaunchController : MonoBehaviour
 
     Vector2 GetMouseWorldPosition()
     {
+        Camera camera = Camera.main;
+
+        if (camera == null)
+        {
+            Debug.LogError("LaunchController requires a Main Camera tagged camera in the scene.");
+            return transform.position;
+        }
+
         Vector3 mousePosition = Input.mousePosition;
-
-        mousePosition.z =
-            -Camera.main.transform.position.z;
-
-        return Camera.main.ScreenToWorldPoint(mousePosition);
+        mousePosition.z = -camera.transform.position.z;
+        return camera.ScreenToWorldPoint(mousePosition);
     }
 
     void UpdateLaunchText()

@@ -70,7 +70,7 @@ public class BeastRoster : MonoBehaviour
             case BeastId.Mossback: return "Heavy Knock";
             case BeastId.Voltis: return "Chain Zap";
             case BeastId.Ripple: return "Splash Wave";
-            default: return "Double Bounce";
+            default: return "Flame Burst";
         }
     }
 
