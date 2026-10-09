@@ -25,7 +25,6 @@ public class Bumper : MonoBehaviour
         if (sr == null)
             sr = gameObject.AddComponent<SpriteRenderer>();
 
-        sr.sprite = GetFallbackSprite();
         UpdateVisuals();
     }
 
@@ -82,6 +81,9 @@ public class Bumper : MonoBehaviour
     {
         if (sr == null)
             return;
+
+        if (sr.sprite == null)
+            sr.sprite = GetFallbackSprite();
 
         switch (type)
         {
