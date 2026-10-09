@@ -32,6 +32,9 @@ public class PadSwapSystem : MonoBehaviour
 
     void Start()
     {
+        PortraitButtonLayout.Apply(swapButton != null
+            ? swapButton.transform as RectTransform
+            : null, 1);
         BuildSquad();
         UpdateSwapButton();
     }

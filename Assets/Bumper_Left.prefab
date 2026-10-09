@@ -84,15 +84,15 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 0}
-  m_Color: {r: 0.2, g: 0.8, b: 0.2, a: 1}
+  m_Sprite: {fileID: 3790713284700277764, guid: 953b5347c795ba940971594c8920f79e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.5, y: 0.5}
+  m_Size: {x: 0.75, y: 0.71}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
 --- !u!50 &2598228685321154585
@@ -170,8 +170,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad233d57c00bdef479c4795f4b99f823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bumper
+  greenSprite: {fileID: 3790713284700277764, guid: 953b5347c795ba940971594c8920f79e, type: 3}
+  blueSprite: {fileID: 1125230322319491910, guid: 953b5347c795ba940971594c8920f79e, type: 3}
+  redSprite: {fileID: 1848521461882120493, guid: 953b5347c795ba940971594c8920f79e, type: 3}
   type: 0
   hp: 3
   speedMultiplier: 1.2
   minimumBoostSpeed: 12
   maxSpeed: 15
+  hitScale: 1.2
+  hitRotation: 10
+  hitDuration: 0.12
+  hitEffect: {fileID: 6501226205444608163, guid: cdabe927bf5529d4b8a4c08815a87d03, type: 3}

@@ -1,0 +1,667 @@
+fileFormatVersion: 2
+guid: 2ba1753eceee8064384e42b275a60f75
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5063195949723965497
+    second: BumperBeast-removebg-preview_0
+  - first:
+      213: 7406708111065838720
+    second: BumperBeast-removebg-preview_1
+  - first:
+      213: 2061941517117834501
+    second: BumperBeast-removebg-preview_2
+  - first:
+      213: 3327527956481365372
+    second: BumperBeast-removebg-preview_3
+  - first:
+      213: -2452786698913377382
+    second: BumperBeast-removebg-preview_4
+  - first:
+      213: -2674937061773794893
+    second: BumperBeast-removebg-preview_5
+  - first:
+      213: -909950391525547881
+    second: BumperBeast-removebg-preview_6
+  - first:
+      213: -7703765841531488974
+    second: BumperBeast-removebg-preview_7
+  - first:
+      213: -6830088806605794640
+    second: BumperBeast-removebg-preview_8
+  - first:
+      213: 5463873300364020364
+    second: BumperBeast-removebg-preview_9
+  - first:
+      213: -8949244695756947752
+    second: BumperBeast-removebg-preview_10
+  - first:
+      213: -1705976106878536391
+    second: BumperBeast-removebg-preview_11
+  - first:
+      213: 2040183974403257443
+    second: BumperBeast-removebg-preview_12
+  - first:
+      213: -2548966447504381120
+    second: BumperBeast-removebg-preview_13
+  - first:
+      213: 5479380651099845250
+    second: BumperBeast-removebg-preview_14
+  - first:
+      213: -6484132182783623432
+    second: BumperBeast-removebg-preview_15
+  - first:
+      213: 6403410953108128755
+    second: BumperBeast-removebg-preview_16
+  - first:
+      213: 9182702014381839280
+    second: BumperBeast-removebg-preview_17
+  - first:
+      213: -128719931973101970
+    second: BumperBeast-removebg-preview_18
+  - first:
+      213: 3446692962314496631
+    second: BumperBeast-removebg-preview_19
+  - first:
+      213: 2096356740998440139
+    second: BumperBeast-removebg-preview_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_0
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 537
+        width: 83
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9385e7be3e5144640800000000000000
+      internalID: 5063195949723965497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_1
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 542
+        width: 68
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 084751bd8c9e9c660800000000000000
+      internalID: 7406708111065838720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_2
+      rect:
+        serializedVersion: 2
+        x: 221
+        y: 585
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 505407b92ec7d9c10800000000000000
+      internalID: 2061941517117834501
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_3
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 539
+        width: 122
+        height: 110
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c75d042eb01cd2e20800000000000000
+      internalID: 3327527956481365372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_4
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 425
+        width: 84
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9317752e73f5fdd0800000000000000
+      internalID: -2452786698913377382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_5
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 431
+        width: 80
+        height: 96
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b1227c2ae6b0ead0800000000000000
+      internalID: -2674937061773794893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_6
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 511
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79064e5a0f43f53f0800000000000000
+      internalID: -909950391525547881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_7
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 428
+        width: 114
+        height: 105
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2353abe88c9b61590800000000000000
+      internalID: -7703765841531488974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_8
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 255
+        width: 262
+        height: 153
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b2d3e1fa66a631a0800000000000000
+      internalID: -6830088806605794640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_9
+      rect:
+        serializedVersion: 2
+        x: 164
+        y: 359
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8a40fd51d393db40800000000000000
+      internalID: 5463873300364020364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_10
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 283
+        width: 163
+        height: 133
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8debb554d55edc380800000000000000
+      internalID: -8949244695756947752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_11
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 175
+        width: 73
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 935733af4c72358e0800000000000000
+      internalID: -1705976106878536391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_12
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 174
+        width: 83
+        height: 73
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36430cee380305c10800000000000000
+      internalID: 2040183974403257443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_13
+      rect:
+        serializedVersion: 2
+        x: 202
+        y: 175
+        width: 68
+        height: 72
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04bac10658040acd0800000000000000
+      internalID: -2548966447504381120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_14
+      rect:
+        serializedVersion: 2
+        x: 286
+        y: 175
+        width: 70
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28274f1dbabaa0c40800000000000000
+      internalID: 5479380651099845250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_15
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 147
+        width: 260
+        height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fef088522cb306a0800000000000000
+      internalID: -6484132182783623432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_16
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 109
+        width: 306
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f30bdac55c7dd850800000000000000
+      internalID: 6403410953108128755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_17
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 19
+        width: 79
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b35e7d74d28f6f70800000000000000
+      internalID: 9182702014381839280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_18
+      rect:
+        serializedVersion: 2
+        x: 108
+        y: 18
+        width: 76
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e661b3367e1b63ef0800000000000000
+      internalID: -128719931973101970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_19
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 18
+        width: 84
+        height: 74
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77a2894ecfc15df20800000000000000
+      internalID: 3446692962314496631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast-removebg-preview_20
+      rect:
+        serializedVersion: 2
+        x: 285
+        y: 18
+        width: 70
+        height: 77
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc425b55951c71d10800000000000000
+      internalID: 2096356740998440139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 838c203d7d648764c892ba77f1bc315a
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      BumperBeast-removebg-preview_0: 5063195949723965497
+      BumperBeast-removebg-preview_1: 7406708111065838720
+      BumperBeast-removebg-preview_10: -8949244695756947752
+      BumperBeast-removebg-preview_11: -1705976106878536391
+      BumperBeast-removebg-preview_12: 2040183974403257443
+      BumperBeast-removebg-preview_13: -2548966447504381120
+      BumperBeast-removebg-preview_14: 5479380651099845250
+      BumperBeast-removebg-preview_15: -6484132182783623432
+      BumperBeast-removebg-preview_16: 6403410953108128755
+      BumperBeast-removebg-preview_17: 9182702014381839280
+      BumperBeast-removebg-preview_18: -128719931973101970
+      BumperBeast-removebg-preview_19: 3446692962314496631
+      BumperBeast-removebg-preview_2: 2061941517117834501
+      BumperBeast-removebg-preview_20: 2096356740998440139
+      BumperBeast-removebg-preview_3: 3327527956481365372
+      BumperBeast-removebg-preview_4: -2452786698913377382
+      BumperBeast-removebg-preview_5: -2674937061773794893
+      BumperBeast-removebg-preview_6: -909950391525547881
+      BumperBeast-removebg-preview_7: -7703765841531488974
+      BumperBeast-removebg-preview_8: -6830088806605794640
+      BumperBeast-removebg-preview_9: 5463873300364020364
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

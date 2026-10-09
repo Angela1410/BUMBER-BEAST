@@ -1436,10 +1436,7 @@ public static class BumperBeastProjectSetup
         }
 
         RectTransform rect = buttonObject.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(1f, 0f);
-        rect.anchorMax = new Vector2(1f, 0f);
-        rect.anchoredPosition = new Vector2(-180f, 100f);
-        rect.sizeDelta = new Vector2(320f, 132f);
+        PortraitButtonLayout.Apply(rect, 0);
 
         Image image = buttonObject.GetComponent<Image>();
         if (image == null)
@@ -1503,10 +1500,7 @@ public static class BumperBeastProjectSetup
         }
 
         RectTransform rect = buttonObject.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(1f, 0f);
-        rect.anchorMax = new Vector2(1f, 0f);
-        rect.anchoredPosition = new Vector2(-180f, 260f);
-        rect.sizeDelta = new Vector2(320f, 112f);
+        PortraitButtonLayout.Apply(rect, 1);
 
         Image image = buttonObject.GetComponent<Image>();
         if (image == null)

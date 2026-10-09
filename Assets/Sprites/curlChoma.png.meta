@@ -1,0 +1,1993 @@
+fileFormatVersion: 2
+guid: 643113e6b42b95d4ab6aea8d2c88a47f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8973928079853740259
+    second: curlChoma_0
+  - first:
+      213: 4311679256683491210
+    second: curlChoma_1
+  - first:
+      213: 7888379339309296540
+    second: curlChoma_2
+  - first:
+      213: 735695523595254567
+    second: curlChoma_3
+  - first:
+      213: -6158304653777163079
+    second: curlChoma_4
+  - first:
+      213: 5735828383497387057
+    second: curlChoma_5
+  - first:
+      213: -54092183008693815
+    second: curlChoma_6
+  - first:
+      213: -221086864944983102
+    second: curlChoma_7
+  - first:
+      213: -2457422994227549137
+    second: curlChoma_8
+  - first:
+      213: 3017077288799857234
+    second: curlChoma_9
+  - first:
+      213: 8295973870981514643
+    second: curlChoma_10
+  - first:
+      213: 1203686264220541310
+    second: curlChoma_11
+  - first:
+      213: -4484769173152748872
+    second: curlChoma_12
+  - first:
+      213: -2710761565424407458
+    second: curlChoma_13
+  - first:
+      213: -721334451218810049
+    second: curlChoma_14
+  - first:
+      213: 528841774446022049
+    second: curlChoma_15
+  - first:
+      213: 5870968307867593720
+    second: curlChoma_16
+  - first:
+      213: -6679714842756535946
+    second: curlChoma_17
+  - first:
+      213: 697467880198593962
+    second: curlChoma_18
+  - first:
+      213: -6619099822427224287
+    second: curlChoma_19
+  - first:
+      213: -1811167740512548315
+    second: curlChoma_20
+  - first:
+      213: -3089290876876533046
+    second: curlChoma_21
+  - first:
+      213: -5809506557671804305
+    second: curlChoma_22
+  - first:
+      213: 8893060150174785651
+    second: curlChoma_23
+  - first:
+      213: -9112483703140176046
+    second: curlChoma_24
+  - first:
+      213: -6377015933137420490
+    second: curlChoma_25
+  - first:
+      213: -5891960892753325755
+    second: curlChoma_26
+  - first:
+      213: -483868887694205595
+    second: curlChoma_27
+  - first:
+      213: -299223029210773134
+    second: curlChoma_28
+  - first:
+      213: 5225045513245473304
+    second: curlChoma_29
+  - first:
+      213: -6270909343824296093
+    second: curlChoma_30
+  - first:
+      213: 4174312717552946400
+    second: curlChoma_31
+  - first:
+      213: -7271653938233643500
+    second: curlChoma_32
+  - first:
+      213: -2252051996121633843
+    second: curlChoma_33
+  - first:
+      213: -8563920313455377184
+    second: curlChoma_34
+  - first:
+      213: -3124754789633712265
+    second: curlChoma_35
+  - first:
+      213: 4931681196172243482
+    second: curlChoma_36
+  - first:
+      213: 2421993690344233218
+    second: curlChoma_37
+  - first:
+      213: -4467513772261356649
+    second: curlChoma_38
+  - first:
+      213: 2948585133695379119
+    second: curlChoma_39
+  - first:
+      213: 393394874367422525
+    second: curlChoma_40
+  - first:
+      213: 4155095394159660075
+    second: curlChoma_41
+  - first:
+      213: -4057088263278960352
+    second: curlChoma_42
+  - first:
+      213: -4253805269058635560
+    second: curlChoma_43
+  - first:
+      213: 7696043593082614749
+    second: curlChoma_44
+  - first:
+      213: -4357354695260363150
+    second: curlChoma_45
+  - first:
+      213: -2663306248842348946
+    second: curlChoma_46
+  - first:
+      213: 3903253224336138751
+    second: curlChoma_47
+  - first:
+      213: -3533096262071308396
+    second: curlChoma_48
+  - first:
+      213: -1285359729451239843
+    second: curlChoma_49
+  - first:
+      213: -5378036743544265333
+    second: curlChoma_50
+  - first:
+      213: 3934584562738235659
+    second: curlChoma_51
+  - first:
+      213: -2746436298462066911
+    second: curlChoma_52
+  - first:
+      213: 1387906247103854384
+    second: curlChoma_53
+  - first:
+      213: -3655962315358344638
+    second: curlChoma_54
+  - first:
+      213: 3437925197785308982
+    second: curlChoma_55
+  - first:
+      213: 854024120978758596
+    second: curlChoma_56
+  - first:
+      213: -5272846869936497815
+    second: curlChoma_57
+  - first:
+      213: -7010791565854381262
+    second: curlChoma_58
+  - first:
+      213: 5668654780367109626
+    second: curlChoma_59
+  - first:
+      213: 5999239797191775791
+    second: curlChoma_60
+  - first:
+      213: 7858377833874867068
+    second: curlChoma_61
+  - first:
+      213: -8620137914634954830
+    second: curlChoma_62
+  - first:
+      213: 4438293461279118016
+    second: curlChoma_63
+  - first:
+      213: 8441935047887859547
+    second: curlChoma_64
+  - first:
+      213: 6050448558082826060
+    second: curlChoma_65
+  - first:
+      213: 158639708435039669
+    second: curlChoma_66
+  - first:
+      213: 3928897187444207307
+    second: curlChoma_67
+  - first:
+      213: 7801902672471502288
+    second: curlChoma_68
+  - first:
+      213: 4339435034406730383
+    second: curlChoma_69
+  - first:
+      213: -3167592941544971396
+    second: curlChoma_70
+  - first:
+      213: 4970834952980187116
+    second: curlChoma_71
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: curlChoma_0
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 303
+        width: 112
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e0e59fea0cc98c70800000000000000
+      internalID: 8973928079853740259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_1
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 306
+        width: 107
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8f2a00907926db30800000000000000
+      internalID: 4311679256683491210
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_2
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 408
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9baf05f637297d60800000000000000
+      internalID: 7888379339309296540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_3
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 304
+        width: 111
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72b7dba4e27b53a00800000000000000
+      internalID: 735695523595254567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_4
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 309
+        width: 99
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9bc2af4ab8e498aa0800000000000000
+      internalID: -6158304653777163079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_5
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 358
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13cf6fa6681c99f40800000000000000
+      internalID: 5735828383497387057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_6
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 304
+        width: 6
+        height: 4
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c134a63273df3ff0800000000000000
+      internalID: -54092183008693815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_7
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 305
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c3137eeaaa8eecf0800000000000000
+      internalID: -221086864944983102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_8
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 287
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2ca0368eca75edd0800000000000000
+      internalID: -2457422994227549137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_9
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 284
+        width: 32
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25a60da1fcfced920800000000000000
+      internalID: 3017077288799857234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_10
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 287
+        width: 32
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39586cd1848312370800000000000000
+      internalID: 8295973870981514643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_11
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 284
+        width: 25
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e71e1e7a74a54b010800000000000000
+      internalID: 1203686264220541310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_12
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 287
+        width: 14
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8baab96c236e2c1c0800000000000000
+      internalID: -4484769173152748872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_13
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 287
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5ca81ee7b0716ad0800000000000000
+      internalID: -2710761565424407458
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_14
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 284
+        width: 56
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3bf9de632e4df5f0800000000000000
+      internalID: -721334451218810049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_15
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 284
+        width: 34
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ad0e3cbac2d65700800000000000000
+      internalID: 528841774446022049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_16
+      rect:
+        serializedVersion: 2
+        x: 262
+        y: 284
+        width: 19
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fb260ef19ed97150800000000000000
+      internalID: 5870968307867593720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_17
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 287
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 679a79cbdb2ec43a0800000000000000
+      internalID: -6679714842756535946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_18
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 287
+        width: 9
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aad5b797757eda900800000000000000
+      internalID: 697467880198593962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_19
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 284
+        width: 23
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 127cf5fe7cb3424a0800000000000000
+      internalID: -6619099822427224287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_20
+      rect:
+        serializedVersion: 2
+        x: 344
+        y: 287
+        width: 41
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52a4a1639807dd6e0800000000000000
+      internalID: -1811167740512548315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_21
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 287
+        width: 27
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac25be3b052a025d0800000000000000
+      internalID: -3089290876876533046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_22
+      rect:
+        serializedVersion: 2
+        x: 450
+        y: 288
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f627badd09c706fa0800000000000000
+      internalID: -5809506557671804305
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_23
+      rect:
+        serializedVersion: 2
+        x: 461
+        y: 284
+        width: 26
+        height: 14
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 370a951d61f7a6b70800000000000000
+      internalID: 8893060150174785651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_24
+      rect:
+        serializedVersion: 2
+        x: 489
+        y: 284
+        width: 41
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25f2bcc1a54f98180800000000000000
+      internalID: -9112483703140176046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_25
+      rect:
+        serializedVersion: 2
+        x: 531
+        y: 287
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63f7652bbc94087a0800000000000000
+      internalID: -6377015933137420490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_26
+      rect:
+        serializedVersion: 2
+        x: 29
+        y: 166
+        width: 109
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 541d1f4f8cc8b3ea0800000000000000
+      internalID: -5891960892753325755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_27
+      rect:
+        serializedVersion: 2
+        x: 61
+        y: 266
+        width: 12
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56d9f1f6fc3f849f0800000000000000
+      internalID: -483868887694205595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_28
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 170
+        width: 101
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27986438d32f8dbf0800000000000000
+      internalID: -299223029210773134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_29
+      rect:
+        serializedVersion: 2
+        x: 305
+        y: 165
+        width: 115
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81abe38f537138840800000000000000
+      internalID: 5225045513245473304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_30
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 166
+        width: 110
+        height: 109
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 367ccae2d2149f8a0800000000000000
+      internalID: -6270909343824296093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_31
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 150
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ec8327dc432ee930800000000000000
+      internalID: 4174312717552946400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_32
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 150
+        width: 35
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41e63022545e51b90800000000000000
+      internalID: -7271653938233643500
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_33
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 148
+        width: 36
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcbe57334aa1fb0e0800000000000000
+      internalID: -2252051996121633843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_34
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 150
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e48db739d7d62980800000000000000
+      internalID: -8563920313455377184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_35
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 150
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77f9ea11314a2a4d0800000000000000
+      internalID: -3124754789633712265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_36
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 149
+        width: 24
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a12f1533be9d07440800000000000000
+      internalID: 4931681196172243482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_37
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 147
+        width: 21
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2099439dd66ac9120800000000000000
+      internalID: 2421993690344233218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_38
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 148
+        width: 30
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79b423fd4e33002c0800000000000000
+      internalID: -4467513772261356649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_39
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 150
+        width: 28
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa629eb8e8a7be820800000000000000
+      internalID: 2948585133695379119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_40
+      rect:
+        serializedVersion: 2
+        x: 279
+        y: 150
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d30312fcd8e957500800000000000000
+      internalID: 393394874367422525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_41
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 150
+        width: 11
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2c8fb01f3dd9a930800000000000000
+      internalID: 4155095394159660075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_42
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 148
+        width: 25
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 021e9dc48b352b7c0800000000000000
+      internalID: -4057088263278960352
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_43
+      rect:
+        serializedVersion: 2
+        x: 359
+        y: 150
+        width: 46
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d8331a35a277f4c0800000000000000
+      internalID: -4253805269058635560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_44
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 150
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd33c9d5fd6ddca60800000000000000
+      internalID: 7696043593082614749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_45
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 150
+        width: 29
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27620acadf09783c0800000000000000
+      internalID: -4357354695260363150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_46
+      rect:
+        serializedVersion: 2
+        x: 498
+        y: 148
+        width: 26
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e667ca5d3190a0bd0800000000000000
+      internalID: -2663306248842348946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_47
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 150
+        width: 17
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff124f090242b2630800000000000000
+      internalID: 3903253224336138751
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_48
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 96
+        width: 5
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49faaf53babe7fec0800000000000000
+      internalID: -3533096262071308396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_49
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 104
+        height: 107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d56777dd22c792ee0800000000000000
+      internalID: -1285359729451239843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_50
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 98
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b85ab0863106d55b0800000000000000
+      internalID: -5378036743544265333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_51
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 37
+        width: 107
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b098fb040d37a9630800000000000000
+      internalID: 3934584562738235659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_52
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 33
+        width: 108
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1270eefdcb2b2e9d0800000000000000
+      internalID: -2746436298462066911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_53
+      rect:
+        serializedVersion: 2
+        x: 447
+        y: 33
+        width: 104
+        height: 106
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 037bb28d065d24310800000000000000
+      internalID: 1387906247103854384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_54
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 71
+        width: 5
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24ae9d0f4a9634dc0800000000000000
+      internalID: -3655962315358344638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_55
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 17
+        width: 5
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63f9b52a0c6f5bf20800000000000000
+      internalID: 3437925197785308982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_56
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 17
+        width: 20
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cbdd88c96a1adb00800000000000000
+      internalID: 854024120978758596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_57
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 15
+        width: 30
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96b976265b513d6b0800000000000000
+      internalID: -5272846869936497815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_58
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 17
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23be1f2373aa4be90800000000000000
+      internalID: -7010791565854381262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_59
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 17
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afdf91a2d7b1bae40800000000000000
+      internalID: 5668654780367109626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_60
+      rect:
+        serializedVersion: 2
+        x: 177
+        y: 17
+        width: 36
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f26900a6fc4914350800000000000000
+      internalID: 5999239797191775791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_61
+      rect:
+        serializedVersion: 2
+        x: 215
+        y: 15
+        width: 41
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c734ae221019e0d60800000000000000
+      internalID: 7858377833874867068
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_62
+      rect:
+        serializedVersion: 2
+        x: 258
+        y: 17
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b79e43fc3e1f5880800000000000000
+      internalID: -8620137914634954830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_63
+      rect:
+        serializedVersion: 2
+        x: 304
+        y: 17
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c21b70536cf79d30800000000000000
+      internalID: 4438293461279118016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_64
+      rect:
+        serializedVersion: 2
+        x: 316
+        y: 15
+        width: 34
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5fa642e237c72570800000000000000
+      internalID: 8441935047887859547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_65
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 17
+        width: 50
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4f1d4c28e287f350800000000000000
+      internalID: 6050448558082826060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_66
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 17
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b5ca8c69f9933200800000000000000
+      internalID: 158639708435039669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_67
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 17
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcea4a00d2f368630800000000000000
+      internalID: 3928897187444207307
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_68
+      rect:
+        serializedVersion: 2
+        x: 459
+        y: 15
+        width: 33
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0dda5d4f42de54c60800000000000000
+      internalID: 7801902672471502288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_69
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 17
+        width: 28
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8ab2b72c25c83c30800000000000000
+      internalID: 4339435034406730383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_70
+      rect:
+        serializedVersion: 2
+        x: 523
+        y: 17
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c736d2690037a04d0800000000000000
+      internalID: -3167592941544971396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: curlChoma_71
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 17
+        width: 16
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce7ca799d04fbf440800000000000000
+      internalID: 4970834952980187116
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: c2635421e3a1a9d4cac04982d529f6f1
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      curlChoma_0: 8973928079853740259
+      curlChoma_1: 4311679256683491210
+      curlChoma_10: 8295973870981514643
+      curlChoma_11: 1203686264220541310
+      curlChoma_12: -4484769173152748872
+      curlChoma_13: -2710761565424407458
+      curlChoma_14: -721334451218810049
+      curlChoma_15: 528841774446022049
+      curlChoma_16: 5870968307867593720
+      curlChoma_17: -6679714842756535946
+      curlChoma_18: 697467880198593962
+      curlChoma_19: -6619099822427224287
+      curlChoma_2: 7888379339309296540
+      curlChoma_20: -1811167740512548315
+      curlChoma_21: -3089290876876533046
+      curlChoma_22: -5809506557671804305
+      curlChoma_23: 8893060150174785651
+      curlChoma_24: -9112483703140176046
+      curlChoma_25: -6377015933137420490
+      curlChoma_26: -5891960892753325755
+      curlChoma_27: -483868887694205595
+      curlChoma_28: -299223029210773134
+      curlChoma_29: 5225045513245473304
+      curlChoma_3: 735695523595254567
+      curlChoma_30: -6270909343824296093
+      curlChoma_31: 4174312717552946400
+      curlChoma_32: -7271653938233643500
+      curlChoma_33: -2252051996121633843
+      curlChoma_34: -8563920313455377184
+      curlChoma_35: -3124754789633712265
+      curlChoma_36: 4931681196172243482
+      curlChoma_37: 2421993690344233218
+      curlChoma_38: -4467513772261356649
+      curlChoma_39: 2948585133695379119
+      curlChoma_4: -6158304653777163079
+      curlChoma_40: 393394874367422525
+      curlChoma_41: 4155095394159660075
+      curlChoma_42: -4057088263278960352
+      curlChoma_43: -4253805269058635560
+      curlChoma_44: 7696043593082614749
+      curlChoma_45: -4357354695260363150
+      curlChoma_46: -2663306248842348946
+      curlChoma_47: 3903253224336138751
+      curlChoma_48: -3533096262071308396
+      curlChoma_49: -1285359729451239843
+      curlChoma_5: 5735828383497387057
+      curlChoma_50: -5378036743544265333
+      curlChoma_51: 3934584562738235659
+      curlChoma_52: -2746436298462066911
+      curlChoma_53: 1387906247103854384
+      curlChoma_54: -3655962315358344638
+      curlChoma_55: 3437925197785308982
+      curlChoma_56: 854024120978758596
+      curlChoma_57: -5272846869936497815
+      curlChoma_58: -7010791565854381262
+      curlChoma_59: 5668654780367109626
+      curlChoma_6: -54092183008693815
+      curlChoma_60: 5999239797191775791
+      curlChoma_61: 7858377833874867068
+      curlChoma_62: -8620137914634954830
+      curlChoma_63: 4438293461279118016
+      curlChoma_64: 8441935047887859547
+      curlChoma_65: 6050448558082826060
+      curlChoma_66: 158639708435039669
+      curlChoma_67: 3928897187444207307
+      curlChoma_68: 7801902672471502288
+      curlChoma_69: 4339435034406730383
+      curlChoma_7: -221086864944983102
+      curlChoma_70: -3167592941544971396
+      curlChoma_71: 4970834952980187116
+      curlChoma_8: -2457422994227549137
+      curlChoma_9: 3017077288799857234
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -74,15 +74,10 @@ public class BeastRoster : MonoBehaviour
         }
     }
 
-    public static Color GetColor(BeastId beast)
+   public static Color GetColor(BeastId beast)
     {
-        switch (beast)
-        {
-            case BeastId.Thistle: return new Color(0.55f, 1f, 0.12f);
-            case BeastId.Mossback: return new Color(0.65f, 0.3f, 0.08f);
-            case BeastId.Voltis: return new Color(1f, 0.85f, 0.05f);
-            case BeastId.Ripple: return new Color(0.15f, 0.45f, 1f);
-            default: return new Color(1f, 0.2f, 0.1f);
-        }
+        // Returning pure white ensures the original 2D sprite artwork 
+        // is displayed exactly as it was drawn, without any color tinting.
+        return Color.white; 
     }
 }

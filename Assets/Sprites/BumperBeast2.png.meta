@@ -1,0 +1,1083 @@
+fileFormatVersion: 2
+guid: 953b5347c795ba940971594c8920f79e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2829466678544512699
+    second: BumperBeast2_0
+  - first:
+      213: 5331484815026063082
+    second: BumperBeast2_1
+  - first:
+      213: -1235933425095887540
+    second: BumperBeast2_2
+  - first:
+      213: 6932164884721165507
+    second: BumperBeast2_3
+  - first:
+      213: -1433103927673427900
+    second: BumperBeast2_4
+  - first:
+      213: 8451059671724996811
+    second: BumperBeast2_5
+  - first:
+      213: 5426020261435239679
+    second: BumperBeast2_6
+  - first:
+      213: 5817177655358333462
+    second: BumperBeast2_7
+  - first:
+      213: -6612376780193623099
+    second: BumperBeast2_8
+  - first:
+      213: 4942984354735038412
+    second: BumperBeast2_9
+  - first:
+      213: 2398196094220847558
+    second: BumperBeast2_10
+  - first:
+      213: -1996710179946196079
+    second: BumperBeast2_11
+  - first:
+      213: -7368506645184698858
+    second: BumperBeast2_12
+  - first:
+      213: -6067047220314262265
+    second: BumperBeast2_13
+  - first:
+      213: 749412079534379381
+    second: BumperBeast2_14
+  - first:
+      213: 3790713284700277764
+    second: BumperBeast2_15
+  - first:
+      213: 1848521461882120493
+    second: BumperBeast2_16
+  - first:
+      213: 1125230322319491910
+    second: BumperBeast2_17
+  - first:
+      213: 3280034169469754845
+    second: BumperBeast2_18
+  - first:
+      213: -2171214381643354298
+    second: BumperBeast2_19
+  - first:
+      213: 1244574346986670761
+    second: BumperBeast2_20
+  - first:
+      213: -25691669263608670
+    second: BumperBeast2_21
+  - first:
+      213: -8322573019449401129
+    second: BumperBeast2_22
+  - first:
+      213: 3853084818803642988
+    second: BumperBeast2_23
+  - first:
+      213: 3008888504896887410
+    second: BumperBeast2_24
+  - first:
+      213: -1984719916617886847
+    second: BumperBeast2_25
+  - first:
+      213: 4611994494804103617
+    second: BumperBeast2_26
+  - first:
+      213: -2534624445749954611
+    second: BumperBeast2_27
+  - first:
+      213: -5109692581853979099
+    second: BumperBeast2_28
+  - first:
+      213: 8575119278101813516
+    second: BumperBeast2_29
+  - first:
+      213: -4442026797593087159
+    second: BumperBeast2_30
+  - first:
+      213: 5123077112734123614
+    second: BumperBeast2_31
+  - first:
+      213: -1197891956072364186
+    second: BumperBeast2_32
+  - first:
+      213: 6632691615003427568
+    second: BumperBeast2_33
+  - first:
+      213: 7225440073417344735
+    second: BumperBeast2_34
+  - first:
+      213: -5694738314146305888
+    second: BumperBeast2_35
+  - first:
+      213: -6337945223237520847
+    second: BumperBeast2_36
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BumperBeast2_0
+      rect:
+        serializedVersion: 2
+        x: 97
+        y: 629
+        width: 55
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 549cc890c07bbb8d0800000000000000
+      internalID: -2829466678544512699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_1
+      rect:
+        serializedVersion: 2
+        x: 153
+        y: 629
+        width: 25
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae6840d113d3df940800000000000000
+      internalID: 5331484815026063082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_2
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 630
+        width: 21
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c45b02f191519dee0800000000000000
+      internalID: -1235933425095887540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_3
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 636
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c4ed360c3ff33060800000000000000
+      internalID: 6932164884721165507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_4
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 630
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 448eec812979c1ce0800000000000000
+      internalID: -1433103927673427900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_5
+      rect:
+        serializedVersion: 2
+        x: 230
+        y: 630
+        width: 23
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc83ccceef1384570800000000000000
+      internalID: 8451059671724996811
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_6
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 630
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffc6be2fda81d4b40800000000000000
+      internalID: 5426020261435239679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_7
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 629
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61229feb144cab050800000000000000
+      internalID: 5817177655358333462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_8
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 513
+        width: 88
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c3948f2a5e1c34a0800000000000000
+      internalID: -6612376780193623099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_9
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 520
+        width: 89
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ccf9b42e412099440800000000000000
+      internalID: 4942984354735038412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_10
+      rect:
+        serializedVersion: 2
+        x: 259
+        y: 520
+        width: 90
+        height: 88
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c943c934aa184120800000000000000
+      internalID: 2398196094220847558
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_11
+      rect:
+        serializedVersion: 2
+        x: 26
+        y: 417
+        width: 88
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19396ec9ba24a44e0800000000000000
+      internalID: -1996710179946196079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_12
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 417
+        width: 87
+        height: 86
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61629a80f3ecdb990800000000000000
+      internalID: -7368506645184698858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_13
+      rect:
+        serializedVersion: 2
+        x: 197
+        y: 497
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 705b5ad92b48dcba0800000000000000
+      internalID: -6067047220314262265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_14
+      rect:
+        serializedVersion: 2
+        x: 253
+        y: 424
+        width: 101
+        height: 68
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5719807d052766a00800000000000000
+      internalID: 749412079534379381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_15
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 336
+        width: 75
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40c0aebf5a15b9430800000000000000
+      internalID: 3790713284700277764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_16
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 335
+        width: 74
+        height: 70
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d296b27c97447a910800000000000000
+      internalID: 1848521461882120493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_17
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 336
+        width: 70
+        height: 65
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6430a54340f9d9f00800000000000000
+      internalID: 1125230322319491910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_18
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 300
+        width: 37
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddd5362e2b5058d20800000000000000
+      internalID: 3280034169469754845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_19
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 300
+        width: 26
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64fade2060c4ed1e0800000000000000
+      internalID: -2171214381643354298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_20
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 301
+        width: 13
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aa44b846cd954110800000000000000
+      internalID: 1244574346986670761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_21
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 300
+        width: 14
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a41bdb1099b4aff0800000000000000
+      internalID: -25691669263608670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_22
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 301
+        width: 28
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d0e7760fe7408c80800000000000000
+      internalID: -8322573019449401129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_23
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 301
+        width: 40
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c62dd3a6a38e87530800000000000000
+      internalID: 3853084818803642988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_24
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 301
+        width: 40
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27a92274728b1c920800000000000000
+      internalID: 3008888504896887410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_25
+      rect:
+        serializedVersion: 2
+        x: 269
+        y: 301
+        width: 12
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 183195750cbd474e0800000000000000
+      internalID: -1984719916617886847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_26
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 301
+        width: 5
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c11bd0ce88110040800000000000000
+      internalID: 4611994494804103617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_27
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 301
+        width: 11
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc77d00ee7433dcd0800000000000000
+      internalID: -2534624445749954611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_28
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 24
+        height: 17
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52e152b4ba9b619b0800000000000000
+      internalID: -5109692581853979099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_29
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 243
+        width: 343
+        height: 53
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c09dcddec81f00770800000000000000
+      internalID: 8575119278101813516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_30
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 194
+        width: 348
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 943b2b69920ca52c0800000000000000
+      internalID: -4442026797593087159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_31
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 117
+        width: 165
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e568375ad73d81740800000000000000
+      internalID: 5123077112734123614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_32
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 117
+        width: 165
+        height: 64
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6674207dc9b306fe0800000000000000
+      internalID: -1197891956072364186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_33
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 57
+        width: 169
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f2cdf0e1ed0c0c50800000000000000
+      internalID: 6632691615003427568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_34
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 58
+        width: 166
+        height: 28
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd6c9e9f67be54460800000000000000
+      internalID: 7225440073417344735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_35
+      rect:
+        serializedVersion: 2
+        x: 15
+        y: 13
+        width: 167
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a8a080eca938f0b0800000000000000
+      internalID: -5694738314146305888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BumperBeast2_36
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 13
+        width: 166
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1323b0b36681b08a0800000000000000
+      internalID: -6337945223237520847
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 40c03941a9d2c544c854e9d3bd9fa668
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      BumperBeast2_0: -2829466678544512699
+      BumperBeast2_1: 5331484815026063082
+      BumperBeast2_10: 2398196094220847558
+      BumperBeast2_11: -1996710179946196079
+      BumperBeast2_12: -7368506645184698858
+      BumperBeast2_13: -6067047220314262265
+      BumperBeast2_14: 749412079534379381
+      BumperBeast2_15: 3790713284700277764
+      BumperBeast2_16: 1848521461882120493
+      BumperBeast2_17: 1125230322319491910
+      BumperBeast2_18: 3280034169469754845
+      BumperBeast2_19: -2171214381643354298
+      BumperBeast2_2: -1235933425095887540
+      BumperBeast2_20: 1244574346986670761
+      BumperBeast2_21: -25691669263608670
+      BumperBeast2_22: -8322573019449401129
+      BumperBeast2_23: 3853084818803642988
+      BumperBeast2_24: 3008888504896887410
+      BumperBeast2_25: -1984719916617886847
+      BumperBeast2_26: 4611994494804103617
+      BumperBeast2_27: -2534624445749954611
+      BumperBeast2_28: -5109692581853979099
+      BumperBeast2_29: 8575119278101813516
+      BumperBeast2_3: 6932164884721165507
+      BumperBeast2_30: -4442026797593087159
+      BumperBeast2_31: 5123077112734123614
+      BumperBeast2_32: -1197891956072364186
+      BumperBeast2_33: 6632691615003427568
+      BumperBeast2_34: 7225440073417344735
+      BumperBeast2_35: -5694738314146305888
+      BumperBeast2_36: -6337945223237520847
+      BumperBeast2_4: -1433103927673427900
+      BumperBeast2_5: 8451059671724996811
+      BumperBeast2_6: 5426020261435239679
+      BumperBeast2_7: 5817177655358333462
+      BumperBeast2_8: -6612376780193623099
+      BumperBeast2_9: 4942984354735038412
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

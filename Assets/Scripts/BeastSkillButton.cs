@@ -18,6 +18,11 @@ public class BeastSkillButton : MonoBehaviour
             button.onClick.AddListener(OnSkillPressed);
     }
 
+    void Start()
+    {
+        PortraitButtonLayout.Apply(transform as RectTransform, 0);
+    }
+
     void Update()
     {
         if (beast == null || button == null)

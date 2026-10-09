@@ -5,17 +5,28 @@ public enum BumperType { Green, Blue, Red }
 
 public class Bumper : MonoBehaviour
 {
+    [Header("Bumper Sprites")]
+    public Sprite greenSprite;
+    public Sprite blueSprite;
+    public Sprite redSprite;
+
     [Header("Bumper Settings")]
     public BumperType type = BumperType.Green;
     public int hp = 3;
-    
+
     [Header("Green Bumper Physics")]
-    public float speedMultiplier = 1.6f; // Cranked up to 60% boost
-    public float minimumBoostSpeed = 12f; // Guarantees it shoots out fast even if hit slowly
+    public float speedMultiplier = 1.6f;   // 60% boost
+    public float minimumBoostSpeed = 12f;  // Guarantees a fast exit even on a slow hit
     public float maxSpeed = 18f;
 
-    private SpriteRenderer sr;
+    [Header("Hit Feedback")]
+    public float hitScale = 1.2f;          // not used yet
+    public float hitRotation = 10f;        // not used yet
+    public float hitDuration = 0.12f;      // not used yet
+    public ParticleSystem hitEffect;       // drag the BumperHitEffect PREFAB here
+
     private Vector3 originalScale;
+    private SpriteRenderer sr;
     private static Sprite fallbackSprite;
 
     void Awake()
@@ -36,9 +47,15 @@ public class Bumper : MonoBehaviour
 
     void OnValidate()
     {
-        sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.delayCall += () =>
+        {
+            if (this == null) return;
+            if (sr == null) sr = GetComponent<SpriteRenderer>();
+            if (sr == null) return;
             UpdateVisuals();
+        };
+#endif
     }
 
     static Sprite GetFallbackSprite()
@@ -82,20 +99,27 @@ public class Bumper : MonoBehaviour
         if (sr == null)
             return;
 
-        if (sr.sprite == null)
-            sr.sprite = GetFallbackSprite();
-
-        switch (type)
+        Sprite typeSprite = type switch
         {
-            case BumperType.Blue:
-                sr.color = new Color(0.2f, 0.4f, 1f);
-                break;
-            case BumperType.Red:
-                sr.color = new Color(0.9f, 0.2f, 0.2f);
-                break;
-            default:
-                sr.color = new Color(0.2f, 0.8f, 0.2f);
-                break;
+            BumperType.Blue => blueSprite,
+            BumperType.Red => redSprite,
+            _ => greenSprite
+        };
+
+        if (typeSprite != null)
+        {
+            sr.sprite = typeSprite;
+            sr.color = Color.white;
+        }
+        else if (sr.sprite == null)
+        {
+            sr.sprite = GetFallbackSprite();
+            sr.color = type switch
+            {
+                BumperType.Blue => new Color(0.2f, 0.4f, 1f),
+                BumperType.Red => new Color(0.9f, 0.2f, 0.2f),
+                _ => new Color(0.2f, 0.8f, 0.2f)
+            };
         }
     }
 
@@ -107,14 +131,23 @@ public class Bumper : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // STRICT CHECK: Only take damage and apply effect if it's the player's Beast
+        // Only react to the player's Beast
         BeastController beast = collision.gameObject.GetComponent<BeastController>();
-        
+
         if (beast != null)
         {
             ApplyEffect(collision.rigidbody, collision);
+
+            // Spark effect: spawn a copy at the bumper, play it, remove it after 1 second
+            if (hitEffect != null)
+            {
+                ParticleSystem fx = Instantiate(hitEffect, transform.position, Quaternion.identity);
+                fx.Play();
+                Destroy(fx.gameObject, 1f);
+            }
+
             TakeDamage();
-            StartCoroutine(HitPunchEffect()); // Visual juice
+            StartCoroutine(HitPunchEffect());
         }
     }
 
@@ -163,19 +196,19 @@ public class Bumper : MonoBehaviour
 
     void BreakBumper()
     {
-        // Tell the manager to start the respawn timer before we destroy this object
+        // Tell the manager to start the respawn timer before this object is destroyed
         BumperManager manager = FindAnyObjectByType<BumperManager>();
         if (manager != null)
         {
             manager.HandleBumperBroken();
         }
-        
+
         Destroy(gameObject);
     }
 
     IEnumerator HitPunchEffect()
     {
-        // Makes the bumper quickly bulge out and snap back for game feel
+        // The bumper bulges out and snaps back for game feel
         transform.localScale = originalScale * 1.3f;
         yield return new WaitForSeconds(0.05f);
         transform.localScale = originalScale;
