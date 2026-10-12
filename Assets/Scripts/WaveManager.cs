@@ -86,7 +86,7 @@ public class WaveManager : MonoBehaviour
             return;
         }
         
-        // Ensure route waypoints are assigned in the inspector
+        
         if (routeWaypoints == null || routeWaypoints.Length == 0)
         {
             Debug.LogWarning("WaveManager has no routeWaypoints assigned! Enemies will not move.", this);

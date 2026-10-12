@@ -31,7 +31,7 @@ public class LaunchController : MonoBehaviour
     private Animator anim;
     private Vector3 originalScale;
     
-    // --> THE FIX: We use one unbreakable anchor point <--
+    
     private Vector3 trueHomePosition; 
     
     private SpriteRenderer spriteRenderer;
@@ -59,7 +59,7 @@ public class LaunchController : MonoBehaviour
 
         originalScale = transform.localScale;
         
-        // Record the exact center of the launch pad ONCE at the start of the game
+        
         trueHomePosition = transform.position; 
         
         isAnimatingLaunch = false;
@@ -101,7 +101,7 @@ public class LaunchController : MonoBehaviour
     {
         UpdateLaunchAnimation();
 
-        // --> THE FIX: Force him to stay exactly at the anchor whenever he is waiting at the pad <--
+        
         if (beastController != null &&
             beastController.State == BeastState.AtPad &&
             !isDragging &&
@@ -121,9 +121,9 @@ public class LaunchController : MonoBehaviour
         if (rb != null && rb.linearVelocity.magnitude > 0.1f)
             return;
 
-        // --------------------------------
-        // START AIMING
-        // --------------------------------
+        
+        
+        
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current != null &&
@@ -139,9 +139,9 @@ public class LaunchController : MonoBehaviour
                 aimLine.enabled = true;
         }
 
-        // --------------------------------
-        // AIMING / DRAGGING
-        // --------------------------------
+        
+        
+        
         if (isDragging)
         {
             Vector2 currentMousePosition = GetMouseWorldPosition();
@@ -156,7 +156,7 @@ public class LaunchController : MonoBehaviour
 
             float dragRatio = Mathf.Clamp01(dragDistance / maxDragDistance);
 
-            // Move Choma backward physically relative to the unbreakable anchor
+            
             transform.position = trueHomePosition - (Vector3)(direction * (dragRatio * visualPullbackDistance));
 
             if (aimLine != null)
@@ -202,9 +202,9 @@ public class LaunchController : MonoBehaviour
             );
         }
 
-        // --------------------------------
-        // RELEASE / LAUNCH
-        // --------------------------------
+        
+        
+        
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
             Vector2 dragEnd = GetMouseWorldPosition();
@@ -222,7 +222,7 @@ public class LaunchController : MonoBehaviour
 
                 transform.localScale = originalScale;
 
-                // Snap him back to the absolute center before he flies
+                
                 transform.position = trueHomePosition;
 
                 StopChargeEffect();
@@ -244,7 +244,7 @@ public class LaunchController : MonoBehaviour
             }
             else
             {
-                // Player barely dragged, cancel and lock to anchor
+                
                 transform.position = trueHomePosition; 
                 SetIdleVisual();
             }

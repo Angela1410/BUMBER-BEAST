@@ -8,7 +8,7 @@ public class BumperManager : MonoBehaviour
     public GameObject bumperPrefab; 
     public Transform[] fixedSpawnPoints; 
     public float respawnDelay = 5f;
-    public float checkRadius = 0.5f; // How wide to check for obstacles before spawning
+    public float checkRadius = 0.5f; 
 
     public void HandleBumperBroken()
     {
@@ -25,7 +25,7 @@ public class BumperManager : MonoBehaviour
             yield break;
         }
 
-        // Find all spawn points that don't have an enemy or another bumper sitting on them
+        
         List<Transform> emptyPoints = new List<Transform>();
         foreach (Transform point in fixedSpawnPoints)
         {
@@ -38,13 +38,13 @@ public class BumperManager : MonoBehaviour
 
         if (emptyPoints.Count > 0)
         {
-            // Pick a random empty safe point
+            
             Transform selectedPoint = emptyPoints[Random.Range(0, emptyPoints.Count)];
             Instantiate(bumperPrefab, selectedPoint.position, Quaternion.identity);
         }
         else
         {
-            // If all points are blocked by enemies, wait 1 second and try again
+            
             yield return new WaitForSeconds(1f);
             StartCoroutine(RespawnBumperRoutine());
         }

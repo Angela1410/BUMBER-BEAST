@@ -21,7 +21,7 @@ public class StageManager : MonoBehaviour
     private bool stageFinished = false;
     private int barrierHealth;
     
-    // --> NEW: Reference to your visual script <--
+    
     private BarrierVisuals barrierVisuals;
 
     void Awake()
@@ -38,7 +38,7 @@ public class StageManager : MonoBehaviour
 
             barrierY = barrierObject.transform.position.y;
             
-            // --> NEW: Grab the visual script attached to Square <--
+            
             barrierVisuals = barrierObject.GetComponent<BarrierVisuals>();
         }
 
@@ -85,14 +85,14 @@ public class StageManager : MonoBehaviour
 
         Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
 
-        // WIN
+        
         if (enemies.Length == 0)
         {
             StageComplete();
             return;
         }
 
-        // LOSE
+        
         if (launchController != null && !launchController.unlimitedLaunches && launchController.launchesLeft <= 0)
         {
             StageFailed();
@@ -136,7 +136,7 @@ public class StageManager : MonoBehaviour
 
                 if (barrierHealth <= 0)
                 {
-                    // --> NEW: Play Destroyed animation! <--
+                    
                     if (barrierVisuals != null)
                         barrierVisuals.PlayDestroyed();
                         
@@ -145,7 +145,7 @@ public class StageManager : MonoBehaviour
                 }
                 else
                 {
-                    // --> NEW: Play Hit animation! <--
+                    
                     if (barrierVisuals != null)
                         barrierVisuals.PlayHit();
                 }

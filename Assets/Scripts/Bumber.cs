@@ -15,20 +15,20 @@ public class Bumper : MonoBehaviour
     public int hp = 3;
 
     [Header("Green Bumper Physics")]
-    public float speedMultiplier = 1.6f;   // 60% boost
-    public float minimumBoostSpeed = 12f;  // Guarantees a fast exit even on a slow hit
+    public float speedMultiplier = 1.6f;   
+    public float minimumBoostSpeed = 12f;  
     public float maxSpeed = 18f;
 
     [Header("Bramble (Thornmaw)")]
-    public bool isBramble = false;                // set by ThornmawAbility
-    public float brambleSlowMultiplier = 0.5f;    // Choma keeps half his speed
-    public Sprite brambleSprite;   // custom art for Thornmaw's brambles
+    public bool isBramble = false;                
+    public float brambleSlowMultiplier = 0.5f;    
+    public Sprite brambleSprite;   
 
     [Header("Hit Feedback")]
-    public float hitScale = 1.2f;          // not used yet
-    public float hitRotation = 10f;        // not used yet
-    public float hitDuration = 0.12f;      // not used yet
-    public ParticleSystem hitEffect;       // drag the BumperHitEffect PREFAB here
+    public float hitScale = 1.2f;          
+    public float hitRotation = 10f;        
+    public float hitDuration = 0.12f;      
+    public ParticleSystem hitEffect;       
 
     private Vector3 originalScale;
     private SpriteRenderer sr;
@@ -127,17 +127,17 @@ public class Bumper : MonoBehaviour
             };
         }
 
-        // Thornmaw's brambles get a purple tint so they read as a hazard
+        
         if (isBramble)
 {
     if (brambleSprite != null)
     {
         sr.sprite = brambleSprite;
-        sr.color = Color.white;   // keep the art's real colors
+        sr.color = Color.white;   
     }
     else
     {
-        sr.color = new Color(0.75f, 0.45f, 0.85f);  // purple tint if no art is assigned
+        sr.color = new Color(0.75f, 0.45f, 0.85f);  
     }
 }
     }
@@ -150,14 +150,14 @@ public class Bumper : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Only react to the player's Beast
+        
         BeastController beast = collision.gameObject.GetComponent<BeastController>();
 
         if (beast != null)
         {
             ApplyEffect(collision.rigidbody, collision);
 
-            // Spark effect: spawn a copy at the bumper, play it, remove it after 1 second
+            
             if (hitEffect != null)
             {
                 ParticleSystem fx = Instantiate(hitEffect, transform.position, Quaternion.identity);
@@ -174,7 +174,7 @@ public class Bumper : MonoBehaviour
     {
         if (beastRb == null) return;
 
-        // Brambles snare Choma instead of boosting him
+        
         if (isBramble)
         {
             beastRb.linearVelocity *= brambleSlowMultiplier;
@@ -222,7 +222,7 @@ public class Bumper : MonoBehaviour
 
     void BreakBumper()
     {
-        // Brambles never trigger a respawn; only normal bumpers do
+        
         BumperManager manager = FindAnyObjectByType<BumperManager>();
         if (manager != null && !isBramble)
         {
@@ -234,7 +234,7 @@ public class Bumper : MonoBehaviour
 
     IEnumerator HitPunchEffect()
     {
-        // The bumper bulges out and snaps back for game feel
+        
         transform.localScale = originalScale * 1.3f;
         yield return new WaitForSeconds(0.05f);
         transform.localScale = originalScale;

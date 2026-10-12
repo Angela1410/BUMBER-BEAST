@@ -20,15 +20,15 @@ public class BarrierVisuals : MonoBehaviour
     {
         ChangeAnimationState("Barrier_Hit");
         
-        // Return to idle after the hit animation finishes.
-        // (Adjust 0.4f to match the exact length of your Barrier_Hit animation)
+        
+        
         Invoke(nameof(PlayIdle), 0.4f);
     }
 
     public void PlayDestroyed()
     {
         ChangeAnimationState("Barrier_Destroyed");
-        CancelInvoke(nameof(PlayIdle)); // Stop it from returning to idle if it's dead!
+        CancelInvoke(nameof(PlayIdle)); 
     }
 
     private void ChangeAnimationState(string newState)

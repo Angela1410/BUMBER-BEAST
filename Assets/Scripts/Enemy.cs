@@ -167,7 +167,7 @@ public class Enemy : MonoBehaviour
             Vector2 laneWaypoint = (Vector2)waypoint.position + Vector2.right * routeLaneOffset;
             Vector2 toWaypoint = laneWaypoint - (Vector2)transform.position;
 
-            // If the enemy is close enough to the waypoint, move to the next one
+            
             if (toWaypoint.sqrMagnitude <= 0.04f)
             {
                 currentRouteIndex++;
@@ -177,9 +177,9 @@ public class Enemy : MonoBehaviour
             return toWaypoint.normalized;
         }
 
-        // STRICT ROUTING FALLBACK:
-        // If the enemy has no route, or has reached the end of its route, it stops moving.
-        // We log a warning so you immediately know if a stage layout is missing a route assignment.
+        
+        
+        
         if (routeWaypoints == null || routeWaypoints.Length == 0)
         {
             Debug.LogWarning(gameObject.name + " was spawned without a route and cannot move! Check your WaveManager or Stage configuration.");

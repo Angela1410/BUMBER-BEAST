@@ -41,17 +41,17 @@ public class LaunchPadFeedback : MonoBehaviour
 
     public void PlayLaunchEffect()
     {
-        // 1. Play the snap sprite animation
+        
         if (anim != null) 
             anim.Play("LaunchPad_Snap");
 
-        // 2. Do the quick physical scale shrink
+        
         targetScale = originalScale * (1f - bounceAmount);
 
-        // 3. Return the physical scale instantly (0.08s)
+        
         Invoke(nameof(ReturnScaleToNormal), 0.08f);
 
-        // 4. Return the animation to Idle after the snap finishes (0.4s)
+        
         Invoke(nameof(ReturnToIdle), 0.4f); 
     }
 

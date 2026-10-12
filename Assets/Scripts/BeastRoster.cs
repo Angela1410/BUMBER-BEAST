@@ -76,8 +76,8 @@ public class BeastRoster : MonoBehaviour
 
    public static Color GetColor(BeastId beast)
     {
-        // Returning pure white ensures the original 2D sprite artwork 
-        // is displayed exactly as it was drawn, without any color tinting.
+        
+        
         return Color.white; 
     }
 }
