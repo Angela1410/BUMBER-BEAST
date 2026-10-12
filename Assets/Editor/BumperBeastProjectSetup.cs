@@ -9,8 +9,8 @@ using TMPro;
 [InitializeOnLoad]
 public static class BumperBeastProjectSetup
 {
-    private const string EnemyPrefabPath = "Assets/Enemy_1.prefab";
-    private const string BumperPrefabPath = "Assets/Bumper_Left.prefab";
+    private const string EnemyPrefabPath = "Assets/Prefab/Enemy_1.prefab";
+    private const string BumperPrefabPath = "Assets/Prefab/Bumper_Left.prefab";
     private const string ChomaPhysicsPath = "Assets/materials/ChomaBounce.physicsMaterial2D";
     private const string EnemyPhysicsPath = "Assets/materials/EnemyNoBounce.physicsMaterial2D";
     private const string ActiveSceneSetupKey = "BumperBeast.ActiveSceneSetupComplete";

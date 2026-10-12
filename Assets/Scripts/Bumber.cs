@@ -19,6 +19,11 @@ public class Bumper : MonoBehaviour
     public float minimumBoostSpeed = 12f;  // Guarantees a fast exit even on a slow hit
     public float maxSpeed = 18f;
 
+    [Header("Bramble (Thornmaw)")]
+    public bool isBramble = false;                // set by ThornmawAbility
+    public float brambleSlowMultiplier = 0.5f;    // Choma keeps half his speed
+    public Sprite brambleSprite;   // custom art for Thornmaw's brambles
+
     [Header("Hit Feedback")]
     public float hitScale = 1.2f;          // not used yet
     public float hitRotation = 10f;        // not used yet
@@ -121,6 +126,20 @@ public class Bumper : MonoBehaviour
                 _ => new Color(0.2f, 0.8f, 0.2f)
             };
         }
+
+        // Thornmaw's brambles get a purple tint so they read as a hazard
+        if (isBramble)
+{
+    if (brambleSprite != null)
+    {
+        sr.sprite = brambleSprite;
+        sr.color = Color.white;   // keep the art's real colors
+    }
+    else
+    {
+        sr.color = new Color(0.75f, 0.45f, 0.85f);  // purple tint if no art is assigned
+    }
+}
     }
 
     public void RefreshVisuals()
@@ -154,6 +173,13 @@ public class Bumper : MonoBehaviour
     void ApplyEffect(Rigidbody2D beastRb, Collision2D collision)
     {
         if (beastRb == null) return;
+
+        // Brambles snare Choma instead of boosting him
+        if (isBramble)
+        {
+            beastRb.linearVelocity *= brambleSlowMultiplier;
+            return;
+        }
 
         if (type == BumperType.Green)
         {
@@ -196,9 +222,9 @@ public class Bumper : MonoBehaviour
 
     void BreakBumper()
     {
-        // Tell the manager to start the respawn timer before this object is destroyed
+        // Brambles never trigger a respawn; only normal bumpers do
         BumperManager manager = FindAnyObjectByType<BumperManager>();
-        if (manager != null)
+        if (manager != null && !isBramble)
         {
             manager.HandleBumperBroken();
         }

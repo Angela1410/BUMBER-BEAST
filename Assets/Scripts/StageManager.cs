@@ -20,6 +20,9 @@ public class StageManager : MonoBehaviour
 
     private bool stageFinished = false;
     private int barrierHealth;
+    
+    // --> NEW: Reference to your visual script <--
+    private BarrierVisuals barrierVisuals;
 
     void Awake()
     {
@@ -34,6 +37,9 @@ public class StageManager : MonoBehaviour
                 barrierCollider.isTrigger = true;
 
             barrierY = barrierObject.transform.position.y;
+            
+            // --> NEW: Grab the visual script attached to Square <--
+            barrierVisuals = barrierObject.GetComponent<BarrierVisuals>();
         }
 
         barrierHealth = barrierMaxHealth;
@@ -77,7 +83,7 @@ public class StageManager : MonoBehaviour
             return;
         }
 
-        Enemy[] enemies = FindObjectsByType<Enemy>();
+        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
 
         // WIN
         if (enemies.Length == 0)
@@ -95,7 +101,7 @@ public class StageManager : MonoBehaviour
 
     bool HasActiveBoss()
     {
-        foreach (Enemy enemy in FindObjectsByType<Enemy>())
+        foreach (Enemy enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
         {
             if (enemy != null && enemy.isBoss)
                 return true;
@@ -106,7 +112,7 @@ public class StageManager : MonoBehaviour
 
     bool EnemyReachedBarrier()
     {
-        Enemy[] enemies = FindObjectsByType<Enemy>();
+        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         bool barrierDestroyed = false;
 
         foreach (Enemy enemy in enemies)
@@ -130,8 +136,18 @@ public class StageManager : MonoBehaviour
 
                 if (barrierHealth <= 0)
                 {
+                    // --> NEW: Play Destroyed animation! <--
+                    if (barrierVisuals != null)
+                        barrierVisuals.PlayDestroyed();
+                        
                     barrierDestroyed = true;
                     break;
+                }
+                else
+                {
+                    // --> NEW: Play Hit animation! <--
+                    if (barrierVisuals != null)
+                        barrierVisuals.PlayHit();
                 }
             }
         }
