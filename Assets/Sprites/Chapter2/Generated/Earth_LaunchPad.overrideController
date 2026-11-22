@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Earth_LaunchPad
+  m_Controller: {fileID: 9100000, guid: e3a71da4b62bc92489a722512caadd5e, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 991658be0eb926a41b0708b09d10050c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9986955f55d239949a43afb6de5117c5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 415b42c04d0a8f6428e29e2e58535b59, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f1ebe298ef14c30409cfa5d1096a5e20, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 15d802faee6ef42489f82deec1764583, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f9ced299656be16498e3cf30f18c1556, type: 2}

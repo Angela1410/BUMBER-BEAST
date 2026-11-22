@@ -6,35 +6,13 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-[InitializeOnLoad]
 public static class BumperBeastProjectSetup
 {
     private const string EnemyPrefabPath = "Assets/Prefab/Enemy_1.prefab";
     private const string BumperPrefabPath = "Assets/Prefab/Bumper_Left.prefab";
     private const string ChomaPhysicsPath = "Assets/materials/ChomaBounce.physicsMaterial2D";
     private const string EnemyPhysicsPath = "Assets/materials/EnemyNoBounce.physicsMaterial2D";
-    private const string ActiveSceneSetupKey = "BumperBeast.ActiveSceneSetupComplete";
     private static Sprite bumperSprite;
-
-    static BumperBeastProjectSetup()
-    {
-        EditorApplication.delayCall += SetupActiveSceneOnce;
-    }
-
-    private static void SetupActiveSceneOnce()
-    {
-        if (Application.isBatchMode || SessionState.GetBool(ActiveSceneSetupKey, false))
-            return;
-
-        SessionState.SetBool(ActiveSceneSetupKey, true);
-
-        if (!EditorSceneManager.GetActiveScene().IsValid())
-            return;
-
-        SetupEnemyPrefab();
-        SetupScene(EditorSceneManager.GetActiveScene(), EditorSceneManager.GetActiveScene().path);
-        EditorSceneManager.SaveScene(EditorSceneManager.GetActiveScene());
-    }
 
     [MenuItem("Bumper Beast/Build Complete Wave Gameplay")]
     public static void BuildAllStages()
@@ -985,7 +963,7 @@ public static class BumperBeastProjectSetup
 
         BumperManager manager = Object.FindAnyObjectByType<BumperManager>();
         if (manager == null)
-            manager = new GameObject("BumberManager").AddComponent<BumperManager>();
+            manager = new GameObject("BumperManager").AddComponent<BumperManager>();
 
         manager.bumperPrefab = bumperPrefab;
         manager.respawnDelay = 5f;

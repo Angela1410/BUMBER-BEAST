@@ -4,34 +4,68 @@ using UnityEngine.UI;
 
 public static class PortraitButtonLayout
 {
-    private const float MaximumWidth = 380f;
-    private const float MaximumHeight = 150f;
-    private const float ButtonGap = 18f;
-    private const float EdgeMargin = 24f;
+    private const float AbilitySize = 210f;
+    private const float SwapSize = 156f;
+    private const float ButtonGap = 66f;   // room for the swap button's name ribbon
+    private const float RightInset = 80f;
+    private const float BottomInset = 150f;
 
-    public static void Apply(RectTransform buttonRect, int stackIndex)
+    // Places a HUD button in the bottom-right corner.
+    // stackIndex 0 = ability button (bottom), 1 = swap button (directly above it).
+    // Returns false if the canvas has no size yet, so the caller can try again next frame.
+    public static bool Apply(RectTransform buttonRect, int stackIndex)
     {
         if (buttonRect == null || !(buttonRect.parent is RectTransform canvasRect))
-            return;
+            return false;
 
         float canvasWidth = canvasRect.rect.width;
         float canvasHeight = canvasRect.rect.height;
         if (canvasWidth <= 0f || canvasHeight <= 0f)
-            return;
+            return false;
 
-        float width = Mathf.Min(MaximumWidth, canvasWidth * 0.42f);
-        float height = Mathf.Min(MaximumHeight, canvasHeight * 0.09f);
-        float margin = Mathf.Min(EdgeMargin, canvasWidth * 0.04f);
-        float gap = Mathf.Min(ButtonGap, canvasHeight * 0.012f);
+        float referenceScale = Mathf.Min(canvasWidth / 1080f, canvasHeight / 1920f);
+        float size = stackIndex == 0 ? AbilitySize * referenceScale : SwapSize * referenceScale;
+        float gap = ButtonGap * referenceScale;
+
+        Rect safeArea = Screen.safeArea;
+        float widthScale = canvasWidth / Mathf.Max(1f, Screen.width);
+        float heightScale = canvasHeight / Mathf.Max(1f, Screen.height);
+        float safeLeft = safeArea.x * widthScale;
+        float safeRight = (Screen.width - safeArea.xMax) * widthScale;
+        float safeBottom = safeArea.y * heightScale;
+        float safeTop = (Screen.height - safeArea.yMax) * heightScale;
 
         buttonRect.anchorMin = new Vector2(1f, 0f);
         buttonRect.anchorMax = new Vector2(1f, 0f);
         buttonRect.pivot = new Vector2(1f, 0f);
-        buttonRect.anchoredPosition = new Vector2(
-            -margin,
-            margin + stackIndex * (height + gap)
-        );
-        buttonRect.sizeDelta = new Vector2(width, height);
+
+        float rightInset = Mathf.Clamp(
+            Mathf.Max(RightInset * referenceScale, safeRight),
+            0f,
+            Mathf.Max(0f, canvasWidth - size - safeLeft));
+        float bottomInset = Mathf.Clamp(
+            Mathf.Max(BottomInset * referenceScale, safeBottom),
+            0f,
+            Mathf.Max(0f, canvasHeight - size - safeTop));
+
+        float x;
+        float y;
+
+        if (stackIndex == 0)
+        {
+            x = -rightInset;
+            y = bottomInset;
+        }
+        else
+        {
+            // Same center line as the ability button, sitting above it with a gap.
+            float centerOffset = (AbilitySize - SwapSize) * 0.5f * referenceScale;
+            x = -rightInset - centerOffset;
+            y = bottomInset + AbilitySize * referenceScale + gap;
+        }
+
+        buttonRect.anchoredPosition = new Vector2(x, y);
+        buttonRect.sizeDelta = new Vector2(size, size);
 
         foreach (Text legacyText in buttonRect.GetComponentsInChildren<Text>(true))
         {
@@ -40,11 +74,40 @@ public static class PortraitButtonLayout
             legacyText.resizeTextMaxSize = 28;
         }
 
-        foreach (TMP_Text tmpText in buttonRect.GetComponentsInChildren<TMP_Text>(true))
+        return true;
+    }
+
+    // 1 on the 1080x1920 reference canvas; used to scale fonts with the layout.
+    public static float ReferenceScale(RectTransform buttonRect)
+    {
+        if (buttonRect == null || !(buttonRect.parent is RectTransform canvasRect))
+            return 1f;
+        float width = canvasRect.rect.width, height = canvasRect.rect.height;
+        if (width <= 0f || height <= 0f)
+            return 1f;
+        return Mathf.Min(width / 1080f, height / 1920f);
+    }
+
+    // Hides every other text under a button so only the label we keep is drawn.
+    // This is what removes the doubled "FLAME BURST / SWAP BEAST" text.
+    public static void HideOtherLabels(Transform root, TMP_Text keep)
+    {
+        if (root == null)
+            return;
+
+        foreach (TMP_Text text in root.GetComponentsInChildren<TMP_Text>(true))
         {
-            tmpText.enableAutoSizing = true;
-            tmpText.fontSizeMin = 16f;
-            tmpText.fontSizeMax = 28f;
+            if (text == keep)
+                continue;
+
+            // Never hide a parent of the label we are keeping.
+            if (keep != null && keep.transform.IsChildOf(text.transform))
+                continue;
+
+            text.gameObject.SetActive(false);
         }
+
+        foreach (Text legacy in root.GetComponentsInChildren<Text>(true))
+            legacy.gameObject.SetActive(false);
     }
 }

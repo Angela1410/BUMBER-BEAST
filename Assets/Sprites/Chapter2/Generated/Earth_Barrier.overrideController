@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Earth_Barrier
+  m_Controller: {fileID: 9100000, guid: 1c5f66a84ffff7b4e8d842637ab8a362, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 7152c80bf97b3cc47b8b18f54a4b0a8f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 70e4b9813b571174d8dfe051fb94bc02, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 53b4f54f1141c6e4f8a535dc4002059d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: b1017a37aa5a26f449bdd85a6e5b3f1f, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 0b76a32d41fd4c5438d775d74640c97a, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 9ba36fd50207317449c3a2b1eeec6706, type: 2}

@@ -1,0 +1,339 @@
+fileFormatVersion: 2
+guid: b068ba220a3b5a844bfe099b3217100d
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2946091215645212990
+    second: BarrierA3_0
+  - first:
+      213: 4353650211835741334
+    second: BarrierA3_1
+  - first:
+      213: -3859843318654853561
+    second: BarrierA3_2
+  - first:
+      213: -1269191302870314102
+    second: BarrierA3_3
+  - first:
+      213: -3403861167245984103
+    second: BarrierA3_4
+  - first:
+      213: 3147871181666869431
+    second: BarrierA3_5
+  - first:
+      213: 5155046623472180982
+    second: BarrierA3_6
+  - first:
+      213: -5662063708208476428
+    second: BarrierA3_7
+  - first:
+      213: 684090839657481340
+    second: BarrierA3_8
+  - first:
+      213: -3100919376550901550
+    second: BarrierA3_9
+  - first:
+      213: 7607768138517182129
+    second: BarrierA3_10
+  - first:
+      213: -594537522763112215
+    second: BarrierA3_11
+  - first:
+      213: 5866922548087458634
+    second: BarrierA3_12
+  - first:
+      213: -8694422282864876001
+    second: BarrierA3_13
+  - first:
+      213: -6640873438478450174
+    second: BarrierA3_14
+  - first:
+      213: -2005311673134227219
+    second: BarrierA3_15
+  - first:
+      213: -5212651581938736354
+    second: BarrierA3_16
+  - first:
+      213: -5475693855621633656
+    second: BarrierA3_17
+  - first:
+      213: -636303247500710353
+    second: BarrierA3_18
+  - first:
+      213: -2298990714893141862
+    second: BarrierA3_19
+  - first:
+      213: 2308559765141784307
+    second: BarrierA3_20
+  - first:
+      213: -2307002022127617720
+    second: BarrierA3_21
+  - first:
+      213: 8255738963392883291
+    second: BarrierA3_22
+  - first:
+      213: 8123652748280925183
+    second: BarrierA3_23
+  - first:
+      213: 4564006742862581742
+    second: BarrierA3_24
+  - first:
+      213: 7442931152169568473
+    second: BarrierA3_25
+  - first:
+      213: 8906644524816373403
+    second: BarrierA3_26
+  - first:
+      213: 8962401351981256275
+    second: BarrierA3_27
+  - first:
+      213: -5559738046915263981
+    second: BarrierA3_28
+  - first:
+      213: -434015416392866521
+    second: BarrierA3_29
+  - first:
+      213: -5398407393599395739
+    second: BarrierA3_30
+  - first:
+      213: 8417456941758035934
+    second: BarrierA3_31
+  - first:
+      213: 6135661270292884693
+    second: BarrierA3_32
+  - first:
+      213: 4345567583476634554
+    second: BarrierA3_33
+  - first:
+      213: 5882400631106682545
+    second: BarrierA3_34
+  - first:
+      213: -1696830581086576053
+    second: BarrierA3_35
+  - first:
+      213: -5348658165014033967
+    second: BarrierA3_36
+  - first:
+      213: -7635081105272559293
+    second: BarrierA3_37
+  - first:
+      213: 4560038948715692147
+    second: BarrierA3_38
+  - first:
+      213: 2394826600838508609
+    second: BarrierA3_39
+  - first:
+      213: 1603170660913137827
+    second: BarrierA3_40
+  - first:
+      213: -8556181769524664173
+    second: BarrierA3_41
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: BarrierA3_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 250
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e318e600a5e92e820800000000000000
+      internalID: 2946091215645212990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarrierA3_1
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 250
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69406c01dc54b6c30800000000000000
+      internalID: 4353650211835741334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarrierA3_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 2
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74e99e6b3f41f6ac0800000000000000
+      internalID: -3859843318654853561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BarrierA3_3
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 0
+        width: 250
+        height: 250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8356680c3de26ee0800000000000000
+      internalID: -1269191302870314102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: a9343cb57cfdf3642b806e30a0609b5f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":2.0},"gridSpriteSize":{"x":250.0,"y":250.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      BarrierA3_0: 2946091215645212990
+      BarrierA3_1: 4353650211835741334
+      BarrierA3_2: -3859843318654853561
+      BarrierA3_3: -1269191302870314102
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

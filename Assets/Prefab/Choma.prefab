@@ -232,7 +232,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 3327527956481365372, guid: 2ba1753eceee8064384e42b275a60f75, type: 3}
+  m_Sprite: {fileID: 6479975823068925807, guid: f5b64e95da20bd14a936da75f049c901, type: 3}
   m_Color: {r: 0.8773585, g: 0.8566661, b: 0.8566661, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -328,12 +328,40 @@ MonoBehaviour:
   idleSprite: {fileID: 3327527956481365372, guid: 2ba1753eceee8064384e42b275a60f75, type: 3}
   ballSprite: {fileID: 4311679256683491210, guid: 643113e6b42b95d4ab6aea8d2c88a47f, type: 3}
   launchPadFeedback: {fileID: 0}
-  aimSquashAmount: 0.12
-  aimStretchAmount: 0.08
+  beastSprites:
+  - beast: 1
+    idle: {fileID: 386628323, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    ball: {fileID: 336622330, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+  beastAnimations:
+  - beast: 1
+    idle:
+    - {fileID: 386628323, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: -1768534238, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: 1193597595, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: -1650287858, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    curl:
+    - {fileID: 336622330, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: 1287181773, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: -1621565801, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: 356521480, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    spin:
+    - {fileID: -508086829, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: -842117978, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: -5224711727083568035, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: -3451951615923777894, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    fps: 10
+    skillEffect:
+    - {fileID: 2030726958647317140, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: 165896399779114272, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: -6159412583708421153, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+    - {fileID: 8891366127157935609, guid: eb56a9186670dfb4389f3f3fdde0b75e, type: 3}
+  idleState: Choma_Idle
+  curlState: Choma_Curl
+  spinState: Choma_Spin
   launchPopAmount: 0.18
   animationSpeed: 12
-  visualPullbackDistance: 0.8
   chargeEffect: {fileID: 2976058845714822610}
+  flightTrail: {fileID: 0}
 --- !u!114 &2412028333670463558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +413,7 @@ MonoBehaviour:
   swapLabel: {fileID: 0}
   legacySwapLabel: {fileID: 0}
   squad: 
+  unlockAllForTesting: 0
 --- !u!95 &7060417062333478531
 Animator:
   serializedVersion: 7

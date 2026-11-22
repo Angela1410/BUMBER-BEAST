@@ -178,6 +178,10 @@ MonoBehaviour:
   speedMultiplier: 1.2
   minimumBoostSpeed: 12
   maxSpeed: 15
+  blueSlowMultiplier: 0.55
+  explosionRadius: 1.6
+  explosionDamage: 2
+  explosionColor: {r: 1, g: 0.5, b: 0.2, a: 1}
   isBramble: 0
   brambleSlowMultiplier: 0.5
   brambleSprite: {fileID: 0}

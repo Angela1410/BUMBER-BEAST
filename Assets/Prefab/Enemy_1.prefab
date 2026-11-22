@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 1880000000000000001}
   - component: {fileID: 1880000000000000002}
   - component: {fileID: 2347783085897289613}
+  - component: {fileID: -1944290071140635245}
+  - component: {fileID: 6620518831147785531}
   m_Layer: 0
   m_Name: Enemy_1
   m_TagString: Enemy
@@ -171,11 +173,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 444f273fcf0177045b6c9615755e5978, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  maxHealth: 1
+  maxHealth: 4
   element: 3
+  elementTintStrength: 1
   isBoss: 0
+  destroysBarrierOnReach: 0
   bossName: Boss
-  moveSpeed: 0.3
+  moveSpeed: 0.55
   bossHealthText: {fileID: 0}
   waveHealthBonus: 0
   waveSpeedMultiplier: 1
@@ -204,3 +208,50 @@ MonoBehaviour:
   areaMax: {x: 3.5, y: 6}
   minDistanceFromBoss: 1.5
   minDistanceFromOtherBrambles: 1.2
+--- !u!114 &-1944290071140635245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4989637454171060024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8879151871cdf543ba9f946abb11c3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHitFeedback
+  flashColor: {r: 1, g: 0.55, b: 0.45, a: 1}
+  flashDuration: 0.1
+  punchScale: 1.15
+  hitRecoilAngle: 9
+  walkBobAmount: 0.025
+  walkTiltAngle: 2.5
+  walkCyclesPerSecond: 2.2
+  hitEffect: {fileID: 6501226205444608163, guid: cdabe927bf5529d4b8a4c08815a87d03, type: 3}
+--- !u!114 &6620518831147785531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4989637454171060024}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f19df39fe8117a4eb9791d2c2855790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TerrathornAbility
+  bossSprite: {fileID: -8949244695756947752, guid: 2ba1753eceee8064384e42b275a60f75, type: 3}
+  bossScale: 2.6
+  stoneTint: {r: 0.86, g: 0.68, b: 0.5, a: 1}
+  boulderSprite: {fileID: -3911201256747275503, guid: e4f8821bfbf291540b05b9fa03f7f0c3, type: 3}
+  maxBoulders: 3
+  firstDropDelay: 4
+  dropInterval: 5.5
+  warningTime: 0.9
+  boulderLifetime: 10
+  boulderHits: 2
+  boulderRadius: 0.55
+  areaMin: {x: -3.2, y: -1.4}
+  areaMax: {x: 3.2, y: 3.4}
+  minDistanceFromBoss: 1.6
+  clearanceRadius: 1.05

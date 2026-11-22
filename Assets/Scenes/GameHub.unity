@@ -4653,7 +4653,7 @@ RectTransform:
   m_GameObject: {fileID: 1456452363}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 782762688}
@@ -5334,6 +5334,24 @@ MonoBehaviour:
   unlockedText: {fileID: 1893817349}
   shopText: {fileID: 1041313552}
   stageCount: 20
+  chapterArtwork:
+  - {fileID: 8524962455707562668, guid: 80a21cd1843ba03488ab21fb1858899f, type: 3}
+  - {fileID: 21300000, guid: 5bcae431b8cb3af46b0a0952c6ccf447, type: 3}
+  - {fileID: -436208047628017480, guid: b4ededc160cd7ab43a132bacd64c34a3, type: 3}
+  - {fileID: -7029364473858320360, guid: 669fe1b80ea50c343a1cdb081591d5e5, type: 3}
+  - {fileID: 3170339368609187506, guid: bd735774bda1e444a9b437403352b9f1, type: 3}
+  beastPortraits:
+  - {fileID: 5063195949723965497, guid: 2ba1753eceee8064384e42b275a60f75, type: 3}
+  - {fileID: -2452786698913377382, guid: 2ba1753eceee8064384e42b275a60f75, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  bossPortraits:
+  - {fileID: 5463873300364020364, guid: 2ba1753eceee8064384e42b275a60f75, type: 3}
+  - {fileID: -8949244695756947752, guid: 2ba1753eceee8064384e42b275a60f75, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!4 &1746008977
 Transform:
   m_ObjectHideFlags: 0
@@ -5845,7 +5863,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: BUMPER BEAST
+  m_Text: BUMPER BEASTS
 --- !u!222 &1887347696
 CanvasRenderer:
   m_ObjectHideFlags: 0

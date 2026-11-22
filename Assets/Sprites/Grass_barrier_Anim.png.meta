@@ -1,0 +1,519 @@
+fileFormatVersion: 2
+guid: d4e50899e6ed6c4498ac618faedc62ec
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7122287638467237668
+    second: Grass_barrier_Anim_0
+  - first:
+      213: 494799000190822602
+    second: Grass_barrier_Anim_1
+  - first:
+      213: 1896400593068250071
+    second: Grass_barrier_Anim_2
+  - first:
+      213: 3224406556264903503
+    second: Grass_barrier_Anim_3
+  - first:
+      213: -62624984135123504
+    second: Grass_barrier_Anim_4
+  - first:
+      213: -169395281689581118
+    second: Grass_barrier_Anim_5
+  - first:
+      213: -3520811982841676050
+    second: Grass_barrier_Anim_6
+  - first:
+      213: -850152591336877311
+    second: Grass_barrier_Anim_7
+  - first:
+      213: 930309237948695282
+    second: Grass_barrier_Anim_8
+  - first:
+      213: 6238638177791957192
+    second: Grass_barrier_Anim_9
+  - first:
+      213: -6884583033273568473
+    second: Grass_barrier_Anim_10
+  - first:
+      213: 7482569188160311922
+    second: Grass_barrier_Anim_11
+  - first:
+      213: 7034927595490328128
+    second: Grass_barrier_Anim_12
+  - first:
+      213: -5007762296421260833
+    second: Grass_barrier_Anim_13
+  - first:
+      213: -7187618701638520684
+    second: Grass_barrier_Anim_14
+  - first:
+      213: 2126177827647580839
+    second: Grass_barrier_Anim_15
+  - first:
+      213: -3006962794551067980
+    second: Grass_barrier_Anim_16
+  - first:
+      213: 5696641059187797892
+    second: Grass_barrier_Anim_17
+  - first:
+      213: -7364693135665279036
+    second: Grass_barrier_Anim_18
+  - first:
+      213: -754899360719474838
+    second: Grass_barrier_Anim_19
+  - first:
+      213: -8806479932849278766
+    second: Grass_barrier_Anim_20
+  - first:
+      213: 476452123580016283
+    second: Grass_barrier_Anim_21
+  - first:
+      213: 4165352756323184827
+    second: Grass_barrier_Anim_22
+  - first:
+      213: 3928640266867712070
+    second: Grass_barrier_Anim_23
+  - first:
+      213: 4329012083148523973
+    second: Grass_barrier_Anim_24
+  - first:
+      213: 4412265499614396599
+    second: Grass_barrier_Anim_25
+  - first:
+      213: 2592709466467009614
+    second: Grass_barrier_Anim_26
+  - first:
+      213: -108966043364509948
+    second: Grass_barrier_Anim_27
+  - first:
+      213: -8889689454333416829
+    second: Grass_barrier_Anim_28
+  - first:
+      213: 2056697559679377537
+    second: Grass_barrier_Anim_29
+  - first:
+      213: -7208188788473119702
+    second: Grass_barrier_Anim_30
+  - first:
+      213: -5456646664519577446
+    second: Grass_barrier_Anim_31
+  - first:
+      213: -7153139130972870186
+    second: Grass_barrier_Anim_32
+  - first:
+      213: 2772329387286665798
+    second: Grass_barrier_Anim_33
+  - first:
+      213: -1362726992895884666
+    second: Grass_barrier_Anim_34
+  - first:
+      213: -1107055834535993060
+    second: Grass_barrier_Anim_35
+  - first:
+      213: 5378634903276766762
+    second: Grass_barrier_Anim_36
+  - first:
+      213: -364856463962577318
+    second: Grass_barrier_Anim_37
+  - first:
+      213: -6041994087602731130
+    second: Grass_barrier_Anim_38
+  - first:
+      213: -1945103808119315357
+    second: Grass_barrier_Anim_39
+  - first:
+      213: 4008979389018074260
+    second: Grass_barrier_Anim_40
+  - first:
+      213: 4080672414329656350
+    second: Grass_barrier_Anim_41
+  - first:
+      213: -7163890964363901878
+    second: Grass_barrier_Anim_42
+  - first:
+      213: 8168291521386307546
+    second: Grass_barrier_Anim_43
+  - first:
+      213: -532880402852774969
+    second: Grass_barrier_Anim_44
+  - first:
+      213: 1392483997049347298
+    second: Grass_barrier_Anim_45
+  - first:
+      213: 1567093647684512130
+    second: Grass_barrier_Anim_46
+  - first:
+      213: -8647254220425296012
+    second: Grass_barrier_Anim_47
+  - first:
+      213: 4061147921678063798
+    second: Grass_barrier_Anim_48
+  - first:
+      213: 7273804374452948395
+    second: Grass_barrier_Anim_49
+  - first:
+      213: -7211687752254166205
+    second: Grass_barrier_Anim_50
+  - first:
+      213: -45524382456550654
+    second: Grass_barrier_Anim_51
+  - first:
+      213: -8469205685878025264
+    second: Grass_barrier_Anim_52
+  - first:
+      213: -8105316158219129478
+    second: Grass_barrier_Anim_53
+  - first:
+      213: -5618792239227332593
+    second: Grass_barrier_Anim_54
+  - first:
+      213: 8949628227256367497
+    second: Grass_barrier_Anim_55
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 34
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 463
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 52, y: 0, z: 44, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 427def62fd277d260800000000000000
+      internalID: 7122287638467237668
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_1
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 463
+        width: 211
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 52, y: 0, z: 44, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac8a791b111edd600800000000000000
+      internalID: 494799000190822602
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 347
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 52, y: 0, z: 44, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d35ca5ba4e515a10800000000000000
+      internalID: 1896400593068250071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_3
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 348
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 44, y: 0, z: 51, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f433c95eda46fbc20800000000000000
+      internalID: 3224406556264903503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 232
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 52, y: 0, z: 44, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ddbf82a8e2812ff0800000000000000
+      internalID: -62624984135123504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_5
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 233
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 44, y: 0, z: 51, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c9e34883ef26adf0800000000000000
+      internalID: -169395281689581118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 118
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 54, y: 0, z: 46, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eee78c9d720932fc0800000000000000
+      internalID: -3520811982841676050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_7
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 118
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 47, y: 0, z: 55, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 103dc74f8b6a334f0800000000000000
+      internalID: -850152591336877311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 3
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 57, y: 0, z: 48, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f2423ba25f19ec00800000000000000
+      internalID: 930309237948695282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Grass_barrier_Anim_9
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 3
+        width: 216
+        height: 115
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 50, y: 0, z: 55, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c8da757e58149650800000000000000
+      internalID: 6238638177791957192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 4faaf3030fccba64abff42712c2fe306
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":2.0,"y":5.0},"gridSpriteSize":{"x":216.0,"y":115.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Grass_barrier_Anim_0: 7122287638467237668
+      Grass_barrier_Anim_1: 494799000190822602
+      Grass_barrier_Anim_2: 1896400593068250071
+      Grass_barrier_Anim_3: 3224406556264903503
+      Grass_barrier_Anim_4: -62624984135123504
+      Grass_barrier_Anim_5: -169395281689581118
+      Grass_barrier_Anim_6: -3520811982841676050
+      Grass_barrier_Anim_7: -850152591336877311
+      Grass_barrier_Anim_8: 930309237948695282
+      Grass_barrier_Anim_9: 6238638177791957192
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

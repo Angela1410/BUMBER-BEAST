@@ -35,6 +35,7 @@ public class ThornmawAbility : MonoBehaviour
             !string.IsNullOrEmpty(enemy.bossName) &&
             enemy.bossName.IndexOf("Thornmaw", StringComparison.OrdinalIgnoreCase) >= 0)
         {
+            enemy.destroysBarrierOnReach = true;
             sr = GetComponent<SpriteRenderer>();
             StartCoroutine(ApplyBossLook());
             StartCoroutine(BrambleRoutine());
@@ -48,9 +49,19 @@ public class ThornmawAbility : MonoBehaviour
         if (sr != null)
         {
             if (bossSprite != null) sr.sprite = bossSprite;
-            sr.color = Color.white;
+            GetComponent<Enemy>().SetHitFlashBaseColor(Color.white);
+            CircleCollider2D bossCollider = GetComponent<CircleCollider2D>();
+            if (bossCollider != null && sr.sprite != null)
+            {
+                Bounds spriteBounds = sr.sprite.bounds;
+                bossCollider.radius = Mathf.Min(spriteBounds.extents.x, spriteBounds.extents.y) * 0.45f;
+                bossCollider.offset = spriteBounds.center;
+            }
         }
         transform.localScale = Vector3.one * bossScale;
+        EnemyHitFeedback hitFeedback = GetComponent<EnemyHitFeedback>();
+        if (hitFeedback != null)
+            hitFeedback.SetBasePose(transform.localScale, transform.localRotation);
     }
 
     IEnumerator BrambleRoutine()

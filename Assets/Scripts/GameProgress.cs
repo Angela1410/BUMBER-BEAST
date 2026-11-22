@@ -11,6 +11,10 @@ public class GameProgress : MonoBehaviour
     public int LaunchPowerLevel { get; private set; }
     public int SkillCooldownLevel { get; private set; }
     public BeastId SelectedBeast { get; private set; }
+    public const int MaxLaunchPowerLevel = 10;
+    public const int MaxSkillCooldownLevel = 10;
+    public bool CanUpgradeLaunchPower => LaunchPowerLevel < MaxLaunchPowerLevel;
+    public bool CanUpgradeSkillCooldown => SkillCooldownLevel < MaxSkillCooldownLevel;
     public int LaunchPowerPrice => 50 + LaunchPowerLevel * 25;
     public int SkillCooldownPrice => 75 + SkillCooldownLevel * 35;
 
@@ -22,6 +26,15 @@ public class GameProgress : MonoBehaviour
     const string SkillKey = "BumperBeast.SkillCooldownLevel";
     const string BeastKey = "BumperBeast.SelectedBeast";
     const string UnlockedBeastsKey = "BumperBeast.UnlockedBeasts";
+    const string SquadKey = "BumperBeast.Squad";
+
+    public const int MaxSquadSize = 3;
+
+    public enum SquadChange { Added, Removed, Full, NotOwned, LastMember }
+
+    // Up to three owned Beasts taken into every stage; the first one starts on the pad.
+    private readonly System.Collections.Generic.List<BeastId> squad = new System.Collections.Generic.List<BeastId>(MaxSquadSize);
+    public System.Collections.Generic.IReadOnlyList<BeastId> Squad => squad;
 
     void Awake()
     {
@@ -59,6 +72,77 @@ public class GameProgress : MonoBehaviour
         Save();
     }
 
+    // True once a stage's first-clear coin reward has been paid out.
+    public bool IsStageRewarded(int stageNumber)
+    {
+        if (stageNumber < 1 || stageNumber > 31)
+            return false;
+
+        return (PlayerPrefs.GetInt(RewardedStagesKey, 0) & (1 << (stageNumber - 1))) != 0;
+    }
+
+    // Bonus coins (new stars, combos, the daily gift).
+    public void AddCoins(int amount)
+    {
+        if (amount <= 0)
+            return;
+        Coins += amount;
+        Save();
+    }
+
+    // ------------------------------------------------------------------ star ratings
+    // Best stars per stage (0-3), saved as one digit per stage: "3210...".
+    const string StarsKey = "BumperBeast.Stars";
+    public const int MaxStarsPerStage = 3;
+
+    public int GetStars(int stageNumber)
+    {
+        string saved = PlayerPrefs.GetString(StarsKey, string.Empty);
+        int index = stageNumber - 1;
+        if (index < 0 || index >= saved.Length)
+            return 0;
+        int value = saved[index] - '0';
+        return value >= 0 && value <= MaxStarsPerStage ? value : 0;
+    }
+
+    // Keeps the best result; returns how many stars are NEW (0 when it did not beat the record).
+    public int RecordStars(int stageNumber, int stars)
+    {
+        stars = Mathf.Clamp(stars, 0, MaxStarsPerStage);
+        int previous = GetStars(stageNumber);
+        if (stageNumber < 1 || stars <= previous)
+            return 0;
+
+        char[] digits = PlayerPrefs.GetString(StarsKey, string.Empty).ToCharArray();
+        if (digits.Length < stageNumber)
+        {
+            char[] grown = new char[stageNumber];
+            for (int i = 0; i < grown.Length; i++)
+                grown[i] = i < digits.Length ? digits[i] : '0';
+            digits = grown;
+        }
+        digits[stageNumber - 1] = (char)('0' + stars);
+        PlayerPrefs.SetString(StarsKey, new string(digits));
+        PlayerPrefs.Save();
+        return stars - previous;
+    }
+
+    public int TotalStars
+    {
+        get
+        {
+            string saved = PlayerPrefs.GetString(StarsKey, string.Empty);
+            int total = 0;
+            foreach (char digit in saved)
+            {
+                int value = digit - '0';
+                if (value > 0 && value <= MaxStarsPerStage)
+                    total += value;
+            }
+            return total;
+        }
+    }
+
     public bool SpendCoins(int amount)
     {
         if (Coins < amount)
@@ -71,6 +155,9 @@ public class GameProgress : MonoBehaviour
 
     public bool BuyLaunchPower()
     {
+        if (!CanUpgradeLaunchPower)
+            return false;
+
         int price = LaunchPowerPrice;
 
         if (!SpendCoins(price))
@@ -83,6 +170,9 @@ public class GameProgress : MonoBehaviour
 
     public bool BuySkillCooldown()
     {
+        if (!CanUpgradeSkillCooldown)
+            return false;
+
         int price = SkillCooldownPrice;
 
         if (!SpendCoins(price))
@@ -113,18 +203,58 @@ public class GameProgress : MonoBehaviour
 
         int unlocked = PlayerPrefs.GetInt(UnlockedBeastsKey, 1) | (1 << (int)beast);
         PlayerPrefs.SetInt(UnlockedBeastsKey, unlocked);
+        // A freshly recruited Beast joins the squad if there is room.
+        if (!squad.Contains(beast) && squad.Count < MaxSquadSize)
+            squad.Add(beast);
         Save();
         return true;
     }
 
+    // Makes the Beast the squad's lead (it starts on the pad). It joins the squad if needed,
+    // taking the last slot when the squad is full.
     public void SelectBeast(BeastId beast)
     {
         if (!IsBeastUnlocked(beast))
             return;
 
+        squad.Remove(beast);
+        if (squad.Count >= MaxSquadSize)
+            squad.RemoveAt(squad.Count - 1);
+        squad.Insert(0, beast);
         SelectedBeast = beast;
         PlayerPrefs.SetInt(BeastKey, (int)beast);
         Save();
+    }
+
+    public bool IsInSquad(BeastId beast)
+    {
+        return squad.Contains(beast);
+    }
+
+    public SquadChange ToggleSquadMember(BeastId beast)
+    {
+        if (!IsBeastUnlocked(beast))
+            return SquadChange.NotOwned;
+
+        if (squad.Contains(beast))
+        {
+            if (squad.Count <= 1)
+                return SquadChange.LastMember;
+            squad.Remove(beast);
+            if (SelectedBeast == beast)
+            {
+                SelectedBeast = squad[0];
+                PlayerPrefs.SetInt(BeastKey, (int)SelectedBeast);
+            }
+            Save();
+            return SquadChange.Removed;
+        }
+
+        if (squad.Count >= MaxSquadSize)
+            return SquadChange.Full;
+        squad.Add(beast);
+        Save();
+        return SquadChange.Added;
     }
 
     public void ApplySelectedBeast(GameObject beastObject)
@@ -179,6 +309,14 @@ public class GameProgress : MonoBehaviour
         PlayerPrefs.SetInt(UnlockedBeastsKey, 1);
         PlayerPrefs.SetInt(RewardedStagesKey, 0);
         PlayerPrefs.SetInt(BeastKey, (int)BeastId.Choma);
+        SelectedBeast = BeastId.Choma;
+        squad.Clear();
+        squad.Add(BeastId.Choma);
+        PlayerPrefs.DeleteKey(ThistleRescueSequence.SeenKey);
+        foreach (BeastId beast in BeastRoster.AllBeasts)
+            PlayerPrefs.DeleteKey(ThistleRescueSequence.SeenKeyFor(beast));
+        PlayerPrefs.DeleteKey(GameHubController.SeenChapterKey);
+        PlayerPrefs.DeleteKey(StarsKey);
         Save();
     }
 
@@ -189,6 +327,8 @@ public class GameProgress : MonoBehaviour
         HighestClearedStage = PlayerPrefs.GetInt(ClearedStageKey, 0);
         LaunchPowerLevel = PlayerPrefs.GetInt(LaunchKey, 0);
         SkillCooldownLevel = PlayerPrefs.GetInt(SkillKey, 0);
+        LaunchPowerLevel = Mathf.Clamp(LaunchPowerLevel, 0, MaxLaunchPowerLevel);
+        SkillCooldownLevel = Mathf.Clamp(SkillCooldownLevel, 0, MaxSkillCooldownLevel);
         SelectedBeast = (BeastId)PlayerPrefs.GetInt(BeastKey, 0);
 
         if (!IsBeastUnlocked(SelectedBeast))
@@ -196,6 +336,52 @@ public class GameProgress : MonoBehaviour
             SelectedBeast = BeastId.Choma;
             PlayerPrefs.SetInt(BeastKey, (int)BeastId.Choma);
             PlayerPrefs.Save();
+        }
+
+        LoadSquad();
+    }
+
+    // Saved as "0,1,2". Older saves have no squad: it starts as the old automatic one
+    // (the equipped Beast, then owned Beasts in roster order).
+    void LoadSquad()
+    {
+        squad.Clear();
+        string saved = PlayerPrefs.GetString(SquadKey, string.Empty);
+        foreach (string part in saved.Split(','))
+        {
+            if (squad.Count >= MaxSquadSize)
+                break;
+            if (int.TryParse(part, out int value) && System.Enum.IsDefined(typeof(BeastId), value))
+            {
+                BeastId beast = (BeastId)value;
+                if (IsBeastUnlocked(beast) && !squad.Contains(beast))
+                    squad.Add(beast);
+            }
+        }
+
+        if (squad.Count == 0)
+        {
+            squad.Add(SelectedBeast);
+            foreach (BeastId beast in BeastRoster.AllBeasts)
+            {
+                if (squad.Count >= MaxSquadSize)
+                    break;
+                if (IsBeastUnlocked(beast) && !squad.Contains(beast))
+                    squad.Add(beast);
+            }
+        }
+
+        // The equipped Beast always leads.
+        if (!squad.Contains(SelectedBeast))
+        {
+            if (squad.Count >= MaxSquadSize)
+                squad.RemoveAt(squad.Count - 1);
+            squad.Insert(0, SelectedBeast);
+        }
+        else if (squad[0] != SelectedBeast)
+        {
+            squad.Remove(SelectedBeast);
+            squad.Insert(0, SelectedBeast);
         }
     }
 
@@ -207,6 +393,14 @@ public class GameProgress : MonoBehaviour
         PlayerPrefs.SetInt(LaunchKey, LaunchPowerLevel);
         PlayerPrefs.SetInt(SkillKey, SkillCooldownLevel);
         PlayerPrefs.SetInt(BeastKey, (int)SelectedBeast);
+        System.Text.StringBuilder saved = new System.Text.StringBuilder(8);
+        for (int i = 0; i < squad.Count; i++)
+        {
+            if (i > 0)
+                saved.Append(',');
+            saved.Append((int)squad[i]);
+        }
+        PlayerPrefs.SetString(SquadKey, saved.ToString());
         PlayerPrefs.Save();
     }
 }

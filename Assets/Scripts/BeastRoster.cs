@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum BeastId
 {
@@ -74,10 +73,30 @@ public class BeastRoster : MonoBehaviour
         }
     }
 
-   public static Color GetColor(BeastId beast)
+    // Placeholder tint, only used while a Beast has no art of its own.
+    // Once real sprites are assigned, LaunchController ignores this.
+    public static Color GetColor(BeastId beast)
     {
-        
-        
-        return Color.white; 
+        switch (beast)
+        {
+            case BeastId.Thistle: return new Color(0.6f, 1f, 0.6f);
+            case BeastId.Mossback: return new Color(0.75f, 0.6f, 0.45f);
+            case BeastId.Voltis: return new Color(1f, 0.95f, 0.5f);
+            case BeastId.Ripple: return new Color(0.55f, 0.75f, 1f);
+            default: return Color.white;
+        }
+    }
+
+    // Color of the charging sparks while aiming
+    public static Color GetEffectColor(BeastId beast)
+    {
+        switch (beast)
+        {
+            case BeastId.Thistle: return new Color(0.45f, 1f, 0.35f);
+            case BeastId.Mossback: return new Color(0.7f, 0.5f, 0.3f);
+            case BeastId.Voltis: return new Color(1f, 0.95f, 0.3f);
+            case BeastId.Ripple: return new Color(0.4f, 0.75f, 1f);
+            default: return new Color(1f, 0.55f, 0.15f);
+        }
     }
 }

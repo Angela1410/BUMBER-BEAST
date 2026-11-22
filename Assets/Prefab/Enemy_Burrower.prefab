@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1433196535120075765
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: elementTintStrength
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4989637454171060024, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_Name
+      value: Enemy_Burrower
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.283
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.13557
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5054424713686929659, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5785019026827155809, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -26204860, guid: a66303622bd89674bb7c78b533a9dcfc, type: 3}
+    - target: {fileID: 5785019026827155809, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_Color.b
+      value: 0.793
+      objectReference: {fileID: 0}
+    - target: {fileID: 5785019026827155809, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_Color.g
+      value: 0.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 5785019026827155809, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_Color.r
+      value: 0.802
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164700767982656205, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      propertyPath: m_Radius
+      value: 0.21
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4989637454171060024, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6094862353079645425}
+  m_SourcePrefab: {fileID: 100100000, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+--- !u!1 &6259295893917183181 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4989637454171060024, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+  m_PrefabInstance: {fileID: 1433196535120075765}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6094862353079645425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6259295893917183181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd7236f3784ecf345937c5808c93e36b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDamagedSprite
+  damagedAtHealthRatio: 0.5
+  damagedSprite: {fileID: -1355054226, guid: a66303622bd89674bb7c78b533a9dcfc, type: 3}

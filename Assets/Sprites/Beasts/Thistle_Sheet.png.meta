@@ -1,0 +1,569 @@
+fileFormatVersion: 2
+guid: eb56a9186670dfb4389f3f3fdde0b75e
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2426142495780535672
+    second: Thistle_Sheet_0
+  - first:
+      213: -5436765230944577086
+    second: Thistle_Sheet_1
+  - first:
+      213: 7563238026902161373
+    second: Thistle_Sheet_2
+  - first:
+      213: -3296599119305832277
+    second: Thistle_Sheet_3
+  - first:
+      213: 3184067249078700159
+    second: Thistle_Sheet_4
+  - first:
+      213: -1704757485620320246
+    second: Thistle_Sheet_5
+  - first:
+      213: 2471778777700768411
+    second: Thistle_Sheet_6
+  - first:
+      213: 9139092701374999411
+    second: Thistle_Sheet_7
+  - first:
+      213: -6849821745279033980
+    second: Thistle_Sheet_8
+  - first:
+      213: 1166033385213146010
+    second: Thistle_Sheet_9
+  - first:
+      213: -5224711727083568035
+    second: Thistle_Sheet_10
+  - first:
+      213: -3451951615923777894
+    second: Thistle_Sheet_11
+  - first:
+      213: 2030726958647317140
+    second: Thistle_Sheet_12
+  - first:
+      213: 165896399779114272
+    second: Thistle_Sheet_13
+  - first:
+      213: -6159412583708421153
+    second: Thistle_Sheet_14
+  - first:
+      213: 8891366127157935609
+    second: Thistle_Sheet_15
+  - first:
+      213: -1705366616409291324
+    second: Thistle_Sheet_16
+  - first:
+      213: 6247849664989191027
+    second: Thistle_Sheet_17
+  - first:
+      213: 2408612184613076405
+    second: Thistle_Sheet_18
+  - first:
+      213: 6677518217126322908
+    second: Thistle_Sheet_19
+  - first:
+      213: 6074514342996050703
+    second: Thistle_Sheet_20
+  - first:
+      213: -7265877830902671869
+    second: Thistle_Sheet_21
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 382
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Thistle_Sheet_10
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 440
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d54cd5dad581e77b0800000000000000
+      internalID: -5224711727083568035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_11
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 440
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9e07076b443810d0800000000000000
+      internalID: -3451951615923777894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4929bfdd8679e2c10800000000000000
+      internalID: 2030726958647317140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_13
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 0
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02da95a85e16d4200800000000000000
+      internalID: 165896399779114272
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_14
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 0
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd31dfa93ee558aa0800000000000000
+      internalID: -6159412583708421153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_15
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 0
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fd7039526a746b70800000000000000
+      internalID: 8891366127157935609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_00
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1320
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f3761f2398309a48996ae9334309fdc
+      internalID: 386628323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_01
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 1320
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e603acb2bd9ec04688d9b4296f27090
+      internalID: -1768534238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_02
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 1320
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9ab158aaba7b321479688532663f8d3e
+      internalID: 1193597595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_03
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 1320
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e328b1fe1b5f04f4b89be586e27ee216
+      internalID: -1650287858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_04
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 880
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1bbc195ac7752b4bb364aabbad3f8cb
+      internalID: 336622330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_05
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 880
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3380c441928a2b4b8fdaf06d8fd030d
+      internalID: 1287181773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_06
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 880
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3492e64085897984ea071f07ee119007
+      internalID: -1621565801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_07
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 880
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2b542a4c98e40bf4ba48f7114197f251
+      internalID: 356521480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_08
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 440
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5f9eb9bcbc28aca4aa78966cba98e362
+      internalID: -508086829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Thistle_Sheet_09
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 440
+        width: 496
+        height: 440
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e59ba9ef825599c4d9c16e909276a8c5
+      internalID: -842117978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 966af92521f93a447b8c47980c6dd3a1
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Thistle_Sheet_0: -2426142495780535672
+      Thistle_Sheet_00: 386628323
+      Thistle_Sheet_01: -1768534238
+      Thistle_Sheet_02: 1193597595
+      Thistle_Sheet_03: -1650287858
+      Thistle_Sheet_04: 336622330
+      Thistle_Sheet_05: 1287181773
+      Thistle_Sheet_06: -1621565801
+      Thistle_Sheet_07: 356521480
+      Thistle_Sheet_08: -508086829
+      Thistle_Sheet_09: -842117978
+      Thistle_Sheet_1: -5436765230944577086
+      Thistle_Sheet_10: -5224711727083568035
+      Thistle_Sheet_11: -3451951615923777894
+      Thistle_Sheet_12: 2030726958647317140
+      Thistle_Sheet_13: 165896399779114272
+      Thistle_Sheet_14: -6159412583708421153
+      Thistle_Sheet_15: 8891366127157935609
+      Thistle_Sheet_16: -1705366616409291324
+      Thistle_Sheet_17: 6247849664989191027
+      Thistle_Sheet_18: 2408612184613076405
+      Thistle_Sheet_19: 6677518217126322908
+      Thistle_Sheet_2: 7563238026902161373
+      Thistle_Sheet_20: 6074514342996050703
+      Thistle_Sheet_21: -7265877830902671869
+      Thistle_Sheet_3: -3296599119305832277
+      Thistle_Sheet_4: 3184067249078700159
+      Thistle_Sheet_5: -1704757485620320246
+      Thistle_Sheet_6: 2471778777700768411
+      Thistle_Sheet_7: 9139092701374999411
+      Thistle_Sheet_8: -6849821745279033980
+      Thistle_Sheet_9: 1166033385213146010
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
