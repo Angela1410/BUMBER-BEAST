@@ -161,18 +161,21 @@ public static class StageWaveLayouts
     private static readonly StageSpec[] Stages =
     {
         // ---- Chapter 1: Thorn Pups only, gentle pacing (Choma alone, Fire beats Grass) ----
-        new StageSpec(1, 2, null,
-            new WaveSpec("Thorn Pups", 20f, 2.8f, 3.6f, 3, W(Kind.ThornPup, 1f)),
-            new WaveSpec("Pup Pack", 25f, 2.6f, 3.4f, 3, W(Kind.ThornPup, 1f)),
-            new WaveSpec("Thicket Rush", 30f, 2.4f, 3.2f, 4, W(Kind.ThornPup, 1f))),
-        new StageSpec(2, 2, null,
-            new WaveSpec("Thorn Pups", 25f, 2.6f, 3.4f, 3, W(Kind.ThornPup, 1f)),
-            new WaveSpec("Pup Pack", 30f, 2.4f, 3.2f, 4, W(Kind.ThornPup, 1f)),
-            new WaveSpec("Overgrowth", 35f, 2.2f, 3.0f, 4, W(Kind.ThornPup, 1f))),
-        new StageSpec(3, 2, null,
-            new WaveSpec("Thorn Pups", 30f, 2.4f, 3.2f, 4, W(Kind.ThornPup, 1f)),
-            new WaveSpec("Bramble Pack", 35f, 2.2f, 3.0f, 4, W(Kind.ThornPup, 1f)),
-            new WaveSpec("Wild Thicket", 40f, 2.0f, 2.8f, 5, W(Kind.ThornPup, 1f))),
+        // Stage 1 is the learning stage: Pups have 2 HP (one Choma hit), walk slower and come in
+        // ones and twos. Stage 2 keeps that for two waves; stage 3 brings back full-strength Pups
+        // a little slower; from stage 4 on the normal pace holds.
+        new StageSpec(1, 4, null,
+            new WaveSpec("Thorn Pups", 18f, 3.4f, 4.2f, 2, -2, 0.68f, W(Kind.ThornPup, 1f)),
+            new WaveSpec("Pup Pack", 22f, 3.2f, 4.0f, 3, -2, 0.74f, W(Kind.ThornPup, 1f)),
+            new WaveSpec("Thicket Rush", 25f, 3.0f, 3.8f, 3, -2, 0.8f, W(Kind.ThornPup, 1f))),
+        new StageSpec(2, 4, null,
+            new WaveSpec("Thorn Pups", 22f, 3.0f, 3.8f, 3, -2, 0.72f, W(Kind.ThornPup, 1f)),
+            new WaveSpec("Pup Pack", 26f, 2.8f, 3.6f, 3, -2, 0.8f, W(Kind.ThornPup, 1f)),
+            new WaveSpec("Overgrowth", 30f, 2.6f, 3.4f, 4, 0, 0.9f, W(Kind.ThornPup, 1f))),
+        new StageSpec(3, 4, null,
+            new WaveSpec("Thorn Pups", 28f, 2.6f, 3.4f, 4, 0, 0.75f, W(Kind.ThornPup, 1f)),
+            new WaveSpec("Bramble Pack", 32f, 2.4f, 3.2f, 4, 0, 0.86f, W(Kind.ThornPup, 1f)),
+            new WaveSpec("Wild Thicket", 36f, 2.2f, 3.0f, 5, 0, 0.95f, W(Kind.ThornPup, 1f))),
         new StageSpec(4, 2, null,
             new WaveSpec("Thicket Rush", 30f, 2.2f, 3.0f, 4, W(Kind.ThornPup, 1f)),
             new WaveSpec("Strange Tracks", 30f, 2.2f, 3.0f, 4,

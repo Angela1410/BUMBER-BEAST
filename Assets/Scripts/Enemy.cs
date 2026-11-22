@@ -23,8 +23,11 @@ public class Enemy : MonoBehaviour
     public bool HasReachedBarrier { get; private set; }
     public bool IsRooted => isRooted;
     public bool IsDead => isDead;
+    public int CurrentHealth => currentHealth;
+    // Full health after the wave bonus and the difficulty (Settings > DIFFICULTY).
+    public int MaxHealthTotal => Mathf.Max(1, Mathf.RoundToInt(Mathf.Max(1, maxHealth + waveHealthBonus) * Difficulty.EnemyHealth));
     public float HealthRatio => Mathf.Clamp01(
-        (float)currentHealth / Mathf.Max(1, maxHealth + waveHealthBonus));
+        (float)currentHealth / MaxHealthTotal);
 
     // Live enemies, kept current from OnEnable/OnDisable so per-frame checks
     // (barrier contact, boss alive) don't have to allocate with FindObjectsByType.
@@ -139,13 +142,32 @@ public class Enemy : MonoBehaviour
         UpdateHealthText();
     }
 
+    // Health of each chapter's boss (0 = not a chapter boss: keeps the old minimum).
+    public static int ChapterBossHealth(string name)
+    {
+        if (string.IsNullOrEmpty(name))
+            return 0;
+        string key = name.ToUpperInvariant();
+        if (key.Contains("THORNMAW")) return 20;
+        if (key.Contains("TERRATHORN")) return 28;
+        if (key.Contains("VOLTREX")) return 34;
+        if (key.Contains("MAELITH")) return 40;
+        if (key.Contains("PYRAX")) return 48;
+        return 0;
+    }
+
     public void SetBoss(string bossNameText, int bossHealth = 0, float bossSpeedMultiplier = 1f)
     {
         isBoss = true;
         maxHealth = Mathf.Max(maxHealth, MinimumBossHealth);
         bossName = string.IsNullOrEmpty(bossNameText) ? bossName : bossNameText;
-        waveHealthBonus = Mathf.Clamp(bossHealth, 0, MaximumBossBonusHealth);
+        // Chapter bosses get a real health pool (it grows chapter by chapter); the wave's small
+        // bonus still adds on top.
+        int chapterHealth = ChapterBossHealth(bossName);
+        waveHealthBonus = Mathf.Clamp(bossHealth, 0, MaximumBossBonusHealth) +
+            (chapterHealth > maxHealth ? chapterHealth - maxHealth : 0);
         waveSpeedMultiplier = bossSpeedMultiplier;
+        BossPhases.Attach(this);
 
         if (bossHealthText == null)
         {
@@ -258,9 +280,11 @@ public class Enemy : MonoBehaviour
 
     void ApplyWaveStats()
     {
-        currentHealth = maxHealth + waveHealthBonus;
+        // Beginner waves can lower health (negative bonus), but never below one hit. The difficulty
+        // scales health and speed for every enemy and boss.
+        currentHealth = MaxHealthTotal;
         float speed = isBoss ? BossMoveSpeed : baseMoveSpeed;
-        moveSpeed = speed * Mathf.Max(0.1f, waveSpeedMultiplier);
+        moveSpeed = speed * Mathf.Max(0.1f, waveSpeedMultiplier) * Difficulty.EnemySpeed;
         statsApplied = true;
     }
 
@@ -498,7 +522,7 @@ public class Enemy : MonoBehaviour
                 string label = string.IsNullOrEmpty(bossName) ? "BOSS" : bossName.ToUpperInvariant();
                 bossHealthText.text = "<size=75%><color=#F3C887>" + label +
                     "  |  BOSS</color></size>\n<size=95%><color=#FFF4D6>" +
-                    currentHealth + " / " + (maxHealth + waveHealthBonus) +
+                    currentHealth + " / " + MaxHealthTotal +
                     "  HP</color></size>";
                 UpdateBossHealthFill();
             }
@@ -651,7 +675,7 @@ public class Enemy : MonoBehaviour
         if (bossHealthFillRect == null)
             return;
 
-        int maximumHealth = Mathf.Max(1, maxHealth + waveHealthBonus);
+        int maximumHealth = MaxHealthTotal;
         float fill = Mathf.Clamp01((float)currentHealth / maximumHealth);
         bossHealthFillRect.anchorMax = new Vector2(fill, 1f);
         bossHealthFillRect.offsetMax = Vector2.zero;

@@ -34,6 +34,8 @@ public class BeastController : MonoBehaviour
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
+    private float assistRadius = 1.6f;
+    private float assistTurnDegrees = 190f;
     private float stoppedTime;
     private float flightTime;
     private float bumperSpeedCap;
@@ -89,6 +91,52 @@ public class BeastController : MonoBehaviour
         if (GameProgress.Instance != null)
             skillCooldown = Mathf.Max(1f,
                 skillCooldown - GameProgress.Instance.SkillCooldownLevel * 0.5f);
+
+        // Aim assist is strongest in chapter 1, where players are still learning to aim.
+        StageManager stage = FindAnyObjectByType<StageManager>();
+        bool firstChapter = stage == null || ChapterData.ChapterOfStage(stage.stageNumber) == 0;
+        assistRadius = firstChapter ? 2.1f : 1.6f;
+        assistTurnDegrees = firstChapter ? 280f : 190f;
+        // Settings > DIFFICULTY: strong on EASY, weak on HARD, off on HELL.
+        float strength = Difficulty.AssistStrength;
+        assistRadius *= 0.5f + 0.5f * strength;
+        assistTurnDegrees *= strength;
+    }
+
+    // Settings > AIM ASSIST: bends the flight toward the nearest enemy just ahead, never more than
+    // a few degrees per physics step, keeping the Beast's speed.
+    void ApplyAimAssist()
+    {
+        if (!GameSettings.AimAssist || State != BeastState.Flying || assistTurnDegrees <= 0f)
+            return;
+        Vector2 velocity = rb.linearVelocity;
+        float speed = velocity.magnitude;
+        if (speed < 1.5f)
+            return;
+
+        Vector2 position = rb.position;
+        float bestDistance = assistRadius * assistRadius;
+        Vector2 target = Vector2.zero;
+        bool found = false;
+        List<Enemy> enemies = Enemy.ActiveEnemies;
+        for (int index = 0; index < enemies.Count; index++)
+        {
+            Enemy enemy = enemies[index];
+            if (enemy == null || enemy.IsDead)
+                continue;
+            Vector2 toEnemy = (Vector2)enemy.transform.position - position;
+            float distance = toEnemy.sqrMagnitude;
+            if (distance > bestDistance || Vector2.Dot(toEnemy, velocity) <= 0f)
+                continue;
+            bestDistance = distance;
+            target = toEnemy;
+            found = true;
+        }
+        if (!found)
+            return;
+
+        float maxTurn = assistTurnDegrees * Mathf.Deg2Rad * Time.fixedDeltaTime;
+        rb.linearVelocity = Vector3.RotateTowards(velocity, target.normalized * speed, maxTurn, 0f);
     }
 
     void Update()
@@ -114,6 +162,8 @@ public class BeastController : MonoBehaviour
     {
         if (rb == null || State == BeastState.AtPad || State == BeastState.Returning)
             return;
+
+        ApplyAimAssist();
 
         if (chargedBouncePending)
         {

@@ -10,8 +10,9 @@ public class HitStop : MonoBehaviour
 
     private static HitStop instance;
 
+    public static bool IsActive => instance != null && instance.active;
+
     private float resumeAt;
-    private float savedScale = 1f;
     private bool active;
 
     public static void Pause(float seconds)
@@ -25,11 +26,7 @@ public class HitStop : MonoBehaviour
 
     void Begin(float seconds)
     {
-        if (!active)
-        {
-            savedScale = Time.timeScale;
-            active = true;
-        }
+        active = true;
         resumeAt = Mathf.Max(resumeAt, Time.unscaledTime + Mathf.Clamp(seconds, 0.01f, 0.2f));
         Time.timeScale = FrozenScale;
     }
@@ -48,7 +45,7 @@ public class HitStop : MonoBehaviour
 
         if (Time.unscaledTime >= resumeAt)
         {
-            Time.timeScale = savedScale;
+            Time.timeScale = GameTime.BaseScale;
             active = false;
         }
     }
@@ -56,7 +53,7 @@ public class HitStop : MonoBehaviour
     void OnDestroy()
     {
         if (active && Mathf.Approximately(Time.timeScale, FrozenScale))
-            Time.timeScale = savedScale;
+            Time.timeScale = GameTime.BaseScale;
         if (instance == this)
             instance = null;
     }

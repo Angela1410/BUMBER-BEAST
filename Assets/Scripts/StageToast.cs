@@ -45,7 +45,7 @@ public class StageToast : MonoBehaviour
         GameObject holder = new GameObject("Callout", typeof(RectTransform));
         holder.transform.SetParent(root.transform, false);
         toast.labelRect = holder.GetComponent<RectTransform>();
-        toast.labelRect.sizeDelta = new Vector2(1000f, 240f);
+        toast.labelRect.sizeDelta = new Vector2(880f, 240f);
         toast.group = holder.AddComponent<CanvasGroup>();
         toast.group.blocksRaycasts = false;
         toast.group.interactable = false;
@@ -68,7 +68,7 @@ public class StageToast : MonoBehaviour
         text.richText = true;
         RectTransform rect = text.rectTransform;
         rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-        rect.sizeDelta = new Vector2(1000f, size * 1.3f);
+        rect.sizeDelta = new Vector2(880f, size * 1.3f);
         return text;
     }
 
@@ -76,6 +76,12 @@ public class StageToast : MonoBehaviour
     {
         labelRect.gameObject.SetActive(true);
         labelRect.anchorMin = labelRect.anchorMax = new Vector2(0.5f, Mathf.Clamp01(heightFraction));
+        // Never wider than the screen: long callouts shrink to fit narrow phones.
+        RectTransform canvasRect = transform as RectTransform;
+        float width = canvasRect != null ? Mathf.Clamp(canvasRect.rect.width - 40f, 480f, 880f) : 880f;
+        labelRect.sizeDelta = new Vector2(width, labelRect.sizeDelta.y);
+        label.rectTransform.sizeDelta = new Vector2(width, label.rectTransform.sizeDelta.y);
+        subLabel.rectTransform.sizeDelta = new Vector2(width, subLabel.rectTransform.sizeDelta.y);
         label.text = text;
         label.color = color;
         subLabel.text = subtitle ?? string.Empty;

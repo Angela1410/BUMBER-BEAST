@@ -44,7 +44,7 @@ public class GameMenus : MonoBehaviour
     // showProfileButton: false in a stage (the profile's reset would end the run).
     public static void OpenSettings(bool showProfileButton, Func<BeastId, Sprite> portraits = null, Action onClosed = null)
     {
-        GameMenus menu = Create("SettingsMenu", new Vector2(CardWidth, 1250f), onClosed);
+        GameMenus menu = Create("SettingsMenu", new Vector2(CardWidth, 1615f), onClosed);
         menu.BuildSettings(showProfileButton, portraits);
     }
 
@@ -143,20 +143,27 @@ public class GameMenus : MonoBehaviour
             }
         });
         y -= 175f;
-        // How much power a finger movement gives: low = long, precise pulls; high = short flicks.
+        // How quickly the aim follows the finger: low = steady (a shaky finger is smoothed out),
+        // high = instant. Power always comes from the pull length, not from this slider.
         sensitivityValue = VolumeRow(card, y, UiIcon.ArrowUp, "AIM SENSITIVITY", GameSettings.AimSensitivitySlider, UiTheme.Green, value =>
         {
             GameSettings.AimSensitivitySlider = value;
             sensitivityValue.text = SensitivityText();
         });
         sensitivityValue.text = SensitivityText();
-        y -= 160f;
+        y -= 165f;
+
+        DifficultyRow(card, y, !showProfileButton);
+        y -= 235f;
 
         shakeToggle = ToggleRow(card, y, UiIcon.Shake, "SCREEN SHAKE", () => GameSettings.ScreenShake,
             value => GameSettings.ScreenShake = value);
         y -= 110f;
         ToggleRow(card, y, UiIcon.Hand, "DRAG ANYWHERE TO AIM", () => GameSettings.DragAnywhere,
             value => GameSettings.DragAnywhere = value);
+        y -= 110f;
+        ToggleRow(card, y, UiIcon.Star, "AIM ASSIST", () => GameSettings.AimAssist,
+            value => GameSettings.AimAssist = value);
         y -= 140f;
 
         Button replay = TextButton(card, "ReplayTutorial", "REPLAY TUTORIAL",
@@ -294,7 +301,74 @@ public class GameMenus : MonoBehaviour
 
     static string SensitivityText()
     {
-        return Mathf.RoundToInt(GameSettings.AimSensitivity * 100f).ToString(CultureInfo.InvariantCulture) + "%";
+        float slider = GameSettings.AimSensitivitySlider;
+        return slider < 0.34f ? "STEADY" : slider > 0.66f ? "SNAPPY" : "NORMAL";
+    }
+
+    // DIFFICULTY: four pills with a one-line summary of the selected one. Locked during a stage
+    // (its enemies, barrier and reward were set when it started); change it on the title or map.
+    void DifficultyRow(RectTransform card, float y, bool locked)
+    {
+        Image iconImage = Ui.Image(card, "DifficultyIcon", UiTheme.MutedText, UiIcons.Get(UiIcon.Crown));
+        iconImage.preserveAspect = true;
+        Ui.Place(iconImage.rectTransform, new Vector2(-350f, y + 42f), new Vector2(56f, 56f));
+        TMP_Text title = Ui.Text(card, "DifficultyLabel", "DIFFICULTY", 38f, UiTheme.Cream);
+        title.alignment = TextAlignmentOptions.Left;
+        Ui.Place(title.rectTransform, new Vector2(-90f, y + 42f), new Vector2(460f, 56f));
+
+        TMP_Text note = Ui.Text(card, "DifficultyNote", string.Empty, 26f, UiTheme.MutedText);
+        note.enableAutoSizing = true;
+        note.fontSizeMin = 18f;
+        note.fontSizeMax = 26f;
+        Ui.Place(note.rectTransform, new Vector2(0f, y - 132f), new Vector2(800f, 44f));
+
+        GameDifficulty[] levels = { GameDifficulty.Easy, GameDifficulty.Medium, GameDifficulty.Hard, GameDifficulty.Hell };
+        Button[] pills = new Button[levels.Length];
+        Action refresh = () =>
+        {
+            GameDifficulty current = GameSettings.Difficulty;
+            for (int i = 0; i < pills.Length; i++)
+            {
+                bool selected = levels[i] == current;
+                Color face = Difficulty.ColorOf(levels[i]);
+                pills[i].GetComponent<Image>().color = selected ? face : Color.Lerp(face, UiTheme.Panel, 0.72f);
+                Vector3 scale = Vector3.one * (selected ? 1.08f : 1f);
+                pills[i].transform.localScale = scale;
+                UiButtonFeedback feedback = pills[i].GetComponent<UiButtonFeedback>();
+                if (feedback != null)
+                    feedback.SetBaseScale(scale);
+            }
+            note.text = locked ? "Locked during a stage. Change it on the map." : DifficultySummary(current);
+        };
+
+        const float pillWidth = 182f;
+        const float gap = 14f;
+        float left = -(levels.Length * pillWidth + (levels.Length - 1) * gap) * 0.5f + pillWidth * 0.5f;
+        for (int i = 0; i < levels.Length; i++)
+        {
+            GameDifficulty level = levels[i];
+            pills[i] = TextButton(card, "Difficulty" + Difficulty.Name(level), Difficulty.Name(level),
+                new Vector2(left + i * (pillWidth + gap), y - 52f), new Vector2(pillWidth, 84f), UiButtonRole.Neutral, 30f);
+            pills[i].interactable = !locked;
+            pills[i].onClick.AddListener(() =>
+            {
+                GameSettings.Difficulty = level;
+                GameAudio.Play(level == GameDifficulty.Hell ? Sfx.PowerBumper : Sfx.Coin);
+                refresh();
+            });
+        }
+        refresh();
+    }
+
+    static string DifficultySummary(GameDifficulty difficulty)
+    {
+        switch (difficulty)
+        {
+            case GameDifficulty.Easy: return "Slow enemies, +3 barrier, every shot full power";
+            case GameDifficulty.Hard: return "Fast, tough enemies, -1 barrier  ·  coins x1.5";
+            case GameDifficulty.Hell: return "Brutal enemies, -2 barrier, no aim help  ·  coins x2";
+            default: return "The game as designed";
+        }
     }
 
     static string Percent(float value)

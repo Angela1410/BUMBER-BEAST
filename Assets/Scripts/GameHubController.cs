@@ -525,6 +525,9 @@ public class GameHubController : MonoBehaviour
         SetRect(headerTitle.rectTransform, new Vector2(-220f, 858f), new Vector2(600f, 86f));
         progressLabel = CreateLabel(contentRoot, "ProgressSummary", string.Empty, 26f, TextAlignmentOptions.Left);
         progressLabel.color = UiTheme.MutedText;
+        progressLabel.enableAutoSizing = true;
+        progressLabel.fontSizeMin = 18f;
+        progressLabel.fontSizeMax = 26f;
         SetRect(progressLabel.rectTransform, new Vector2(-220f, 800f), new Vector2(600f, 40f));
 
         RectTransform coinPill = CreatePanel(contentRoot, "CoinBalancePanel", new Vector2(345f, 840f), new Vector2(330f, 100f),
@@ -977,9 +980,11 @@ public class GameHubController : MonoBehaviour
         coinLabel.text = progress.Coins.ToString("#,0", CultureInfo.InvariantCulture);
         int cleared = Mathf.Min(progress.HighestClearedStage, stageCount);
         string stars = "<color=#FFCC42>" + progress.TotalStars + " / " + stageCount * GameProgress.MaxStarsPerStage + " STARS</color>";
-        progressLabel.text = cleared >= stageCount
+        GameDifficulty difficulty = GameSettings.Difficulty;
+        string level = "  ·  <color=#" + Difficulty.Hex(difficulty) + ">" + Difficulty.Name(difficulty) + "</color>";
+        progressLabel.text = (cleared >= stageCount
             ? "<color=#FFCC42>CAMPAIGN COMPLETE!</color>  ·  " + stars
-            : cleared + " / " + stageCount + " STAGES  ·  " + stars;
+            : cleared + " / " + stageCount + " STAGES  ·  " + stars) + level;
 
         RefreshChapterView();
         RefreshUpgradeView();

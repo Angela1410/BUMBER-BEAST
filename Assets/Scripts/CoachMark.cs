@@ -81,7 +81,7 @@ public class CoachMark : MonoBehaviour
         bubble = bubbleObject.GetComponent<RectTransform>();
         bubble.SetParent(transform, false);
         bubble.sizeDelta = new Vector2(940f, 220f);
-        Image back = UiTheme.StylePanel(bubbleObject, new Color32(26, 32, 26, 242), UiTheme.Gold, 4f);
+        Image back = UiTheme.StylePanel(bubbleObject, new Color32(26, 32, 26, 228), UiTheme.Gold, 4f);
         back.raycastTarget = false;
         bubbleGroup = bubbleObject.AddComponent<CanvasGroup>();
         bubbleGroup.blocksRaycasts = false;
@@ -101,8 +101,8 @@ public class CoachMark : MonoBehaviour
         GameObject textObject = new GameObject("Text", typeof(RectTransform));
         textObject.transform.SetParent(bubble, false);
         bubbleText = textObject.AddComponent<TextMeshProUGUI>();
-        UiTheme.StyleLabel(bubbleText, 38f, TextAlignmentOptions.Center);
-        bubbleText.fontSizeMin = 26f;
+        UiTheme.StyleLabel(bubbleText, 34f, TextAlignmentOptions.Center);
+        bubbleText.fontSizeMin = 24f;
         bubbleText.textWrappingMode = TextWrappingModes.Normal;
         bubbleText.richText = true;
         RectTransform textRect = bubbleText.rectTransform;
@@ -116,20 +116,37 @@ public class CoachMark : MonoBehaviour
     // ------------------------------------------------------------------ API
 
     // heightFraction: 0 = bottom of the screen, 1 = top.
+    // heightFraction 0.8 or more = just under the wave bar at the top of the safe area (the field
+    // stays clear); lower values place the bubble's centre at that fraction of the screen.
     public void Say(string text, float heightFraction)
     {
         bubble.gameObject.SetActive(true);
-        bubble.anchorMin = bubble.anchorMax = new Vector2(0.5f, Mathf.Clamp01(heightFraction));
-        bubble.anchoredPosition = Vector2.zero;
+        Canvas.ForceUpdateCanvases();
+        float canvasWidth = canvasRect.rect.width;
+        float canvasHeight = canvasRect.rect.height;
+        if (heightFraction >= 0.8f && Screen.height > 0)
+        {
+            float safeTop = (Screen.height - Screen.safeArea.yMax) / Screen.height * canvasHeight;
+            bubble.anchorMin = bubble.anchorMax = new Vector2(0.5f, 1f);
+            bubble.pivot = new Vector2(0.5f, 1f);
+            bubble.anchoredPosition = new Vector2(0f, -(safeTop + 185f));
+        }
+        else
+        {
+            bubble.anchorMin = bubble.anchorMax = new Vector2(0.5f, Mathf.Clamp01(heightFraction));
+            bubble.pivot = new Vector2(0.5f, 0.5f);
+            bubble.anchoredPosition = Vector2.zero;
+        }
         bubbleText.text = text;
-        // Taller bubble for longer messages.
+        // Sized to the message, and never wider than the screen.
         int lines = 1;
         foreach (char c in text)
         {
             if (c == '\n')
                 lines++;
         }
-        bubble.sizeDelta = new Vector2(940f, Mathf.Max(150f, 70f + lines * 58f + (text.Length > 70 ? 40f : 0f)));
+        float width = Mathf.Clamp(canvasWidth - 48f, 560f, 900f);
+        bubble.sizeDelta = new Vector2(width, Mathf.Max(130f, 56f + lines * 50f));
         HudVisualUtility.ApplyTextStyle(bubbleText);
         bubbleText.color = UiTheme.Cream;
         bubbleShownAt = Time.unscaledTime;

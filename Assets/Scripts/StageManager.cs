@@ -72,6 +72,7 @@ public class StageManager : MonoBehaviour
 
     void Awake()
     {
+        GameTime.ResetBase();
         if (GameProgress.Instance == null)
             new GameObject("GameProgress").AddComponent<GameProgress>();
 
@@ -93,6 +94,8 @@ public class StageManager : MonoBehaviour
             barrierVisuals = barrierObject.GetComponent<BarrierVisuals>();
         }
 
+        // Settings > DIFFICULTY: a sturdier (EASY) or weaker (HARD, HELL) barrier.
+        barrierMaxHealth = Mathf.Max(2, barrierMaxHealth + Difficulty.BarrierBonus);
         barrierHealth = barrierMaxHealth;
 
         if (barrierHealthText == null)
@@ -138,6 +141,12 @@ public class StageManager : MonoBehaviour
         UpdateBarrierHud();
         if (stageFinished)
             return;
+
+        // Keep the clock on the stage speed (normal, or a tutorial lesson's slow motion), so an
+        // interrupted effect can never leave the game running slow.
+        if ((pauseMenu == null || !pauseMenu.IsPaused) && !HitStop.IsActive && !LoadingScreen.IsLoading &&
+            !Mathf.Approximately(Time.timeScale, GameTime.BaseScale))
+            Time.timeScale = GameTime.BaseScale;
 
         if (waveManager != null)
         {
@@ -432,13 +441,13 @@ public class StageManager : MonoBehaviour
 
         bool firstClear = GameProgress.Instance != null && !GameProgress.Instance.IsStageRewarded(stageNumber);
         if (GameProgress.Instance != null)
-            GameProgress.Instance.CompleteStage(stageNumber, stageReward);
+            GameProgress.Instance.CompleteStage(stageNumber, Difficulty.ScaleReward(stageReward));
 
         // Stars (barrier left) and bonus coins: every NEW star pays, and so do combos, on replays too.
         resultStars = StageStats.StarsFor(barrierHealth, barrierMaxHealth);
         resultNewStars = GameProgress.Instance != null ? GameProgress.Instance.RecordStars(stageNumber, resultStars) : 0;
-        int starCoins = resultNewStars * StarCoinReward;
-        int comboCoins = StageStats.ComboCoins;
+        int starCoins = Difficulty.ScaleReward(resultNewStars * StarCoinReward);
+        int comboCoins = Difficulty.ScaleReward(StageStats.ComboCoins);
         if (GameProgress.Instance != null)
             GameProgress.Instance.AddCoins(starCoins + comboCoins);
         string bonus = string.Empty;
@@ -467,7 +476,8 @@ public class StageManager : MonoBehaviour
             }
 
             pendingRewardText = firstClear
-                ? "REWARD  " + UiTheme.Coin(stageReward)
+                ? "REWARD  " + UiTheme.Coin(Difficulty.ScaleReward(stageReward)) +
+                  (Difficulty.RewardMultiplier > 1f ? "  <color=#" + Difficulty.Hex(Difficulty.Current) + ">" + Difficulty.Name(Difficulty.Current) + " x" + Difficulty.RewardMultiplier.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture) + "</color>" : string.Empty)
                 : "<color=#CDC4A8>Reward already collected</color>";
             if (bonus.Length > 0)
                 pendingRewardText += "\n<size=72%>" + bonus + "</size>";
@@ -762,7 +772,7 @@ public class StageManager : MonoBehaviour
                 loseTitleText.text = "BARRIER DESTROYED";
 
             if (loseMessageText != null)
-                loseMessageText.text = "The enemies broke through your barrier.\nTry again.";
+                loseMessageText.text = "The enemies broke through your barrier.\n<color=#B4EC8C>TIP: " + LoseTip() + "</color>";
 
             // Let the barrier's break animation play (it runs on unscaled time) before the
             // lose card covers the screen.
@@ -771,6 +781,33 @@ public class StageManager : MonoBehaviour
             else
                 ShowLosePanel();
         }
+    }
+
+    private static int lossesThisSession;
+    private static readonly string[] GeneralTips =
+    {
+        "Bounce off the walls: one shot can hit several enemies for a COMBO.",
+        "Tap your skill button while your Beast is flying.",
+        "Hit the glowing POWER BUMPER while enemies are on the field.",
+        "Aim feels touchy? Lower AIM SENSITIVITY in Settings.",
+        "Spend coins on LAUNCH POWER in UPGRADES for faster shots.",
+        "Pull back farther for a stronger, straighter shot."
+    };
+
+    // A different hint after each loss: the stage's matchup advice, then general tips in turn.
+    string LoseTip()
+    {
+        int attempt = lossesThisSession++;
+        ChapterInfo chapter = ChapterData.Get(ChapterData.ChapterOfStage(stageNumber));
+        if (ChapterData.IsBossStage(stageNumber) && attempt % 2 == 0)
+        {
+            ElementType counter = ElementVisuals.GetCounter(chapter.bossElement);
+            return chapter.boss + " wins at once if it reaches the barrier. Hit it with " +
+                ElementVisuals.GetName(counter) + " for double damage!";
+        }
+        if (attempt % 2 == 0 && !string.IsNullOrEmpty(chapter.advice))
+            return chapter.advice;
+        return GeneralTips[(attempt / 2) % GeneralTips.Length];
     }
 
     private System.Collections.IEnumerator ShowLosePanelAfterBreak()

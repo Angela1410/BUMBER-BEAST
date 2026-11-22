@@ -16,6 +16,8 @@ public class TutorialDirector : MonoBehaviour
     public const string SwapKey = "BumperBeast.Tutorial.Swap";
 
     private const float FrozenScale = 0f;
+    // Bubbles sit at the top, under the wave bar, so the field stays clear.
+    private const float BubbleTop = 0.865f;
     private const float SlowScale = 0.25f;
 
     private StageManager stage;
@@ -24,8 +26,7 @@ public class TutorialDirector : MonoBehaviour
     private bool enemyHit;
     private bool waveCleared;
     private bool powerBumperHit;
-    private float changedScaleTo = -1f;
-    private float scaleBefore = 1f;
+    private bool changedScale;
 
     public static bool IsDone(string key)
     {
@@ -84,7 +85,8 @@ public class TutorialDirector : MonoBehaviour
         if (stage != null && stage.IsFinished)
         {
             StopAllCoroutines();
-            changedScaleTo = -1f;   // the stage owns the time scale now (frozen behind the card)
+            changedScale = false;   // the stage owns the clock now (frozen behind the card)
+            GameTime.ResetBase();
             if (coach != null)
                 Destroy(coach.gameObject);
             Destroy(gameObject);
@@ -121,9 +123,8 @@ public class TutorialDirector : MonoBehaviour
         if (waves == null)
             yield break;
 
-        coach.Say("Welcome, <color=#FFCC42>" + GameSettings.PlayerName + "</color>!\n" +
-            "Thorn Pups are marching on your barrier. This card shows who's coming and which Beast beats them.\n" +
-            "Tap <color=#FFCC42>READY!</color> to start.", 0.8f);
+        coach.Say("Welcome, <color=#FFCC42>" + GameSettings.PlayerName + "</color>! Thorn Pups are coming.\n" +
+            "The card shows who beats them. Tap <color=#FFCC42>READY!</color>", BubbleTop);
         coach.PointAt(waves.ReadyButtonRect);
         while (waves != null && waves.IsAwaitingReady)
             yield return null;
@@ -141,8 +142,8 @@ public class TutorialDirector : MonoBehaviour
             SetTime(FrozenScale);
             Vector3 pad = beast.transform.position;
             coach.Say(GameSettings.DragAnywhere
-                ? "Touch anywhere and <color=#FFCC42>DRAG BACK</color> to aim.\nThe dots show your path. Let go to <color=#FFCC42>LAUNCH!</color>"
-                : "Touch your Beast and <color=#FFCC42>DRAG BACK</color> to aim.\nThe dots show your path. Let go to <color=#FFCC42>LAUNCH!</color>", 0.6f);
+                ? "<color=#FFCC42>DRAG BACK</color> anywhere to aim, then let go!\nThe dots show your path."
+                : "Touch your Beast, <color=#FFCC42>DRAG BACK</color>, then let go!\nThe dots show your path.", BubbleTop);
             coach.DragGesture(pad + new Vector3(0f, 0.2f, 0f), pad + new Vector3(0.5f, -1.7f, 0f));
             while (!launched)
                 yield return null;
@@ -150,7 +151,7 @@ public class TutorialDirector : MonoBehaviour
         }
         coach.HideAll();
 
-        coach.Say("Bounce off walls and bumpers to smash enemies.\nHit several in one shot for a <color=#FFCC42>COMBO!</color>", 0.6f);
+        coach.Say("Bounce off walls and bumpers.\nHit several in one shot for a <color=#FFCC42>COMBO!</color>", BubbleTop);
         until = Time.unscaledTime + 7f;
         while (!enemyHit && Time.unscaledTime < until)
             yield return null;
@@ -158,8 +159,8 @@ public class TutorialDirector : MonoBehaviour
         if (enemyHit)
         {
             Enemy target = NearestEnemy(beast != null ? beast.transform.position : Vector3.zero);
-            coach.Say("<color=#FF8A3D>FIRE</color> beats <color=#7CD957>GRASS</color> for DOUBLE damage!\n" +
-                "A <color=#FFCC42>gold badge</color> on an enemy means your Beast is strong against it.", 0.62f);
+            coach.Say("<color=#FF8A3D>FIRE</color> beats <color=#7CD957>GRASS</color>: DOUBLE damage!\n" +
+                "A <color=#FFCC42>gold badge</color> means your Beast is strong there.", BubbleTop);
             if (target != null)
                 coach.PointAtWorld(target.transform);
             else
@@ -181,7 +182,7 @@ public class TutorialDirector : MonoBehaviour
         {
             SetTime(SlowScale);
             coach.Say("Tap <color=#FFCC42>" + BeastRoster.GetAbilityName(beast.ActiveBeast).ToUpperInvariant() +
-                "</color> while your Beast is flying!\nEach Beast has its own skill.", 0.6f);
+                "</color> while flying!\nEvery Beast has its own skill.", BubbleTop);
             coach.PointAt(skill.transform as RectTransform);
             until = Time.unscaledTime + 7f;
             while (beast != null && beast.IsSkillReady && beast.State == BeastState.Flying && Time.unscaledTime < until)
@@ -192,8 +193,7 @@ public class TutorialDirector : MonoBehaviour
         }
 
         GameObject barrier = GameObject.Find("Square");
-        coach.Say("Guard your <color=#FFCC42>BARRIER</color>! Every enemy that reaches it does damage.\n" +
-            "Keep it whole for <color=#FFCC42>3 STARS</color>.", 0.62f);
+        coach.Say("Guard your <color=#FFCC42>BARRIER</color>!\nKeep it whole for <color=#FFCC42>3 STARS</color>.", BubbleTop);
         if (barrier != null)
             coach.PointAtWorld(barrier.transform);
         yield return new WaitForSecondsRealtime(4f);
@@ -202,7 +202,7 @@ public class TutorialDirector : MonoBehaviour
         while (!waveCleared && stage != null)
             yield return null;
         MarkDone(Stage1Key);
-        coach.Say("Wave cleared! Your Beast hops back to the pad.\nCheck the next card, then tap READY.", 0.8f);
+        coach.Say("Wave cleared! Check the next card,\nthen tap READY.", BubbleTop);
         yield return new WaitForSecondsRealtime(3.5f);
         coach.HideAll();
     }
@@ -217,14 +217,14 @@ public class TutorialDirector : MonoBehaviour
             yield break;
 
         Bumper power = EnsurePowerBumper();
-        coach.Say("<color=#7CD957>GREEN</color> bumpers speed you up, <color=#6FB8FF>BLUE</color> ones slow you down,\n" +
-            "and the glowing <color=#FF6A4D>POWER BUMPER</color> unleashes your Beast's power!", 0.8f);
+        coach.Say("<color=#7CD957>GREEN</color> speeds you up, <color=#6FB8FF>BLUE</color> slows you down.\n" +
+            "The glowing <color=#FF6A4D>POWER BUMPER</color> unleashes your Beast!", BubbleTop);
         if (power != null)
             coach.PointAtWorld(power.transform);
         while (waves != null && waves.IsAwaitingReady)
             yield return null;
 
-        coach.Say("Bounce into the <color=#FF6A4D>POWER BUMPER</color> while enemies are on the field!", 0.62f);
+        coach.Say("Bounce into the <color=#FF6A4D>POWER BUMPER</color>\nwhile enemies are on the field!", BubbleTop);
         float until = Time.unscaledTime + 90f;
         float retarget = 0f;
         while (!powerBumperHit && Time.unscaledTime < until && stage != null)
@@ -251,8 +251,8 @@ public class TutorialDirector : MonoBehaviour
 
         MarkDone(Stage2Key);
         yield return new WaitForSecondsRealtime(1.5f);
-        coach.Say("Every Beast has its own power:\n<color=#FF8A3D>Choma</color> fireballs · <color=#7CD957>Thistle</color> roots every enemy · " +
-            "<color=#C9A06B>Mossback</color> earthquake\n<color=#FFE45C>Voltis</color> thunder chain · <color=#6FB8FF>Ripple</color> tidal wave", 0.62f);
+        coach.Say("<color=#FF8A3D>Choma</color> fireballs · <color=#7CD957>Thistle</color> roots all · <color=#C9A06B>Mossback</color> quake\n" +
+            "<color=#FFE45C>Voltis</color> thunder · <color=#6FB8FF>Ripple</color> tidal wave", BubbleTop);
         yield return new WaitForSecondsRealtime(5f);
         coach.HideAll();
     }
@@ -305,8 +305,7 @@ public class TutorialDirector : MonoBehaviour
 
         MarkDone(SwapKey);
         BeastId before = pad.ActiveSquadBeast;
-        coach.Say("You brought a squad! Tap here to <color=#FFCC42>SWAP</color> Beasts.\n" +
-            "Bring the one whose element beats the enemies on the card.", 0.8f);
+        coach.Say("Tap here to <color=#FFCC42>SWAP</color> Beasts.\nBring the one that beats this wave!", BubbleTop);
         coach.PointAt(pad.swapButton.transform as RectTransform);
         float until = Time.unscaledTime + 9f;
         while (pad != null && pad.ActiveSquadBeast == before && waves != null && waves.IsAwaitingReady && Time.unscaledTime < until)
@@ -350,22 +349,33 @@ public class TutorialDirector : MonoBehaviour
         return best;
     }
 
-    // Freezes or slows the game for a lesson; only undone if nothing else changed it meanwhile
-    // (the pause menu or the stage result take precedence).
+    // Freezes or slows the game for a lesson by changing the stage speed (GameTime). Hit-stops and the
+    // pause menu return to that speed, so ending the lesson always brings the game back to normal.
     void SetTime(float scale)
     {
-        if (Time.timeScale < 0.5f && changedScaleTo < 0f)
-            return;   // already paused or finished
-        if (changedScaleTo < 0f)
-            scaleBefore = Time.timeScale;
-        Time.timeScale = scale;
-        changedScaleTo = scale;
+        if (stage != null && stage.IsFinished)
+            return;
+        GameTime.SetBase(scale);
+        changedScale = true;
+        if (!GamePaused())
+            Time.timeScale = scale;
     }
 
     void RestoreTime()
     {
-        if (changedScaleTo >= 0f && Mathf.Approximately(Time.timeScale, changedScaleTo))
-            Time.timeScale = scaleBefore;
-        changedScaleTo = -1f;
+        if (!changedScale)
+            return;
+        changedScale = false;
+        GameTime.ResetBase();
+        // The result card and the pause menu own the clock while they are up; otherwise back to normal
+        // now (a hit-stop in progress also ends on the normal speed).
+        if ((stage == null || !stage.IsFinished) && !GamePaused())
+            Time.timeScale = 1f;
+    }
+
+    static bool GamePaused()
+    {
+        PauseMenu pause = FindAnyObjectByType<PauseMenu>();
+        return pause != null && pause.IsPaused;
     }
 }

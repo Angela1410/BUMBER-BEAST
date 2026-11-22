@@ -861,10 +861,10 @@ MonoBehaviour:
     enemyPrefabs:
     - {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
     element: 3
-    enemyCount: 8
-    spawnInterval: 1.1
-    extraHealth: 0
-    speedMultiplier: 0.75
+    enemyCount: 6
+    spawnInterval: 3.4
+    extraHealth: -2
+    speedMultiplier: 0.72
     isBoss: 0
     bossSpawnsLast: 0
     bossSpawnIndex: -1
@@ -872,8 +872,9 @@ MonoBehaviour:
     bossName: 
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 03000000i
-    spawnDuration: 25
+    spawnDuration: 22
     spawnTable:
     - displayName: Thorn Pup
       prefab: {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
@@ -882,16 +883,18 @@ MonoBehaviour:
       weight: 1
       spriteOverride: {fileID: 0}
       scale: 1
-    spawnGap: {x: 2.6, y: 3.4}
+      extraHealth: 0
+      speedMultiplier: 1
+    spawnGap: {x: 3, y: 3.8}
     maxAlive: 3
   - waveName: Pup Pack
     enemyPrefabs:
     - {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
     element: 3
-    enemyCount: 11
-    spawnInterval: 1
-    extraHealth: 0
-    speedMultiplier: 0.87
+    enemyCount: 8
+    spawnInterval: 3.1999998
+    extraHealth: -2
+    speedMultiplier: 0.8
     isBoss: 0
     bossSpawnsLast: 0
     bossSpawnIndex: -1
@@ -899,6 +902,37 @@ MonoBehaviour:
     bossName: 
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
+    elementPattern: 03000000i
+    spawnDuration: 26
+    spawnTable:
+    - displayName: Thorn Pup
+      prefab: {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+      element: 3
+      fixedCount: 0
+      weight: 1
+      spriteOverride: {fileID: 0}
+      scale: 1
+      extraHealth: 0
+      speedMultiplier: 1
+    spawnGap: {x: 2.8, y: 3.6}
+    maxAlive: 3
+  - waveName: Overgrowth
+    enemyPrefabs:
+    - {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
+    element: 3
+    enemyCount: 10
+    spawnInterval: 3
+    extraHealth: 0
+    speedMultiplier: 0.9
+    isBoss: 0
+    bossSpawnsLast: 0
+    bossSpawnIndex: -1
+    bossHealthBonus: 0
+    bossName: 
+    enemySprite: {fileID: 0}
+    enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 03000000i
     spawnDuration: 30
     spawnTable:
@@ -909,34 +943,9 @@ MonoBehaviour:
       weight: 1
       spriteOverride: {fileID: 0}
       scale: 1
-    spawnGap: {x: 2.4, y: 3.2}
-    maxAlive: 4
-  - waveName: Overgrowth
-    enemyPrefabs:
-    - {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
-    element: 3
-    enemyCount: 13
-    spawnInterval: 0.9
-    extraHealth: 0
-    speedMultiplier: 0.97
-    isBoss: 0
-    bossSpawnsLast: 0
-    bossSpawnIndex: -1
-    bossHealthBonus: 0
-    bossName: 
-    enemySprite: {fileID: 0}
-    enemyScale: 1
-    elementPattern: 03000000i
-    spawnDuration: 35
-    spawnTable:
-    - displayName: Thorn Pup
-      prefab: {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
-      element: 3
-      fixedCount: 0
-      weight: 1
-      spriteOverride: {fileID: 0}
-      scale: 1
-    spawnGap: {x: 2.2, y: 3}
+      extraHealth: 0
+      speedMultiplier: 1
+    spawnGap: {x: 2.6, y: 3.4}
     maxAlive: 4
   waveText: {fileID: 0}
   legacyWaveText: {fileID: 0}
@@ -960,7 +969,7 @@ MonoBehaviour:
   maximumSpawnDelay: 1.4
   availableElements: 03000000i
   planBeforeEachWave: 1
-  timedLayoutVersion: 2
+  timedLayoutVersion: 4
 --- !u!4 &432889041
 Transform:
   m_ObjectHideFlags: 0
@@ -2936,6 +2945,7 @@ MonoBehaviour:
   barrierHealthText: {fileID: 0}
   winTitleText: {fileID: 0}
   loseTitleText: {fileID: 0}
+  stageBuildVersion: 0
 --- !u!4 &1159926705
 Transform:
   m_ObjectHideFlags: 0

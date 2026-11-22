@@ -246,8 +246,8 @@ MonoBehaviour:
     enemyPrefabs:
     - {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
     element: 3
-    enemyCount: 11
-    spawnInterval: 1.1
+    enemyCount: 9
+    spawnInterval: 3
     extraHealth: 0
     speedMultiplier: 0.75
     isBoss: 0
@@ -257,8 +257,9 @@ MonoBehaviour:
     bossName: 
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 03000000i
-    spawnDuration: 30
+    spawnDuration: 28
     spawnTable:
     - displayName: Thorn Pup
       prefab: {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
@@ -267,16 +268,18 @@ MonoBehaviour:
       weight: 1
       spriteOverride: {fileID: 0}
       scale: 1
-    spawnGap: {x: 2.4, y: 3.2}
+      extraHealth: 0
+      speedMultiplier: 1
+    spawnGap: {x: 2.6, y: 3.4}
     maxAlive: 4
   - waveName: Bramble Pack
     enemyPrefabs:
     - {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
     element: 3
-    enemyCount: 13
-    spawnInterval: 1
+    enemyCount: 11
+    spawnInterval: 2.8000002
     extraHealth: 0
-    speedMultiplier: 0.88
+    speedMultiplier: 0.86
     isBoss: 0
     bossSpawnsLast: 0
     bossSpawnIndex: -1
@@ -284,8 +287,9 @@ MonoBehaviour:
     bossName: 
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 03000000i
-    spawnDuration: 35
+    spawnDuration: 32
     spawnTable:
     - displayName: Thorn Pup
       prefab: {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
@@ -294,16 +298,18 @@ MonoBehaviour:
       weight: 1
       spriteOverride: {fileID: 0}
       scale: 1
-    spawnGap: {x: 2.2, y: 3}
+      extraHealth: 0
+      speedMultiplier: 1
+    spawnGap: {x: 2.4, y: 3.2}
     maxAlive: 4
   - waveName: Wild Thicket
     enemyPrefabs:
     - {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
     element: 3
-    enemyCount: 17
-    spawnInterval: 0.9
+    enemyCount: 14
+    spawnInterval: 2.6
     extraHealth: 0
-    speedMultiplier: 0.98
+    speedMultiplier: 0.95
     isBoss: 0
     bossSpawnsLast: 0
     bossSpawnIndex: -1
@@ -311,8 +317,9 @@ MonoBehaviour:
     bossName: 
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 03000000i
-    spawnDuration: 40
+    spawnDuration: 36
     spawnTable:
     - displayName: Thorn Pup
       prefab: {fileID: 1880000000000000002, guid: 6f9b80a65f89bf445b393cd8e89b8e15, type: 3}
@@ -321,7 +328,9 @@ MonoBehaviour:
       weight: 1
       spriteOverride: {fileID: 0}
       scale: 1
-    spawnGap: {x: 2, y: 2.8}
+      extraHealth: 0
+      speedMultiplier: 1
+    spawnGap: {x: 2.2, y: 3}
     maxAlive: 5
   waveText: {fileID: 0}
   legacyWaveText: {fileID: 713031308}
@@ -345,7 +354,7 @@ MonoBehaviour:
   maximumSpawnDelay: 1.4
   availableElements: 03000000i
   planBeforeEachWave: 1
-  timedLayoutVersion: 2
+  timedLayoutVersion: 4
 --- !u!4 &47844450
 Transform:
   m_ObjectHideFlags: 0
@@ -3356,6 +3365,7 @@ MonoBehaviour:
   barrierHealthText: {fileID: 403535587}
   winTitleText: {fileID: 0}
   loseTitleText: {fileID: 0}
+  stageBuildVersion: 0
 --- !u!4 &1159926705
 Transform:
   m_ObjectHideFlags: 0

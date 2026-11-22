@@ -14,6 +14,8 @@ public static class GameSettings
     private const string NameKey = "BumperBeast.PlayerName";
     private const string SensitivityKey = "BumperBeast.Settings.AimSensitivity";
     private const string DragAnywhereKey = "BumperBeast.Settings.DragAnywhere";
+    private const string AimAssistKey = "BumperBeast.Settings.AimAssist";
+    private const string DifficultyKey = "BumperBeast.Settings.Difficulty";
 
     private static bool loaded;
     private static float musicVolume = 0.8f;
@@ -22,18 +24,52 @@ public static class GameSettings
     private static string playerName = DefaultPlayerName;
     private static float sensitivitySlider = 0.5f;
     private static bool dragAnywhere = true;
+    private static bool aimAssist = true;
+    private static GameDifficulty difficulty = GameDifficulty.Medium;
 
-    // Aim sensitivity as a slider position (0..1); 0.5 is the normal feel.
+    // Aim sensitivity as a slider position (0..1): how quickly the aim follows the finger. Low =
+    // steady (shaky fingers are smoothed out), high = instant. 0.5 is the normal feel.
     public static float AimSensitivitySlider
     {
         get { Load(); return sensitivitySlider; }
         set { Load(); SetFloat(SensitivityKey, ref sensitivitySlider, value); }
     }
 
-    // How much launch power one unit of finger drag gives: 0.5x (precise) to 2x (short drags).
-    public static float AimSensitivity
+    // How fast the aim catches up with the finger, per second.
+    public static float AimResponse
     {
-        get { return 0.5f * Mathf.Pow(4f, AimSensitivitySlider); }
+        get { return Mathf.Lerp(6f, 40f, AimSensitivitySlider); }
+    }
+
+    public static GameDifficulty Difficulty
+    {
+        get { Load(); return difficulty; }
+        set
+        {
+            Load();
+            if (difficulty == value)
+                return;
+            difficulty = value;
+            PlayerPrefs.SetInt(DifficultyKey, (int)value);
+            PlayerPrefs.Save();
+            NotifyChanged();
+        }
+    }
+
+    // A flying Beast curves gently toward a nearby enemy in front of it.
+    public static bool AimAssist
+    {
+        get { Load(); return aimAssist; }
+        set
+        {
+            Load();
+            if (aimAssist == value)
+                return;
+            aimAssist = value;
+            PlayerPrefs.SetInt(AimAssistKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+            NotifyChanged();
+        }
     }
 
     // Start aiming by touching anywhere on the field, not only on the Beast.
@@ -118,6 +154,9 @@ public static class GameSettings
         playerName = CleanName(PlayerPrefs.GetString(NameKey, DefaultPlayerName));
         sensitivitySlider = Mathf.Clamp01(PlayerPrefs.GetFloat(SensitivityKey, sensitivitySlider));
         dragAnywhere = PlayerPrefs.GetInt(DragAnywhereKey, 1) != 0;
+        aimAssist = PlayerPrefs.GetInt(AimAssistKey, 1) != 0;
+        difficulty = (GameDifficulty)Mathf.Clamp(PlayerPrefs.GetInt(DifficultyKey, (int)GameDifficulty.Medium),
+            (int)GameDifficulty.Easy, (int)GameDifficulty.Hell);
     }
 
     static void SetFloat(string key, ref float field, float value)

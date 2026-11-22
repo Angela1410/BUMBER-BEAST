@@ -19,7 +19,6 @@ public class PauseMenu : MonoBehaviour
     private RectTransform safe;
     private GameObject pauseButton;
     private GameObject overlay;
-    private float timeScaleBeforePause = 1f;
     private bool available = true;
     private Rect lastSafeArea;
     private int lastWidth;
@@ -126,7 +125,6 @@ public class PauseMenu : MonoBehaviour
             return;
 
         IsPaused = true;
-        timeScaleBeforePause = Time.timeScale > 0f ? Time.timeScale : 1f;
         Time.timeScale = 0f;
         BuildOverlay();
     }
@@ -136,7 +134,8 @@ public class PauseMenu : MonoBehaviour
         if (!IsPaused)
             return;
         CloseOverlay();
-        Time.timeScale = timeScaleBeforePause;
+        // Back to the stage speed (normal, or a tutorial lesson's slow motion), never a leftover value.
+        Time.timeScale = GameTime.BaseScale;
     }
 
     void CloseOverlay()

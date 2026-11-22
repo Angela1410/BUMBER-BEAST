@@ -93,6 +93,15 @@ public class LaunchController : MonoBehaviour
     private SpriteRenderer[] trajectoryDots;
 
     private Vector2 dragStart;
+    // Full power at this much finger drag (world units), so a comfortable pull is enough.
+    private const float FullPowerDrag = 1.9f;
+    private const float EasyMinimumDrag = 0.25f;
+    private const float ReleaseGuardSeconds = 0.06f;
+    private Vector2 smoothedAim;
+    private readonly Vector2[] aimHistory = new Vector2[10];
+    private readonly float[] aimHistoryTime = new float[10];
+    private int aimHistoryIndex;
+    private bool aimSlowActive;
     private bool isDragging = false;
     private float currentDragRatio;
     private float idleAnimationTime;
@@ -233,6 +242,10 @@ public class LaunchController : MonoBehaviour
             currentDragRatio = 0f;
             aimBasePosition = transform.position;
             dragStart = pressPosition;
+            smoothedAim = Vector2.zero;
+            for (int index = 0; index < aimHistoryTime.Length; index++)
+                aimHistoryTime[index] = -1f;
+            BeginAimSlowMotion();
             GameAudio.Play(Sfx.Stretch);
             if (launchPadFeedback == null)
                 launchPadFeedback = Object.FindAnyObjectByType<LaunchPadFeedback>();
@@ -250,8 +263,13 @@ public class LaunchController : MonoBehaviour
 
             Vector2 currentMousePosition = GetMouseWorldPosition();
 
-            // Settings > AIM SENSITIVITY scales how much power a finger movement gives.
-            Vector2 launchVector = (dragStart - currentMousePosition) * GameSettings.AimSensitivity;
+            // Settings > AIM SENSITIVITY: the aim eases toward the finger (low = steadier), on
+            // unscaled time so it feels the same in slow motion.
+            Vector2 rawAim = dragStart - currentMousePosition;
+            smoothedAim = Vector2.Lerp(smoothedAim, rawAim,
+                1f - Mathf.Exp(-GameSettings.AimResponse * Time.unscaledDeltaTime));
+            RecordAim(smoothedAim);
+            Vector2 launchVector = AimToLaunch(smoothedAim);
 
             float dragDistance = Mathf.Min(
                 launchVector.magnitude,
@@ -324,9 +342,9 @@ public class LaunchController : MonoBehaviour
         // --------------------------------
         if (PointerUpThisFrame() && isDragging)
         {
-            Vector2 dragEnd = GetMouseWorldPosition();
-
-            Vector2 launchVector = (dragStart - dragEnd) * GameSettings.AimSensitivity;
+            // The aim from just before the finger lifted: lifting often slides it a little.
+            Vector2 launchVector = AimToLaunch(AimBeforeRelease());
+            EndAimSlowMotion();
 
             float dragDistance = Mathf.Min(
                 launchVector.magnitude,
@@ -1197,8 +1215,80 @@ public class LaunchController : MonoBehaviour
         }
     }
 
+    // ============================================
+    // AIM SMOOTHING, RELEASE GUARD, SLOW MOTION
+    // ============================================
+
+    // A finger drag as a launch vector: full power is reached at a comfortable FullPowerDrag;
+    // on EASY any real drag launches at full power, so only the direction matters.
+    Vector2 AimToLaunch(Vector2 aim)
+    {
+        float fullDrag = Mathf.Min(maxDragDistance, FullPowerDrag);
+        Vector2 launch = aim * (maxDragDistance / Mathf.Max(0.01f, fullDrag));
+        if (Difficulty.FullPowerShots && aim.magnitude > EasyMinimumDrag)
+            launch = aim.normalized * maxDragDistance;
+        return launch;
+    }
+
+    void RecordAim(Vector2 aim)
+    {
+        aimHistoryIndex = (aimHistoryIndex + 1) % aimHistory.Length;
+        aimHistory[aimHistoryIndex] = aim;
+        aimHistoryTime[aimHistoryIndex] = Time.unscaledTime;
+    }
+
+    // The aim a moment before release, unless the player flicked so fast that it was still tiny.
+    Vector2 AimBeforeRelease()
+    {
+        float cutoff = Time.unscaledTime - ReleaseGuardSeconds;
+        Vector2 best = smoothedAim;
+        float bestTime = -1f;
+        for (int index = 0; index < aimHistory.Length; index++)
+        {
+            float time = aimHistoryTime[index];
+            if (time >= 0f && time <= cutoff && time > bestTime)
+            {
+                bestTime = time;
+                best = aimHistory[index];
+            }
+        }
+        return bestTime >= 0f && best.magnitude >= smoothedAim.magnitude * 0.6f ? best : smoothedAim;
+    }
+
+    // Slows the stage while the player lines up a shot (per difficulty), never over a tutorial
+    // freeze or the pause menu.
+    void BeginAimSlowMotion()
+    {
+        float scale = Difficulty.AimSlowMotion;
+        if (scale >= 0.99f || !Mathf.Approximately(GameTime.BaseScale, 1f))
+            return;
+        GameTime.SetBase(scale);
+        if (Time.timeScale > 0.5f)
+            Time.timeScale = scale;
+        aimSlowActive = true;
+    }
+
+    void EndAimSlowMotion()
+    {
+        if (!aimSlowActive)
+            return;
+        aimSlowActive = false;
+        float scale = Difficulty.AimSlowMotion;
+        if (!Mathf.Approximately(GameTime.BaseScale, scale))
+            return;
+        GameTime.ResetBase();
+        if (Mathf.Approximately(Time.timeScale, scale))
+            Time.timeScale = 1f;
+    }
+
+    void OnDisable()
+    {
+        EndAimSlowMotion();
+    }
+
     private void CancelAiming()
     {
+        EndAimSlowMotion();
         isDragging = false;
         HideTrajectory();
         if (launchPadFeedback != null)
