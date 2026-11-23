@@ -55,6 +55,11 @@ public class Bumper : MonoBehaviour
 
     public bool IsPowerBumper => type == BumperType.Red && !isBramble;
 
+    // this bumper's own spot in the stage: when it breaks it comes back here (BumperManager)
+    public Vector2 HomePosition { get; private set; }
+    private BumperType homeType;
+    private int startHp;
+
     void OnEnable()
     {
         if (!All.Contains(this))
@@ -155,7 +160,23 @@ public class Bumper : MonoBehaviour
             transform.position = new Vector3(inside.x, inside.y, transform.position.z);
 
         originalScale = transform.localScale;
+        // remember the spot, color and health it starts with, for when it comes back after breaking
+        HomePosition = transform.position;
+        homeType = type;
+        startHp = hp;
         UpdateVisuals();
+    }
+
+    // back in its own spot with its own color and full health (BumperManager calls this)
+    public void ComeBack()
+    {
+        transform.position = new Vector3(HomePosition.x, HomePosition.y, transform.position.z);
+        transform.localScale = originalScale;
+        type = homeType;
+        hp = startHp;
+        gameObject.SetActive(true);
+        RefreshVisuals();
+        StartCoroutine(HitPunchEffect());
     }
 
     void OnValidate()
@@ -393,11 +414,12 @@ public class Bumper : MonoBehaviour
 
     void BreakBumper()
     {
-        
+        // a stage bumper hides and comes back in the same spot later. brambles are gone for good
         BumperManager manager = FindAnyObjectByType<BumperManager>();
         if (manager != null && !isBramble)
         {
-            manager.HandleBumperBroken();
+            manager.Respawn(this);
+            return;
         }
 
         Destroy(gameObject);

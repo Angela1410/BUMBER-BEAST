@@ -295,7 +295,7 @@ public static class StageWaveLayouts
     }
 
     // everything the editor does by itself after a script reload (the tuning file, placeholder art,
-    // stages 9-20, their painted backgrounds, stage waves). the build script calls it too, because batch mode
+    // stages 9-20, their painted backgrounds, bumper layouts, stage waves). the build script calls it too, because batch mode
     // skips the hook. every step has a version, so running it again changes nothing
     public static void ApplyPendingChanges()
     {
@@ -307,6 +307,8 @@ public static class StageWaveLayouts
         if (painted.Count > 0)
             Debug.Log("Bumper Beast: painted backgrounds set on " + string.Join(", ", painted) +
                 " (their generated backdrop and the stage-5 rock decorations are switched off).");
+        // every stage's bumpers in their planned spots (BumperLayouts)
+        BumperLayouts.ApplyPending(problems);
 
         List<StageSpec> outdated = new List<StageSpec>();
         foreach (StageSpec stage in Stages)

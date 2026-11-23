@@ -12,7 +12,6 @@ public static class BumperBeastProjectSetup
     private const string BumperPrefabPath = "Assets/Prefab/Bumper_Left.prefab";
     private const string ChomaPhysicsPath = "Assets/materials/ChomaBounce.physicsMaterial2D";
     private const string EnemyPhysicsPath = "Assets/materials/EnemyNoBounce.physicsMaterial2D";
-    private static Sprite bumperSprite;
 
     [MenuItem("Bumper Beast/Build Complete Wave Gameplay")]
     public static void BuildAllStages()
@@ -805,155 +804,18 @@ public static class BumperBeastProjectSetup
         EnsureStartingBumperLayout(stageNumber);
     }
 
+    // the starting bumpers come from BumperLayouts now: one fixed layout per stage, checked against
+    // the enemy route (the old positions here put bumpers in the middle lane)
     private static void EnsureStartingBumperLayout(int stageNumber)
     {
-        Vector3[] positions;
-        switch (stageNumber)
-        {
-            case 1:
-                positions = new[]
-                {
-                    new Vector3(-1.8f, 1f, 0f),
-                    new Vector3(1.8f, 1f, 0f)
-                };
-                break;
-            case 2:
-                positions = new[]
-                {
-                    new Vector3(-2.2f, 2.5f, 0f),
-                    new Vector3(2.2f, 0.5f, 0f),
-                    new Vector3(-2.2f, -1.5f, 0f)
-                };
-                break;
-            case 3:
-                positions = new[]
-                {
-                    new Vector3(0f, 2.5f, 0f),
-                    new Vector3(-1.5f, 2.5f, 0f),
-                    new Vector3(1.5f, -1.5f, 0f)
-                };
-                break;
-            case 4:
-                positions = new[]
-                {
-                    new Vector3(-1.5f, 0.5f, 0f),
-                    new Vector3(0f, 0.5f, 0f),
-                    new Vector3(1.5f, 0.5f, 0f)
-                };
-                break;
-            default:
-                return;
-        }
-
-        System.Collections.Generic.List<GameObject> bumpers =
-            new System.Collections.Generic.List<GameObject>();
-        foreach (SpriteRenderer renderer in Object.FindObjectsByType<SpriteRenderer>())
-        {
-            if (renderer != null &&
-                renderer.gameObject.name.StartsWith("Bumper_", System.StringComparison.Ordinal))
-                bumpers.Add(renderer.gameObject);
-        }
-
-        bumpers.Sort(CompareStartingBumpers);
-
-        GameObject bumperPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(BumperPrefabPath);
-        if (bumperPrefab == null)
-        {
-            Debug.LogError("Starting bumper layout requires " + BumperPrefabPath + ".");
-            return;
-        }
-
-        while (bumpers.Count > positions.Length)
-        {
-            GameObject extra = bumpers[bumpers.Count - 1];
-            bumpers.RemoveAt(bumpers.Count - 1);
-            Object.DestroyImmediate(extra);
-        }
-
-        while (bumpers.Count < positions.Length)
-        {
-            GameObject bumper = PrefabUtility.InstantiatePrefab(bumperPrefab) as GameObject;
-            if (bumper == null)
-                bumper = Object.Instantiate(bumperPrefab);
-            bumpers.Add(bumper);
-        }
-
-        for (int index = 0; index < positions.Length; index++)
-        {
-            GameObject bumper = bumpers[index];
-            bumper.name = "Bumper_" + (index + 1).ToString("00");
-            bumper.transform.position = positions[index];
-            ConfigureBumper(bumper);
-            EditorUtility.SetDirty(bumper.transform);
-        }
+        System.Collections.Generic.List<string> problems = new System.Collections.Generic.List<string>();
+        BumperLayouts.PlaceInScene(SceneManager.GetActiveScene(), stageNumber, problems);
+        BumperLayouts.Report(problems);
     }
 
-    private static int CompareStartingBumpers(GameObject left, GameObject right)
-    {
-        const string prefix = "Bumper_";
-        int leftIndex = 0;
-        int rightIndex = 0;
-        bool leftHasLayoutIndex = left.name.StartsWith(prefix, System.StringComparison.Ordinal) &&
-            int.TryParse(left.name.Substring(prefix.Length), out leftIndex);
-        bool rightHasLayoutIndex = right.name.StartsWith(prefix, System.StringComparison.Ordinal) &&
-            int.TryParse(right.name.Substring(prefix.Length), out rightIndex);
-
-        if (leftHasLayoutIndex && rightHasLayoutIndex)
-            return leftIndex.CompareTo(rightIndex);
-
-        if (leftHasLayoutIndex != rightHasLayoutIndex)
-            return leftHasLayoutIndex ? -1 : 1;
-
-        int byPosition = left.transform.position.x.CompareTo(right.transform.position.x);
-        return byPosition != 0 ? byPosition : string.CompareOrdinal(left.name, right.name);
-    }
-
-    private static void ConfigureBumper(GameObject bumper)
-    {
-        SpriteRenderer renderer = bumper.GetComponent<SpriteRenderer>();
-        if (renderer == null)
-            renderer = bumper.AddComponent<SpriteRenderer>();
-
-        renderer.sprite = CreateBumperSprite();
-        renderer.color = Color.white;
-
-        CircleCollider2D bumperCollider = bumper.GetComponent<CircleCollider2D>();
-        Collider2D existingCollider = bumper.GetComponent<Collider2D>();
-        if (existingCollider == null)
-        {
-            bumperCollider = bumper.AddComponent<CircleCollider2D>();
-            bumperCollider.radius = 0.46f;
-            existingCollider = bumperCollider;
-        }
-
-        existingCollider.isTrigger = false;
-
-        Rigidbody2D bumperBody = bumper.GetComponent<Rigidbody2D>();
-        if (bumperBody == null)
-            bumperBody = bumper.AddComponent<Rigidbody2D>();
-
-        bumperBody.bodyType = RigidbodyType2D.Static;
-        bumperBody.gravityScale = 0f;
-        bumperBody.freezeRotation = true;
-
-        Bumper bumperLogic = bumper.GetComponent<Bumper>();
-        if (bumperLogic == null)
-        {
-            bumperLogic = bumper.AddComponent<Bumper>();
-            bumperLogic.hp = 3;
-            bumperLogic.speedMultiplier = 1.2f;
-            bumperLogic.minimumBoostSpeed = 12f;
-            bumperLogic.maxSpeed = 15f;
-        }
-
-        bumperLogic.RefreshVisuals();
-        EditorUtility.SetDirty(renderer);
-        EditorUtility.SetDirty(bumper);
-    }
-
+    // a broken bumper comes back in its own spot now, so there are no respawn points to set up
     private static void EnsureBumperRespawnSetup(string scenePath)
     {
-        int stageNumber = GetStageNumber(scenePath);
         GameObject bumperPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(BumperPrefabPath);
         if (bumperPrefab == null)
         {
@@ -969,146 +831,7 @@ public static class BumperBeastProjectSetup
         manager.respawnDelay = 5f;
         manager.checkRadius = 0.5f;
 
-        Vector3[] positions = GetFixedBumperSpawnPositions(stageNumber);
-        if (positions == null &&
-            (manager.fixedSpawnPoints == null || manager.fixedSpawnPoints.Length == 0))
-        {
-            positions = new[]
-            {
-                new Vector3(-3.47f, 5.73f, 0f),
-                new Vector3(3.19f, 4.39f, 0f),
-                new Vector3(-3.77f, 0.35f, 0f),
-                new Vector3(3.49f, -2.69f, 0f)
-            };
-        }
-
-        if (positions != null)
-        {
-            const string spawnRootName = "BumperFixedSpawnPoints";
-
-            GameObject spawnRoot = GameObject.Find(spawnRootName);
-            if (spawnRoot == null)
-                spawnRoot = new GameObject(spawnRootName);
-
-            Transform[] spawnPoints = new Transform[positions.Length];
-            for (int index = 0; index < positions.Length; index++)
-            {
-                string pointName = "BumperSpawnPoint_" + (index + 1).ToString("00");
-                Transform point = manager.fixedSpawnPoints != null &&
-                    index < manager.fixedSpawnPoints.Length
-                    ? manager.fixedSpawnPoints[index]
-                    : null;
-
-                if (point == null)
-                    point = spawnRoot.transform.Find(pointName);
-
-                if (point == null)
-                {
-                    GameObject pointObject = new GameObject(pointName);
-                    pointObject.transform.SetParent(spawnRoot.transform, false);
-                    point = pointObject.transform;
-                }
-
-                point.name = pointName;
-                point.position = positions[index];
-                spawnPoints[index] = point;
-                EditorUtility.SetDirty(point.gameObject);
-            }
-
-            manager.fixedSpawnPoints = spawnPoints;
-            while (spawnRoot.transform.childCount > positions.Length)
-                Object.DestroyImmediate(spawnRoot.transform.GetChild(spawnRoot.transform.childCount - 1).gameObject);
-
-            EditorUtility.SetDirty(spawnRoot);
-        }
-
         EditorUtility.SetDirty(manager);
-    }
-
-    private static Vector3[] GetFixedBumperSpawnPositions(int stageNumber)
-    {
-        if (stageNumber == 1)
-        {
-            return new[]
-            {
-                new Vector3(-2.2f, 3f, 0f),
-                new Vector3(2.2f, 3f, 0f),
-                new Vector3(-2.2f, -1f, 0f),
-                new Vector3(2.2f, -1f, 0f)
-            };
-        }
-
-        if (stageNumber == 2)
-        {
-            return new[]
-            {
-                new Vector3(2.2f, 4.5f, 0f),
-                new Vector3(-2.2f, 0.5f, 0f),
-                new Vector3(2.2f, -1.5f, 0f),
-                new Vector3(-2.2f, -3.5f, 0f)
-            };
-        }
-
-        if (stageNumber == 3)
-        {
-            return new[]
-            {
-                new Vector3(-2f, 3f, 0f),
-                new Vector3(2f, -2f, 0f),
-                new Vector3(0f, 0.5f, 0f),
-                new Vector3(0f, -2.5f, 0f)
-            };
-        }
-
-        if (stageNumber == 4)
-        {
-            return new[]
-            {
-                new Vector3(-2.2f, 2f, 0f),
-                new Vector3(2.2f, 2f, 0f),
-                new Vector3(-2.2f, -1f, 0f),
-                new Vector3(2.2f, -1f, 0f)
-            };
-        }
-
-        return null;
-    }
-
-    private static Sprite CreateBumperSprite()
-    {
-        if (bumperSprite != null)
-            return bumperSprite;
-
-        const int textureSize = 64;
-        Texture2D texture = new Texture2D(textureSize, textureSize, TextureFormat.RGBA32, false);
-        Color outline = new Color(0.04f, 0.04f, 0.04f, 1f);
-        Color body = Color.white;
-        Color center = Color.white;
-
-        for (int y = 0; y < textureSize; y++)
-        {
-            for (int x = 0; x < textureSize; x++)
-            {
-                float dx = x - (textureSize - 1) * 0.5f;
-                float dy = y - (textureSize - 1) * 0.5f;
-                float distance = Mathf.Sqrt(dx * dx + dy * dy);
-                Color pixel = distance > 30f
-                    ? Color.clear
-                    : distance > 24f
-                        ? outline
-                        : distance > 14f
-                            ? body
-                            : center;
-                texture.SetPixel(x, y, pixel);
-            }
-        }
-
-        texture.filterMode = FilterMode.Bilinear;
-        texture.Apply();
-        bumperSprite = Sprite.Create(texture, new Rect(0f, 0f, textureSize, textureSize),
-            new Vector2(0.5f, 0.5f), textureSize);
-        bumperSprite.name = "BumperBeastBumper";
-        return bumperSprite;
     }
 
     private static Transform[] EnsureGrassEnemyRoute(string scenePath)

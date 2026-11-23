@@ -33,13 +33,7 @@ public static class BumperBeastTools
         RegisterAndSyncRoute(parent, point);
     }
 
-    [MenuItem(MenuRoot + "Add Bumper Spawn Point")]
-    private static void AddBumperSpawnPoint()
-    {
-        Transform parent = GetOrCreateContainer("BumperFixedSpawnPoints");
-        Transform point = AddNumberedChild(parent, "BumperSpawnPoint", GetNextDirection(parent));
-        RegisterAndSyncSpawnPoints(parent, point);
-    }
+    // (no "Add Bumper Spawn Point" any more: a broken bumper comes back in its own spot)
 
     private static void AddBumper(BumperType bumperType)
     {
@@ -165,25 +159,6 @@ public static class BumperBeastTools
                 points.Add(parent.GetChild(index));
 
             manager.routeWaypoints = points.ToArray();
-            EditorUtility.SetDirty(manager);
-        }
-
-        MarkSceneDirty(point);
-    }
-
-    private static void RegisterAndSyncSpawnPoints(Transform parent, Transform point)
-    {
-        BumperManager[] managers = Object.FindObjectsByType<BumperManager>(FindObjectsInactive.Include);
-        foreach (BumperManager manager in managers)
-        {
-            if (manager == null)
-                continue;
-
-            var points = new List<Transform>();
-            for (int index = 0; index < parent.childCount; index++)
-                points.Add(parent.GetChild(index));
-
-            manager.fixedSpawnPoints = points.ToArray();
             EditorUtility.SetDirty(manager);
         }
 

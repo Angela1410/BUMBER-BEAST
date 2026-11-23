@@ -165,6 +165,7 @@ MonoBehaviour:
     bossName: 
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 03000000i
     spawnDuration: 30
     spawnTable:
@@ -175,6 +176,8 @@ MonoBehaviour:
       weight: 1
       spriteOverride: {fileID: 0}
       scale: 1
+      extraHealth: 0
+      speedMultiplier: 1
     spawnGap: {x: 2.2, y: 3}
     maxAlive: 4
   - waveName: Strange Tracks
@@ -194,6 +197,7 @@ MonoBehaviour:
     bossName: 
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 030000000200000002000000i
     spawnDuration: 30
     spawnTable:
@@ -204,6 +208,8 @@ MonoBehaviour:
       weight: 1
       spriteOverride: {fileID: 0}
       scale: 1
+      extraHealth: 0
+      speedMultiplier: 1
     - displayName: Dust Scout
       prefab: {fileID: 357688283021206567, guid: 92125d3e50d36634f89e11376c4ae075, type: 3}
       element: 2
@@ -211,6 +217,8 @@ MonoBehaviour:
       weight: 0
       spriteOverride: {fileID: 0}
       scale: 1
+      extraHealth: 0
+      speedMultiplier: 1
     - displayName: Burrower
       prefab: {fileID: 717381506118130679, guid: 6a84307a0a2775848bcf4c23c6153462, type: 3}
       element: 2
@@ -218,6 +226,8 @@ MonoBehaviour:
       weight: 0
       spriteOverride: {fileID: 0}
       scale: 1
+      extraHealth: 0
+      speedMultiplier: 1
     spawnGap: {x: 2.2, y: 3}
     maxAlive: 4
   - waveName: Thornmaw Boss Wave
@@ -235,6 +245,7 @@ MonoBehaviour:
     bossName: Thornmaw
     enemySprite: {fileID: 0}
     enemyScale: 1
+    enemyDisplayName: 
     elementPattern: 
     spawnDuration: 0
     spawnTable: []
@@ -1210,72 +1221,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 387887952}
   m_CullTransparentMesh: 1
---- !u!1 &478321916
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 478321917}
-  m_Layer: 0
-  m_Name: BumperFixedSpawnPoints
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &478321917
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 478321916}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1914553711}
-  - {fileID: 2062599089}
-  - {fileID: 485349040}
-  - {fileID: 1481381310}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &485349039
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 485349040}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_03
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &485349040
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485349039}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.2, y: -1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 478321917}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &496947413
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3595,6 +3540,7 @@ MonoBehaviour:
   barrierHealthText: {fileID: 1995984791}
   winTitleText: {fileID: 0}
   loseTitleText: {fileID: 0}
+  stageBuildVersion: 0
 --- !u!4 &1159926705
 Transform:
   m_ObjectHideFlags: 0
@@ -3878,7 +3824,7 @@ Transform:
   m_GameObject: {fileID: 1189706143}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalPosition: {x: 1.6, y: 0.4, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3933,8 +3879,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bumper
   greenSprite: {fileID: 3790713284700277764, guid: 953b5347c795ba940971594c8920f79e, type: 3}
-  blueSprite: {fileID: 0}
-  redSprite: {fileID: 0}
+  blueSprite: {fileID: 1125230322319491910, guid: 953b5347c795ba940971594c8920f79e, type: 3}
+  redSprite: {fileID: 1848521461882120493, guid: 953b5347c795ba940971594c8920f79e, type: 3}
   type: 0
   hp: 3
   speedMultiplier: 1.2
@@ -4293,14 +4239,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BumperManager
   bumperPrefab: {fileID: 2963151085850224912, guid: eeebe10d363aace41b4a44106b113431, type: 3}
-  fixedSpawnPoints:
-  - {fileID: 1914553711}
-  - {fileID: 2062599089}
-  - {fileID: 485349040}
-  - {fileID: 1481381310}
   respawnDelay: 5
   checkRadius: 0.5
-  respawnTypes: 000000000100000002000000i
+  layoutStamp: 401
 --- !u!4 &1246025583
 Transform:
   m_ObjectHideFlags: 0
@@ -4678,37 +4619,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1481381309
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1481381310}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_04
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1481381310
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1481381309}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.75, y: 4.08, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 478321917}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1514178610
 GameObject:
   m_ObjectHideFlags: 0
@@ -5027,7 +4937,7 @@ Transform:
   m_GameObject: {fileID: 1640006387}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: -1.6, y: 2.8, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5082,8 +4992,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bumper
   greenSprite: {fileID: 3790713284700277764, guid: 953b5347c795ba940971594c8920f79e, type: 3}
-  blueSprite: {fileID: 0}
-  redSprite: {fileID: 0}
+  blueSprite: {fileID: 1125230322319491910, guid: 953b5347c795ba940971594c8920f79e, type: 3}
+  redSprite: {fileID: 1848521461882120493, guid: 953b5347c795ba940971594c8920f79e, type: 3}
   type: 0
   hp: 3
   speedMultiplier: 1.2
@@ -5521,7 +5431,7 @@ Transform:
   m_GameObject: {fileID: 1804559761}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 3.3, y: 3.3, z: 0}
   m_LocalScale: {x: 1.2, y: 1.2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5576,8 +5486,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bumper
   greenSprite: {fileID: 3790713284700277764, guid: 953b5347c795ba940971594c8920f79e, type: 3}
-  blueSprite: {fileID: 0}
-  redSprite: {fileID: 0}
+  blueSprite: {fileID: 1125230322319491910, guid: 953b5347c795ba940971594c8920f79e, type: 3}
+  redSprite: {fileID: 1848521461882120493, guid: 953b5347c795ba940971594c8920f79e, type: 3}
   type: 0
   hp: 3
   speedMultiplier: 1.2
@@ -5624,37 +5534,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1914553710
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1914553711}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1914553711
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1914553710}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.2, y: 2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 478321917}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1995984789
 GameObject:
@@ -5963,37 +5842,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 654567665}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2062599088
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2062599089}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_02
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2062599089
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062599088}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.4, y: 0.42, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 478321917}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2100920143
 GameObject:
   m_ObjectHideFlags: 0
@@ -6155,7 +6003,6 @@ SceneRoots:
   - {fileID: 1804559765}
   - {fileID: 654567665}
   - {fileID: 1246025583}
-  - {fileID: 478321917}
   - {fileID: 1202806189}
   - {fileID: 588179099}
   - {fileID: 824844047}

@@ -641,37 +641,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1549144113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &293772475
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 293772476}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_03
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &293772476
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 293772475}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.2, y: -1.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1558235571}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &316580079
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,37 +763,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1549144113}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &393932624
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 393932625}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_04
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &393932625
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 393932624}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.2, y: -3.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1558235571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &432889039
 GameObject:
@@ -995,15 +933,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2963151085850224912, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_Name
-      value: Bumper_Left
+      value: Bumper_01
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.2
+      value: 2.8
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.5
+      value: 2.4
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1191,15 +1129,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2963151085850224912, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_Name
-      value: Bumper_Left (2)
+      value: Bumper_03
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.2
+      value: -2.6
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.5
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1608,17 +1546,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2508992061042058591, guid: eeebe10d363aace41b4a44106b113431, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1125230322319491910, guid: 953b5347c795ba940971594c8920f79e, type: 3}
     - target: {fileID: 2963151085850224912, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_Name
-      value: Bumper_Left (1)
+      value: Bumper_02
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.2
+      value: -2.7
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 3.4
       objectReference: {fileID: 0}
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1651,6 +1593,10 @@ PrefabInstance:
     - target: {fileID: 4083738888597659657, guid: eeebe10d363aace41b4a44106b113431, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6171318826708255635, guid: eeebe10d363aace41b4a44106b113431, type: 3}
+      propertyPath: type
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1687,14 +1633,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BumperManager
   bumperPrefab: {fileID: 2963151085850224912, guid: eeebe10d363aace41b4a44106b113431, type: 3}
-  fixedSpawnPoints:
-  - {fileID: 1618129532}
-  - {fileID: 973427153}
-  - {fileID: 293772476}
-  - {fileID: 393932625}
   respawnDelay: 5
   checkRadius: 0.5
-  respawnTypes: 000000000100000002000000i
+  layoutStamp: 201
 --- !u!4 &540201292
 Transform:
   m_ObjectHideFlags: 0
@@ -2792,37 +2733,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &973427152
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 973427153}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_02
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &973427153
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 973427152}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.2, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1558235571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &986670570
 GameObject:
@@ -3961,41 +3871,6 @@ Transform:
   - {fileID: 1500033618}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1558235570
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1558235571}
-  m_Layer: 0
-  m_Name: BumperFixedSpawnPoints
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1558235571
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1558235570}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1618129532}
-  - {fileID: 973427153}
-  - {fileID: 293772476}
-  - {fileID: 393932625}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1574879368
 GameObject:
   m_ObjectHideFlags: 0
@@ -4087,37 +3962,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1618129531
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1618129532}
-  m_Layer: 0
-  m_Name: BumperSpawnPoint_01
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1618129532
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1618129531}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.2, y: 4.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1558235571}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1667670065
 GameObject:
@@ -5259,7 +5103,6 @@ SceneRoots:
   - {fileID: 505203498}
   - {fileID: 1549144113}
   - {fileID: 540201292}
-  - {fileID: 1558235571}
   - {fileID: 506671555}
   - {fileID: 1574879370}
   - {fileID: 675123614}

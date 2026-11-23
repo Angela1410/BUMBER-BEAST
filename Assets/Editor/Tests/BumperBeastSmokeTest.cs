@@ -57,6 +57,7 @@ public class BumperBeastSmokeTest
                 problems.Add(name + ": the camera has no CameraFit");
                 continue;
             }
+            CheckLayout(name);
 
             foreach (Vector2Int screen in Screens)
             {
@@ -243,6 +244,48 @@ public class BumperBeastSmokeTest
                 problems.Add("power meter: the Power Bumper doesn't use the red picture");
             report.AppendLine("power meter: " + GameTuning.Get.powerMeterHits + " green hits made " + power.name + " the Power Bumper");
         }
+    }
+
+    // fix 4: every stage has its own fixed bumpers: the right number, outside the middle lane
+    // (so a straight shot always works) and off the enemy path
+    void CheckLayout(string stage)
+    {
+        int expected = stage == "stage-1" || stage == "stage-4" ? 3
+            : stage == "stage-5_Earth" ? 4
+            : stage == "stage-12_Electric" ? 5 : 6;
+        WaveManager waves = WaveManager.Current;
+        List<Vector2> route = new List<Vector2>();
+        if (waves != null && waves.routeWaypoints != null)
+        {
+            foreach (Transform point in waves.routeWaypoints)
+            {
+                if (point != null)
+                    route.Add(point.position);
+            }
+        }
+
+        int count = 0;
+        foreach (Bumper bumper in Bumper.All)
+        {
+            if (bumper == null || bumper.isBramble)
+                continue;
+            count++;
+            Vector2 p = bumper.transform.position;
+            if (Mathf.Abs(p.x - CameraFit.FieldCenterX) < 1.19f)
+                problems.Add(stage + ": " + bumper.name + " at " + p + " blocks the straight shot up the middle");
+            float path = float.MaxValue;
+            for (int i = 0; i + 1 < route.Count; i++)
+            {
+                Vector2 a = route[i], ab = route[i + 1] - a;
+                float t = ab.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(p - a, ab) / ab.sqrMagnitude) : 0f;
+                path = Mathf.Min(path, Vector2.Distance(p, a + ab * t));
+            }
+            if (path < 0.99f)
+                problems.Add(stage + ": " + bumper.name + " at " + p + " sits on the enemy path");
+        }
+        if (count != expected)
+            problems.Add(stage + ": " + count + " bumpers, the layout has " + expected);
+        report.AppendLine(stage + ": " + count + " bumpers in their layout spots");
     }
 
     static Collider2D Wall(string prefix)

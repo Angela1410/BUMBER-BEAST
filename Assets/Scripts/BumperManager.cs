@@ -1,98 +1,38 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// brings broken bumpers back. every bumper has a fixed spot for its stage (placed by the editor tool
+// BumperLayouts), so a broken bumper comes back in that same spot, with the same color, after a short wait
 public class BumperManager : MonoBehaviour
 {
     [Header("Respawn Settings")]
-    public GameObject bumperPrefab; 
-    public Transform[] fixedSpawnPoints; 
+    [Tooltip("The bumper the editor copies from, and where stage bumpers borrow missing pictures from.")]
+    public GameObject bumperPrefab;
     public float respawnDelay = 5f;
+    [Tooltip("A bumper only comes back when nothing (the Beast, an enemy) is this close to its spot.")]
     public float checkRadius = 0.5f;
 
-    [Header("Respawn Colours")]
-    [Tooltip("A respawned bumper gets one of these types at random (equal odds). " +
-        "Leave empty to keep the prefab's own type.")]
-    public BumperType[] respawnTypes = { BumperType.Green, BumperType.Blue, BumperType.Red };
+    // which BumperLayouts layout this stage has (stage x 100 + version), the editor reads it
+    [HideInInspector] public int layoutStamp;
 
-    void OnDrawGizmos()
+    // a bumper broke: hide it now and bring it back in its own spot later
+    public void Respawn(Bumper bumper)
     {
-        if (fixedSpawnPoints == null)
+        if (bumper == null)
             return;
-
-        Gizmos.color = new Color(0.15f, 0.7f, 1f, 0.9f);
-        foreach (Transform point in fixedSpawnPoints)
-        {
-            if (point == null)
-                continue;
-
-            Gizmos.DrawWireSphere(point.position, Mathf.Max(0.1f, checkRadius));
-
-#if UNITY_EDITOR
-            UnityEditor.Handles.Label(point.position + Vector3.up * (checkRadius + 0.15f), point.name);
-#endif
-        }
+        bumper.gameObject.SetActive(false);
+        StartCoroutine(RespawnRoutine(bumper));
     }
 
-    public void HandleBumperBroken()
-    {
-        StartCoroutine(RespawnBumperRoutine());
-    }
-
-    IEnumerator RespawnBumperRoutine()
+    IEnumerator RespawnRoutine(Bumper bumper)
     {
         yield return new WaitForSeconds(respawnDelay);
 
-        if (fixedSpawnPoints == null || fixedSpawnPoints.Length == 0)
-        {
-            Debug.LogWarning("BumperManager: No fixed spawn points assigned!");
-            yield break;
-        }
-
-        if (bumperPrefab == null)
-        {
-            Debug.LogError("BumperManager: No bumper prefab assigned; the broken bumper cannot respawn.", this);
-            yield break;
-        }
-
-        
-        List<Transform> emptyPoints = new List<Transform>();
-        foreach (Transform point in fixedSpawnPoints)
-        {
-            if (point == null)
-                continue;
-
-            Collider2D hit = Physics2D.OverlapCircle(point.position, checkRadius);
-            if (hit == null)
-            {
-                emptyPoints.Add(point);
-            }
-        }
-
-        if (emptyPoints.Count > 0)
-        {
-            
-            Transform selectedPoint = emptyPoints[Random.Range(0, emptyPoints.Count)];
-            GameObject spawned = Instantiate(bumperPrefab, selectedPoint.position, Quaternion.identity);
-
-            // the prefab is always one color, so we pick the new bumper's color here.
-            // never red: the Power Bumper now comes from the POWER meter, not from luck
-            if (respawnTypes != null && respawnTypes.Length > 0)
-            {
-                Bumper bumper = spawned.GetComponent<Bumper>();
-                if (bumper != null && !bumper.isBramble)
-                {
-                    BumperType picked = respawnTypes[Random.Range(0, respawnTypes.Length)];
-                    bumper.type = picked == BumperType.Red ? BumperType.Green : picked;
-                    bumper.RefreshVisuals();
-                }
-            }
-        }
-        else
-        {
-            
+        // wait until its spot is free, so it never pops up on top of the Beast or an enemy
+        while (bumper != null && Physics2D.OverlapCircle(bumper.HomePosition, checkRadius) != null)
             yield return new WaitForSeconds(1f);
-            StartCoroutine(RespawnBumperRoutine());
-        }
+
+        if (bumper != null)
+            bumper.ComeBack();
     }
 }
