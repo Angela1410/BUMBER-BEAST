@@ -294,11 +294,12 @@ public static class StageWaveLayouts
         ApplyPendingChanges();
     }
 
-    // everything the editor does by itself after a script reload (placeholder art, stages 9-20,
-    // their painted backgrounds, stage waves). the build script calls it too, because batch mode
+    // everything the editor does by itself after a script reload (the tuning file, placeholder art,
+    // stages 9-20, their painted backgrounds, stage waves). the build script calls it too, because batch mode
     // skips the hook. every step has a version, so running it again changes nothing
     public static void ApplyPendingChanges()
     {
+        GameTuningAsset.Ensure();
         List<string> problems = new List<string>();
         PlaceholderArtGenerator.EnsureAll(problems);
         List<string> rebuilt = ChapterBuilder.BuildOutdatedStages(problems, false);
