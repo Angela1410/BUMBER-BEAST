@@ -130,6 +130,11 @@ public class Bumper : MonoBehaviour
 
     void Start()
     {
+        // every bumper (scene, respawned, brambles) stays where you can see it, away from the walls
+        Vector2 inside = CameraFit.ClampToField(transform.position, CameraFit.WorldRadius(this, 0.55f));
+        if (((Vector2)transform.position - inside).sqrMagnitude > 0.0001f)
+            transform.position = new Vector3(inside.x, inside.y, transform.position.z);
+
         originalScale = transform.localScale;
         UpdateVisuals();
     }

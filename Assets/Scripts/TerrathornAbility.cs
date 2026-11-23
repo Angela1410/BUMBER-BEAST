@@ -111,6 +111,8 @@ public class TerrathornAbility : MonoBehaviour
             Vector2 candidate = new Vector2(
                 UnityEngine.Random.Range(areaMin.x, areaMax.x),
                 UnityEngine.Random.Range(areaMin.y, areaMax.y));
+            // never outside the screen or too close to a wall
+            candidate = CameraFit.ClampToField(candidate, boulderRadius);
 
             if (Vector2.Distance(candidate, transform.position) < minDistanceFromBoss)
                 continue;

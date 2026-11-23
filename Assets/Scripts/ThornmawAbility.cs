@@ -115,6 +115,8 @@ public class ThornmawAbility : MonoBehaviour
             candidate = new Vector2(
                 UnityEngine.Random.Range(areaMin.x, areaMax.x),
                 UnityEngine.Random.Range(areaMin.y, areaMax.y));
+            // never outside the screen or too close to a wall
+            candidate = CameraFit.ClampToField(candidate, CameraFit.WorldRadius(bramblePrefab != null ? bramblePrefab.transform : null, 0.55f));
 
             if (Vector2.Distance(candidate, transform.position) < minDistanceFromBoss)
                 continue;

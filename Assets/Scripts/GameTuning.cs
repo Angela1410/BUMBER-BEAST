@@ -20,6 +20,10 @@ public class GameTuning : ScriptableObject
     [Tooltip("Coin reward multiplier.")]
     public float[] coinMultiplier = { 1f, 1f, 1.5f, 2f };
 
+    [Header("Screen fit")]
+    [Tooltip("Free space kept between a bumper (or bramble, or boulder) and a side wall, in bumper widths.")]
+    public float bumperWallGap = 1f;
+
     // the editor uses this to save the file again when new settings are added (GameTuningAsset)
     [HideInInspector] public int fileVersion;
 
