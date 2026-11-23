@@ -550,9 +550,10 @@ public class LaunchController : MonoBehaviour
         return GetPlaceholderAnimationSet(beast);
     }
 
-    // Beasts without painted art yet (Mossback, Voltis, Ripple) use the generated PLACEHOLDER
-    // pictures from Assets/Resources/Placeholders: idle, plus the curled ball for curling and spinning
-    // (the pull back spin turns the whole sprite). art we assign always wins
+    // Mossback, Voltis and Ripple use the pictures in Assets/Resources/Placeholders (Mossback and Voltis
+    // got their painted art in v1.4, saved over the old placeholders with the same names, from
+    // Assets/Art/NewBeasts): idle, plus the ball for curling and spinning (the pull back spin turns
+    // the whole sprite). art we assign always wins
     private static readonly Dictionary<BeastId, BeastAnimSet> placeholderAnimationSets =
         new Dictionary<BeastId, BeastAnimSet>();
 
