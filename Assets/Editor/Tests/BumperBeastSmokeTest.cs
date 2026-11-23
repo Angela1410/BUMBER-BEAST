@@ -78,6 +78,8 @@ public class BumperBeastSmokeTest
         CheckBarrierHeal();
         yield return CheckStagger();
         CheckAim();
+        yield return CheckIdleAndArt(shots);
+        yield return CheckBeastsTab(shots);
 
         Application.logMessageReceived -= CollectErrors;
         string summary = "SMOKE TEST REPORT\n" + report + "\nerrors logged: " + errors.Count +
@@ -429,6 +431,113 @@ public class BumperBeastSmokeTest
             report.AppendLine("aim: the aim line lights up " + target.name + " when it's going to hit it");
         if (hide != null)
             hide.Invoke(launcher, null);
+    }
+
+    // fix 7 + 8: the new Mossback and Voltis art on the pad (pictures), and the Beast gently bobs while it waits
+    IEnumerator CheckIdleAndArt(string shots)
+    {
+        BeastController beast = BeastController.Active;
+        LaunchController launcher = beast != null ? beast.GetComponent<LaunchController>() : null;
+        Camera camera = Camera.main;
+        if (beast == null || launcher == null || camera == null)
+        {
+            problems.Add("idle: no Beast in stage 5");
+            yield break;
+        }
+        while (beast.State != BeastState.AtPad)
+            yield return null;
+
+        float lowest = float.MaxValue, highest = float.MinValue;
+        float until = Time.time + 2f;
+        while (Time.time < until)
+        {
+            float y = beast.transform.position.y;
+            lowest = Mathf.Min(lowest, y);
+            highest = Mathf.Max(highest, y);
+            yield return null;
+        }
+        float bob = highest - lowest;
+        if (bob < 0.01f || bob > 0.2f)
+            problems.Add("idle: the Beast moved " + bob.ToString("0.000") + " up and down on the pad (expected a gentle bob)");
+        else
+            report.AppendLine("idle: bobs " + bob.ToString("0.000") + " units on the pad");
+
+        foreach (BeastId id in new[] { BeastId.Voltis, BeastId.Mossback })
+        {
+            beast.SetActiveBeast(id);
+            launcher.PlaySwapPop();
+            for (int frame = 0; frame < 20; frame++)
+                yield return null;
+            SpriteRenderer look = beast.GetComponent<SpriteRenderer>();
+            Sprite art = PlaceholderArt.BeastIdle(id);
+            if (art == null || look == null || (look.sprite != art && look.sprite != PlaceholderArt.BeastBall(id)))
+                problems.Add("art: " + id + " on the pad doesn't use Beast_" + id + "_Idle");
+            else if (Mathf.Abs(art.bounds.size.x - 1.22f) > 0.02f)
+                problems.Add("art: " + id + " is " + art.bounds.size.x.ToString("0.00") + " wide, Choma is 1.22");
+            RenderTexture target = new RenderTexture(540, 1200, 24);
+            camera.targetTexture = target;
+            for (int frame = 0; frame < 3; frame++)
+                yield return null;
+            Capture(camera, target, Path.Combine(shots, "pad_" + id + ".png"));
+            camera.targetTexture = null;
+            Object.Destroy(target);
+        }
+        report.AppendLine("art: Voltis and Mossback use the new pictures on the pad (1.22 wide, like Choma)");
+    }
+
+    // fix 8: the Beasts tab portraits breathe and bob (picture of the tab too)
+    IEnumerator CheckBeastsTab(string shots)
+    {
+        AsyncOperation loading = EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/GameHub.unity",
+            new LoadSceneParameters(LoadSceneMode.Single));
+        while (!loading.isDone)
+            yield return null;
+        for (int frame = 0; frame < 30; frame++)
+            yield return null;
+
+        GameHubController hub = Object.FindAnyObjectByType<GameHubController>();
+        System.Reflection.MethodInfo openBeasts = typeof(GameHubController).GetMethod("OpenBeasts",
+            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        if (hub == null || openBeasts == null)
+        {
+            problems.Add("beasts tab: the hub or its Beasts tab was not found");
+            yield break;
+        }
+        openBeasts.Invoke(hub, null);
+        for (int frame = 0; frame < 10; frame++)
+            yield return null;
+
+        BeastIdleMotion[] idles = Object.FindObjectsByType<BeastIdleMotion>();
+        int moving = 0;
+        foreach (BeastIdleMotion idle in idles)
+        {
+            RectTransform rect = idle.transform as RectTransform;
+            if (!idle.enabled || rect == null)
+                continue;
+            Vector2 before = rect.anchoredPosition;
+            Vector3 scaleBefore = rect.localScale;
+            float until = Time.unscaledTime + 0.5f;
+            while (Time.unscaledTime < until)
+                yield return null;
+            if (rect != null && ((rect.anchoredPosition - before).sqrMagnitude > 0.0001f || rect.localScale != scaleBefore))
+                moving++;
+        }
+        if (idles.Length < 5 || moving == 0)
+            problems.Add("beasts tab: " + idles.Length + " portraits have the idle animation, " + moving + " moving");
+        else
+            report.AppendLine("beasts tab: " + idles.Length + " portraits with the idle animation, " + moving + " moving");
+
+        Camera camera = Camera.main;
+        if (camera != null)
+        {
+            RenderTexture target = new RenderTexture(540, 1200, 24);
+            camera.targetTexture = target;
+            for (int frame = 0; frame < 3; frame++)
+                yield return null;
+            Capture(camera, target, Path.Combine(shots, "beasts_tab.png"));
+            camera.targetTexture = null;
+            Object.Destroy(target);
+        }
     }
 
     static Vector2 Rotate(Vector2 v, float degrees)

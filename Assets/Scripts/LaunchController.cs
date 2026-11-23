@@ -119,6 +119,8 @@ public class LaunchController : MonoBehaviour
     private bool flightSpinActive;
     private Transform[] uprightChildren = new Transform[0];
     private float nextLockedSoundTime;
+    // how far up the idle bob has lifted the Beast right now
+    private float idleLift;
 
     void Start()
     {
@@ -254,7 +256,9 @@ public class LaunchController : MonoBehaviour
 
             isDragging = true;
             currentDragRatio = 0f;
-            aimBasePosition = transform.position;
+            // where it rests on the pad (without the idle bob)
+            aimBasePosition = transform.position - Vector3.up * idleLift;
+            idleLift = 0f;
             dragStart = pressPosition;
             smoothedAim = Vector2.zero;
             for (int index = 0; index < aimHistoryTime.Length; index++)
@@ -1485,9 +1489,9 @@ public class LaunchController : MonoBehaviour
         if (spriteRenderer != null)
             spriteRenderer.color = CurrentBaseColor();
 
-        transform.localScale = originalScale;
         ClearSpin();
-        transform.position = aimBasePosition;
+        // a gentle bob and "breathing" while it waits on the pad (aiming and flying never get here)
+        ApplyIdleMotion();
 
         isAnimatingLaunch = false;
 
@@ -1498,6 +1502,19 @@ public class LaunchController : MonoBehaviour
             flightTrail.emitting = false;
             flightTrail.Clear();
         }
+    }
+
+    // IDLE ANIMATION: a slow bob up and down plus a little squash and stretch, like breathing.
+    // every Beast has its own speed (GameTuning: Idle animation)
+    void ApplyIdleMotion()
+    {
+        BeastIdleMotion.Sample(CurrentBeast(), Time.time, out float lift, out Vector2 squash);
+        float height = spriteRenderer != null && spriteRenderer.sprite != null
+            ? spriteRenderer.sprite.bounds.size.y * Mathf.Abs(originalScale.y)
+            : 1f;
+        idleLift = lift * height;
+        transform.position = aimBasePosition + Vector3.up * idleLift;
+        transform.localScale = new Vector3(originalScale.x * squash.x, originalScale.y * squash.y, originalScale.z);
     }
 
     private void PlayLaunchPop()

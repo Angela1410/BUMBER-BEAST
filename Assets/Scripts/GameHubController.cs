@@ -62,6 +62,7 @@ public class GameHubController : MonoBehaviour
         public Button button;
         public Image ring;
         public Image portrait;
+        public BeastIdleMotion idle;
         public TMP_Text initial;
         public Image plus;
         public TMP_Text tag;
@@ -73,6 +74,7 @@ public class GameHubController : MonoBehaviour
         public Image back;
         public Outline outline;
         public Image portrait;
+        public BeastIdleMotion idle;
         public TMP_Text initial;
         public Image element;
         public TMP_Text name;
@@ -825,6 +827,8 @@ public class GameHubController : MonoBehaviour
         view.portrait = CreateImage(rect, "Portrait", Color.white, null);
         view.portrait.preserveAspect = true;
         Fill(view.portrait.rectTransform, 0.1f);
+        // the Beast in this slot breathes and bobs a little (RefreshBeastView says which Beast)
+        view.idle = view.portrait.gameObject.AddComponent<BeastIdleMotion>();
         view.initial = CreateLabel(rect, "Initial", string.Empty, 60f, TextAlignmentOptions.Center);
         view.plus = CreateImage(rect, "Empty", new Color(1f, 1f, 1f, 0.28f), UiIcons.Get(UiIcon.Plus));
         Fill(view.plus.rectTransform, 0.3f);
@@ -859,6 +863,8 @@ public class GameHubController : MonoBehaviour
         card.portrait = CreateImage(ring.transform, "Portrait", Color.white, null);
         card.portrait.preserveAspect = true;
         Fill(card.portrait.rectTransform, 0.07f);
+        card.idle = card.portrait.gameObject.AddComponent<BeastIdleMotion>();
+        card.idle.beast = beast;
         card.initial = CreateLabel(ring.transform, "Initial", string.Empty, 56f, TextAlignmentOptions.Center);
 
         card.element = CreateImage(rect, "Element", Color.white, ElementVisuals.GetIcon(BeastRoster.GetElement(beast)));
@@ -1215,9 +1221,13 @@ public class GameHubController : MonoBehaviour
             view.plus.enabled = !filled;
             view.ring.enabled = filled && slot == 0;
             view.portrait.enabled = filled;
+            if (view.idle != null)
+                view.idle.enabled = filled;
             if (filled)
             {
                 BeastId beast = progress.Squad[slot];
+                if (view.idle != null)
+                    view.idle.beast = beast;
                 SetPortrait(view.portrait, view.initial, BeastPortrait(beast), BeastRoster.GetColor(beast),
                     BeastRoster.GetName(beast).Substring(0, 1));
                 view.tag.text = slot == 0 ? "<color=#FFCC42>LEAD</color>  " + BeastRoster.GetName(beast).ToUpperInvariant()
@@ -1244,6 +1254,9 @@ public class GameHubController : MonoBehaviour
                 BeastRoster.GetName(beast).Substring(0, 1));
             if (!owned && !reached)
                 card.portrait.color *= new Color(0.25f, 0.25f, 0.28f, 1f);
+            // your Beasts (and ones you can get now) breathe, locked dark ones stay still
+            if (card.idle != null)
+                card.idle.enabled = owned || reached;
 
             card.back.color = inSquad ? new Color32(50, 70, 42, 255) : owned || reached ? (Color)UiTheme.Panel : (Color)UiTheme.PanelDark;
             card.outline.effectColor = inSquad ? (Color)UiTheme.Gold : reached && !owned ? (Color)UiTheme.Orange : (Color)UiTheme.Ink;

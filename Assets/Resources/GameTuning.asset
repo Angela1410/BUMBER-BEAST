@@ -38,4 +38,28 @@ MonoBehaviour:
   - 1
   - 1.5
   - 2
-  fileVersion: 1
+  bumperWallGap: 1
+  bouncePowerPerHit: 1
+  bouncePowerMax: 4
+  bouncePitchStep: 0.08
+  recallLaunchLock: 1.5
+  returnAfterBounces: 6
+  returnAfterSeconds: 3
+  returnFlightTime: 0.3
+  powerMeterHits: 6
+  enemiesPerGroup: 4
+  breakBetweenGroups: 2
+  staggerSeconds: 0.3
+  barrierHealOnWaveClear: 1
+  magnetDegrees: 5
+  magnetReach: 0.4
+  idleBobHeight: 0.04
+  idleBreath: 0.03
+  idleBobsPerSecond: 0.55
+  idleSpeed:
+  - 1
+  - 1.15
+  - 0.75
+  - 1.3
+  - 0.9
+  fileVersion: 2

@@ -63,6 +63,9 @@ public class BeastController : MonoBehaviour
     private readonly Vector3[] zapPoints = new Vector3[16];
     private float launchLockUntil;
     private float launchLockLength = 1f;
+    // where the Beast stands on the pad at the start (the pad's own middle is a bit lower)
+    private Vector3 restSpot;
+    private bool hasRestSpot;
     private SpriteRenderer powerGlow;
     private TrailRenderer powerTrail;
     private Material powerTrailMaterial;
@@ -91,6 +94,8 @@ public class BeastController : MonoBehaviour
         }
 
         State = BeastState.AtPad;
+        restSpot = transform.position;
+        hasRestSpot = true;
     }
 
     void OnEnable()
@@ -359,6 +364,11 @@ public class BeastController : MonoBehaviour
     float BeastRadius()
     {
         return CameraFit.WorldRadius(this, 0.5f);
+    }
+
+    Vector2 RestSpot(Transform pad)
+    {
+        return hasRestSpot ? (Vector2)restSpot : (Vector2)pad.position;
     }
 
     // the skill button calls this
@@ -743,7 +753,8 @@ public class BeastController : MonoBehaviour
         }
 
         // a quick flight back that always takes the same short time (GameTuning: Return Flight Time),
-        // fast at first and gentle at the end
+        // fast at first and gentle at the end. it lands where the Beast stands on the pad, so it
+        // doesn't pop up from the pad's middle after landing
         float duration = Mathf.Max(0.05f, GameTuning.Get.returnFlightTime);
         Vector2 start = transform.position;
         float elapsed = 0f;
@@ -752,13 +763,13 @@ public class BeastController : MonoBehaviour
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
             float eased = 1f - (1f - t) * (1f - t);
-            transform.position = Vector2.LerpUnclamped(start, targetPad.position, eased);
+            transform.position = Vector2.LerpUnclamped(start, RestSpot(targetPad), eased);
             yield return null;
         }
 
         if (targetPad != null)
         {
-            transform.position = targetPad.position;
+            transform.position = hasRestSpot ? restSpot : targetPad.position;
             State = BeastState.AtPad;
         }
         else

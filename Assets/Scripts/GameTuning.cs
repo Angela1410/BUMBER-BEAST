@@ -66,6 +66,16 @@ public class GameTuning : ScriptableObject
     [Tooltip("How close (world units) the aim line must pass a bumper before it's pulled onto it.")]
     public float magnetReach = 0.4f;
 
+    [Header("Idle animation (launch pad and Beasts tab)")]
+    [Tooltip("How high a resting Beast bobs, as a part of its height (0.04 = 4%).")]
+    public float idleBobHeight = 0.04f;
+    [Tooltip("How much it squashes and stretches while breathing (0.03 = 3%).")]
+    public float idleBreath = 0.03f;
+    [Tooltip("Bobs per second at speed 1.")]
+    public float idleBobsPerSecond = 0.55f;
+    [Tooltip("Speed for each Beast: Choma, Thistle, Mossback, Voltis, Ripple (different, so they never move together).")]
+    public float[] idleSpeed = { 1f, 1.15f, 0.75f, 1.3f, 0.9f };
+
     // the editor uses this to save the file again when new settings are added (GameTuningAsset)
     [HideInInspector] public int fileVersion;
 
