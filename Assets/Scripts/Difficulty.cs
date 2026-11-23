@@ -31,7 +31,8 @@ public static class Difficulty
     public static float AssistStrength => GameTuning.Pick(GameTuning.Get.aimAssist, Index, 1f);
     public static float AimSlowMotion => GameTuning.Pick(GameTuning.Get.aimSlowMotion, Index, 1f);
     public static float RewardMultiplier => GameTuning.Pick(GameTuning.Get.coinMultiplier, Index, 1f);
-    public static bool FullPowerShots => Current == GameDifficulty.Easy;
+    // Settings > FULL-POWER SHOTS (on by default), and EASY always
+    public static bool FullPowerShots => GameSettings.FullPowerShots || Current == GameDifficulty.Easy;
 
     public static string Name(GameDifficulty difficulty)
     {

@@ -77,6 +77,7 @@ public class BumperBeastSmokeTest
         CheckPowerMeter();
         CheckBarrierHeal();
         yield return CheckStagger();
+        CheckAim();
 
         Application.logMessageReceived -= CollectErrors;
         string summary = "SMOKE TEST REPORT\n" + report + "\nerrors logged: " + errors.Count +
@@ -361,6 +362,79 @@ public class BumperBeastSmokeTest
             report.AppendLine("stagger: stood still for " + stopFor + " s after a hit, then walked on");
         if (enemy != null)
             Object.Destroy(enemy.gameObject);
+    }
+
+    // fix 6: full-power shots, the bumper magnet and the bumper highlight on the aim line.
+    // it only reads your settings (they're saved on this computer), it never changes them
+    void CheckAim()
+    {
+        LaunchController launcher = Object.FindAnyObjectByType<LaunchController>();
+        Rigidbody2D body = launcher != null ? launcher.GetComponent<Rigidbody2D>() : null;
+        System.Reflection.BindingFlags hidden = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+        System.Reflection.MethodInfo aimToLaunch = typeof(LaunchController).GetMethod("AimToLaunch", hidden);
+        System.Reflection.MethodInfo magnet = typeof(LaunchController).GetMethod("ApplyBumperMagnet", hidden);
+        System.Reflection.MethodInfo trajectory = typeof(LaunchController).GetMethod("UpdateTrajectory", hidden);
+        System.Reflection.MethodInfo hide = typeof(LaunchController).GetMethod("HideTrajectory", hidden);
+        System.Reflection.FieldInfo highlight = typeof(LaunchController).GetField("bumperHighlight", hidden);
+        if (launcher == null || body == null || aimToLaunch == null || magnet == null || trajectory == null || highlight == null)
+        {
+            problems.Add("aim: LaunchController parts not found");
+            return;
+        }
+
+        // a short pull still launches at full power when the setting is on
+        Vector2 shortPull = (Vector2)aimToLaunch.Invoke(launcher, new object[] { new Vector2(0f, 0.5f) });
+        bool full = Mathf.Abs(shortPull.magnitude - launcher.maxDragDistance) < 0.01f;
+        if (Difficulty.FullPowerShots != full)
+            problems.Add("aim: full-power shots is " + Difficulty.FullPowerShots + " but a short pull gave " + shortPull.magnitude);
+
+        // the nearest bumper above the pad: aim so the line just misses it
+        Bumper target = null;
+        foreach (Bumper bumper in Bumper.All)
+        {
+            if (bumper != null && !bumper.isBramble && bumper.transform.position.y > body.position.y &&
+                (target == null || Vector2.Distance(bumper.transform.position, body.position) <
+                    Vector2.Distance(target.transform.position, body.position)))
+                target = bumper;
+        }
+        if (target == null)
+        {
+            problems.Add("aim: no bumper to aim at");
+            return;
+        }
+        Vector2 toBumper = (Vector2)target.transform.position - body.position;
+        float touch = CameraFit.WorldRadius(target, 0.55f) + CameraFit.WorldRadius(launcher, 0.5f);
+        float distance = toBumper.magnitude;
+        float missAngle = Mathf.Asin(Mathf.Clamp01((touch + 0.1f) / distance));
+        Vector2 aim = Rotate(toBumper.normalized, missAngle * Mathf.Rad2Deg);
+        Vector2 pulled = (Vector2)magnet.Invoke(launcher, new object[] { aim });
+        float sideAfter = Mathf.Abs(pulled.x * toBumper.y - pulled.y * toBumper.x);
+        float needed = (missAngle - Mathf.Asin(Mathf.Clamp01(touch * 0.7f / distance))) * Mathf.Rad2Deg;
+        float allowed = GameSettings.AimAssist ? GameTuning.Get.magnetDegrees * Difficulty.AssistStrength : 0f;
+        bool shouldPull = allowed >= needed;
+        if (shouldPull && sideAfter >= touch)
+            problems.Add("aim: the magnet did not pull the line onto " + target.name);
+        if (!shouldPull && Vector2.Angle(aim, pulled) > 0.01f)
+            problems.Add("aim: the magnet turned the line with assist " + allowed.ToString("0.0") + " degrees");
+        report.AppendLine("aim: full power " + Difficulty.FullPowerShots + ", magnet " +
+            (shouldPull ? "pulled a near miss onto " + target.name : "off for this difficulty/setting (needs " +
+            needed.ToString("0.0") + ", has " + allowed.ToString("0.0") + " degrees)"));
+
+        // aiming straight at the bumper lights it up
+        trajectory.Invoke(launcher, new object[] { toBumper.normalized, 9f });
+        SpriteRenderer ring = highlight.GetValue(launcher) as SpriteRenderer;
+        if (ring == null || !ring.enabled || Vector2.Distance(ring.transform.position, target.transform.position) > 0.01f)
+            problems.Add("aim: aiming at " + target.name + " did not light it up");
+        else
+            report.AppendLine("aim: the aim line lights up " + target.name + " when it's going to hit it");
+        if (hide != null)
+            hide.Invoke(launcher, null);
+    }
+
+    static Vector2 Rotate(Vector2 v, float degrees)
+    {
+        float r = degrees * Mathf.Deg2Rad, c = Mathf.Cos(r), s = Mathf.Sin(r);
+        return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
     }
 
     static Collider2D Wall(string prefix)

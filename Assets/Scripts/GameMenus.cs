@@ -44,7 +44,7 @@ public class GameMenus : MonoBehaviour
     // showProfileButton: false during a stage (resetting your progress there would end the run)
     public static void OpenSettings(bool showProfileButton, Func<BeastId, Sprite> portraits = null, Action onClosed = null)
     {
-        GameMenus menu = Create("SettingsMenu", new Vector2(CardWidth, 1615f), onClosed);
+        GameMenus menu = Create("SettingsMenu", new Vector2(CardWidth, 1725f), onClosed);
         menu.BuildSettings(showProfileButton, portraits);
     }
 
@@ -144,7 +144,7 @@ public class GameMenus : MonoBehaviour
         });
         y -= 175f;
         // how fast the aim follows your finger: low = steady (smooths out a shaky finger), high = instant.
-        // the launch power always comes from how far you pull, not from this slider
+        // the launch power comes from FULL-POWER SHOTS or how far you pull, not from this slider
         sensitivityValue = VolumeRow(card, y, UiIcon.ArrowUp, "AIM SENSITIVITY", GameSettings.AimSensitivitySlider, UiTheme.Green, value =>
         {
             GameSettings.AimSensitivitySlider = value;
@@ -164,6 +164,10 @@ public class GameMenus : MonoBehaviour
         y -= 110f;
         ToggleRow(card, y, UiIcon.Star, "AIM ASSIST", () => GameSettings.AimAssist,
             value => GameSettings.AimAssist = value);
+        y -= 110f;
+        // ON: every launch is full power and the drag only picks the direction
+        ToggleRow(card, y, UiIcon.Play, "FULL-POWER SHOTS", () => GameSettings.FullPowerShots,
+            value => GameSettings.FullPowerShots = value);
         y -= 140f;
 
         Button replay = TextButton(card, "ReplayTutorial", "REPLAY TUTORIAL",

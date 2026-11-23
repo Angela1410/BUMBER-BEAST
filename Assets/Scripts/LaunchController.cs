@@ -91,6 +91,10 @@ public class LaunchController : MonoBehaviour
     private readonly RaycastHit2D[] trajectoryHits = new RaycastHit2D[16];
     private SpriteRenderer[] bounceMarkers;
     private SpriteRenderer[] trajectoryDots;
+    // a pulsing ring on the first bounce, and one around the bumper the shot is going to hit
+    private SpriteRenderer firstBounceRing;
+    private SpriteRenderer bumperHighlight;
+    private float firstBounceDistance = -1f;
 
     private Vector2 dragStart;
     // full power at this much finger drag (in world units), so a comfortable pull is enough
@@ -289,6 +293,8 @@ public class LaunchController : MonoBehaviour
             Vector2 direction = launchVector.normalized;
             if (launchVector.sqrMagnitude < 0.0001f)
                 direction = Vector2.up;
+            // aim assist: a line that just misses a bumper gets pulled onto it
+            direction = ApplyBumperMagnet(direction);
 
             float pullDown = Mathf.Clamp(
                 dragStart.y - currentMousePosition.y,
@@ -363,7 +369,8 @@ public class LaunchController : MonoBehaviour
             // only launch if the player really pulled back
             if (dragDistance > 0.1f)
             {
-                Vector2 direction = launchVector.normalized;
+                // the same bumper magnet as the aim line, so the shot goes where the line showed
+                Vector2 direction = ApplyBumperMagnet(launchVector.normalized);
 
                 // a longer pull = a faster launch, up to the max speed
                 float launchSpeed = Mathf.Min(
@@ -892,6 +899,36 @@ public class LaunchController : MonoBehaviour
             markerRenderer.enabled = false;
             bounceMarkers[i] = markerRenderer;
         }
+
+        firstBounceRing = CreateTrajectoryRing("TrajectoryFirstBounce", new Color32(255, 232, 96, 255));
+        bumperHighlight = CreateTrajectoryRing("TrajectoryBumperHighlight", new Color32(255, 255, 255, 230));
+    }
+
+    SpriteRenderer CreateTrajectoryRing(string ringName, Color color)
+    {
+        GameObject ring = new GameObject(ringName);
+        ring.transform.SetParent(transform, false);
+        SpriteRenderer ringRenderer = ring.AddComponent<SpriteRenderer>();
+        ringRenderer.sprite = HudVisualUtility.RingSprite();
+        ringRenderer.color = color;
+        ringRenderer.sortingLayerID = aimLine.sortingLayerID;
+        ringRenderer.sortingOrder = aimLine.sortingOrder + 2;
+        ringRenderer.enabled = false;
+        return ringRenderer;
+    }
+
+    // places a ring at a spot, this many world units across (whatever the Beast's own scale is)
+    void PlaceRing(SpriteRenderer ring, Vector2 at, float diameter, Color color)
+    {
+        if (ring == null)
+            return;
+        float spriteSize = ring.sprite != null ? Mathf.Max(0.01f, ring.sprite.bounds.size.x) : 1f;
+        float parentScale = Mathf.Max(0.01f, Mathf.Abs(transform.lossyScale.x));
+        ring.transform.position = new Vector3(at.x, at.y, aimBasePosition.z - 0.12f);
+        ring.transform.rotation = Quaternion.identity;
+        ring.transform.localScale = Vector3.one * (diameter / spriteSize / parentScale);
+        ring.color = color;
+        ring.enabled = true;
     }
 
     private void CreateTrajectoryDots()
@@ -949,6 +986,8 @@ public class LaunchController : MonoBehaviour
 
         for (int i = 0; i < bounceMarkers.Length; i++)
             bounceMarkers[i].enabled = false;
+        firstBounceDistance = -1f;
+        Bumper aimedBumper = null;
 
         while (remainingTime > 0f && traveledDistance < MaximumTrajectoryDistance)
         {
@@ -1016,12 +1055,27 @@ public class LaunchController : MonoBehaviour
                 if (markerCount < bounceMarkers.Length &&
                     traveledDistance <= MaximumVisibleTrajectoryDistance)
                 {
+                    // the first bounce gets a big bright dot (and a ring, below), later ones small ones
+                    bool first = markerCount == 0;
                     SpriteRenderer marker = bounceMarkers[markerCount++];
                     marker.transform.position = new Vector3(
                         hit.point.x,
                         hit.point.y,
                         aimBasePosition.z - 0.1f);
+                    marker.transform.localScale = Vector3.one * (first ? 0.22f : 0.12f) /
+                        Mathf.Max(0.01f, Mathf.Abs(transform.lossyScale.x));
+                    marker.color = first ? new Color32(255, 232, 96, 255) : new Color32(255, 232, 96, 150);
                     marker.enabled = true;
+                    if (first)
+                        firstBounceDistance = traveledDistance;
+                }
+
+                // the first bumper on the path lights up, so you know the shot will hit it
+                if (aimedBumper == null && traveledDistance <= MaximumVisibleTrajectoryDistance)
+                {
+                    Bumper hitBumper = hit.collider.GetComponentInParent<Bumper>();
+                    if (hitBumper != null && !hitBumper.isBramble)
+                        aimedBumper = hitBumper;
                 }
 
                 float timeToHit = hitDistance / speed;
@@ -1055,6 +1109,23 @@ public class LaunchController : MonoBehaviour
 
         for (int i = markerCount; i < bounceMarkers.Length; i++)
             bounceMarkers[i].enabled = false;
+
+        // a pulsing ring on the first bounce, and one around the bumper the shot will hit
+        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 9f);
+        if (markerCount > 0)
+            PlaceRing(firstBounceRing, bounceMarkers[0].transform.position, 0.46f + 0.08f * pulse,
+                new Color(1f, 0.91f, 0.38f, 0.75f + 0.25f * pulse));
+        else if (firstBounceRing != null)
+            firstBounceRing.enabled = false;
+
+        if (aimedBumper != null)
+        {
+            float size = (CameraFit.WorldRadius(aimedBumper, 0.55f) + 0.14f) * 2f;
+            PlaceRing(bumperHighlight, aimedBumper.transform.position, size * (1f + 0.06f * pulse),
+                new Color(1f, 1f, 1f, 0.55f + 0.4f * pulse));
+        }
+        else if (bumperHighlight != null)
+            bumperHighlight.enabled = false;
     }
 
     private void PlaceTrajectoryDots()
@@ -1082,6 +1153,9 @@ public class LaunchController : MonoBehaviour
                 float size = Mathf.Lerp(0.09f, 0.045f, progress);
                 dot.transform.localScale = Vector3.one * size;
                 Color color = new Color(1f, 0.96f, 0.79f, Mathf.Lerp(0.9f, 0.25f, progress));
+                // after the first bounce the dots fade, so the first part of the shot stands out
+                if (firstBounceDistance >= 0f && targetDistance > firstBounceDistance)
+                    color.a *= 0.5f;
                 dot.color = color;
                 dot.enabled = true;
                 targetDistance += TrajectoryDotSpacing;
@@ -1191,6 +1265,10 @@ public class LaunchController : MonoBehaviour
             aimLine.enabled = false;
             aimLine.positionCount = 0;
         }
+        if (firstBounceRing != null)
+            firstBounceRing.enabled = false;
+        if (bumperHighlight != null)
+            bumperHighlight.enabled = false;
 
         if (bounceMarkers == null)
         {
@@ -1232,6 +1310,51 @@ public class LaunchController : MonoBehaviour
         if (Difficulty.FullPowerShots && aim.magnitude > EasyMinimumDrag)
             launch = aim.normalized * maxDragDistance;
         return launch;
+    }
+
+    // BUMPER MAGNET (aim assist): if the aim line passes very close to a bumper without touching it,
+    // turn it a few degrees so the shot hits the bumper. how close and how far it may turn are in
+    // GameTuning (Aiming), and it follows Settings > AIM ASSIST and the difficulty (none on HELL)
+    Vector2 ApplyBumperMagnet(Vector2 direction)
+    {
+        float strength = GameSettings.AimAssist ? Difficulty.AssistStrength : 0f;
+        GameTuning tuning = GameTuning.Get;
+        float maxTurn = tuning.magnetDegrees * strength;
+        if (maxTurn <= 0f || tuning.magnetReach <= 0f || direction.sqrMagnitude < 0.0001f)
+            return direction;
+
+        Vector2 origin = rb != null ? rb.position : (Vector2)transform.position;
+        if (chomaCollider != null)
+            origin += (Vector2)chomaCollider.bounds.center - (Vector2)transform.position;
+        float beastRadius = GetTrajectoryRadius();
+        float bestTurn = float.MaxValue;
+        Vector2 best = direction;
+        foreach (Bumper bumper in Bumper.All)
+        {
+            if (bumper == null || bumper.isBramble)
+                continue;
+            Vector2 toBumper = (Vector2)bumper.transform.position - origin;
+            if (Vector2.Dot(toBumper, direction) <= 0f)
+                continue; // behind the Beast
+            // how far the line passes from the bumper's middle (+ = the bumper is on the left)
+            float side = direction.x * toBumper.y - direction.y * toBumper.x;
+            float touch = CameraFit.WorldRadius(bumper, 0.55f) + beastRadius;
+            float miss = Mathf.Abs(side) - touch;
+            if (miss <= 0f || miss > tuning.magnetReach)
+                continue; // it already hits this one, or it's not close
+            // turn until the line goes a bit inside the bumper's edge, so the hit is sure
+            float distance = toBumper.magnitude;
+            float now = Mathf.Asin(Mathf.Clamp01(Mathf.Abs(side) / distance));
+            float wanted = Mathf.Asin(Mathf.Clamp01(touch * 0.7f / distance));
+            float turn = (now - wanted) * Mathf.Rad2Deg;
+            if (turn <= 0f || turn > maxTurn || turn >= bestTurn)
+                continue;
+            bestTurn = turn;
+            float angle = Mathf.Sign(side) * turn * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(angle), sin = Mathf.Sin(angle);
+            best = new Vector2(direction.x * cos - direction.y * sin, direction.x * sin + direction.y * cos);
+        }
+        return best;
     }
 
     void RecordAim(Vector2 aim)

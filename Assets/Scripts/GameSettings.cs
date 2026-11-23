@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // player settings used by the title screen, the map and the pause menu: music and sound volume,
-// screen shake, difficulty, aim sensitivity, aim assist, drag anywhere aiming and the profile name.
+// screen shake, difficulty, aim sensitivity, aim assist, drag anywhere aiming, full-power shots and the profile name.
 // saved in PlayerPrefs (only on this phone)
 public static class GameSettings
 {
@@ -16,6 +16,7 @@ public static class GameSettings
     private const string DragAnywhereKey = "BumperBeast.Settings.DragAnywhere";
     private const string AimAssistKey = "BumperBeast.Settings.AimAssist";
     private const string DifficultyKey = "BumperBeast.Settings.Difficulty";
+    private const string FullPowerKey = "BumperBeast.Settings.FullPowerShots";
 
     private static bool loaded;
     private static float musicVolume = 0.8f;
@@ -25,6 +26,7 @@ public static class GameSettings
     private static float sensitivitySlider = 0.5f;
     private static bool dragAnywhere = true;
     private static bool aimAssist = true;
+    private static bool fullPowerShots = true;
     private static GameDifficulty difficulty = GameDifficulty.Medium;
 
     // aim sensitivity as a slider position (0..1): how fast the aim follows the finger.
@@ -67,6 +69,23 @@ public static class GameSettings
                 return;
             aimAssist = value;
             PlayerPrefs.SetInt(AimAssistKey, value ? 1 : 0);
+            PlayerPrefs.Save();
+            NotifyChanged();
+        }
+    }
+
+    // every launch is full power, so dragging only picks the direction (ON by default).
+    // OFF: the pull length sets the power like before (EASY is always full power)
+    public static bool FullPowerShots
+    {
+        get { Load(); return fullPowerShots; }
+        set
+        {
+            Load();
+            if (fullPowerShots == value)
+                return;
+            fullPowerShots = value;
+            PlayerPrefs.SetInt(FullPowerKey, value ? 1 : 0);
             PlayerPrefs.Save();
             NotifyChanged();
         }
@@ -155,6 +174,7 @@ public static class GameSettings
         sensitivitySlider = Mathf.Clamp01(PlayerPrefs.GetFloat(SensitivityKey, sensitivitySlider));
         dragAnywhere = PlayerPrefs.GetInt(DragAnywhereKey, 1) != 0;
         aimAssist = PlayerPrefs.GetInt(AimAssistKey, 1) != 0;
+        fullPowerShots = PlayerPrefs.GetInt(FullPowerKey, 1) != 0;
         difficulty = (GameDifficulty)Mathf.Clamp(PlayerPrefs.GetInt(DifficultyKey, (int)GameDifficulty.Medium),
             (int)GameDifficulty.Easy, (int)GameDifficulty.Hell);
     }

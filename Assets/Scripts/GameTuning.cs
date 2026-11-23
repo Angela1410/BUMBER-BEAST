@@ -59,6 +59,13 @@ public class GameTuning : ScriptableObject
     [Tooltip("Barrier health you get back when you clear a wave (never above full).")]
     public int barrierHealOnWaveClear = 1;
 
+    [Header("Aiming (bumper magnet)")]
+    [Tooltip("The most the aim line is turned toward a bumper, in degrees, at aim assist strength 1 " +
+        "(it's multiplied by the difficulty's aim assist: EASY 1.4, MEDIUM 1, HARD 0.6, HELL 0 = off).")]
+    public float magnetDegrees = 5f;
+    [Tooltip("How close (world units) the aim line must pass a bumper before it's pulled onto it.")]
+    public float magnetReach = 0.4f;
+
     // the editor uses this to save the file again when new settings are added (GameTuningAsset)
     [HideInInspector] public int fileVersion;
 
