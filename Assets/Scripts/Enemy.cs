@@ -363,7 +363,10 @@ public class Enemy : MonoBehaviour
             // check the element chart: is the Beast strong against this enemy?
             // if yes it does 2 damage, if not just 1
             bool superEffective = ElementChart.IsSuperEffective(attacker.element, element);
-            TakeDamage(superEffective ? 2 : 1, superEffective);
+            // bounce power: every bumper or wall hit earlier in this shot adds damage
+            BeastController beast = collision.gameObject.GetComponent<BeastController>();
+            int bonus = beast != null ? beast.BouncePower : 0;
+            TakeDamage((superEffective ? 2 : 1) + bonus, superEffective);
         }
     }
 

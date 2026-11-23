@@ -24,6 +24,26 @@ public class GameTuning : ScriptableObject
     [Tooltip("Free space kept between a bumper (or bramble, or boulder) and a side wall, in bumper widths.")]
     public float bumperWallGap = 1f;
 
+    [Header("Bounce power")]
+    [Tooltip("Extra damage for every bumper or wall the Beast bounces off in one shot.")]
+    public int bouncePowerPerHit = 1;
+    [Tooltip("The most extra damage bouncing can add in one shot.")]
+    public int bouncePowerMax = 4;
+    [Tooltip("How much higher the bumper sound gets with each bounce in a shot (0.08 = 8%).")]
+    public float bouncePitchStep = 0.08f;
+
+    [Header("Swap recall")]
+    [Tooltip("When SWAP calls a flying Beast back, the next launch is locked for this many seconds.")]
+    public float recallLaunchLock = 1.5f;
+
+    [Header("Coming back to the pad")]
+    [Tooltip("The Beast flies back to the pad after this many bounces in one shot...")]
+    public int returnAfterBounces = 6;
+    [Tooltip("...or after this many seconds in the air, whichever comes first.")]
+    public float returnAfterSeconds = 3f;
+    [Tooltip("How long the flight back to the pad takes, in seconds.")]
+    public float returnFlightTime = 0.3f;
+
     // the editor uses this to save the file again when new settings are added (GameTuningAsset)
     [HideInInspector] public int fileVersion;
 

@@ -107,6 +107,20 @@ public class PadSwapSystem : MonoBehaviour
         RefreshLayout(false);
         UpdateSwapButton();
         UpdatePressedScale();
+        UpdateLaunchLockSweep();
+    }
+
+    // after a SWAP recall the button shows a dark sweep that runs out when you can launch again
+    void UpdateLaunchLockSweep()
+    {
+        if (swapVisual == null || swapVisual.Cooldown == null || beast == null)
+            return;
+        float left = beast.LaunchLockLeft;
+        bool locked = left > 0f;
+        if (swapVisual.Cooldown.enabled != locked)
+            swapVisual.Cooldown.enabled = locked;
+        if (locked)
+            swapVisual.Cooldown.fillAmount = left;
     }
 
     void OnDestroy()
@@ -138,7 +152,12 @@ public class PadSwapSystem : MonoBehaviour
         GameAudio.Play(Sfx.Click);
 
         if (pendingSquadIndex >= 0 && recallOnSwap && beast.State == BeastState.Flying)
+        {
             beast.BeginReturn();
+            // calling a flying Beast back costs a short wait before the next launch
+            // (GameTuning: Recall Launch Lock), so skipping the bumpers this way doesn't pay
+            beast.LockLaunch(GameTuning.Get.recallLaunchLock);
+        }
 
         UpdateSwapButton();
     }

@@ -114,6 +114,7 @@ public class LaunchController : MonoBehaviour
     private float pullSpinSpeed;
     private bool flightSpinActive;
     private Transform[] uprightChildren = new Transform[0];
+    private float nextLockedSoundTime;
 
     void Start()
     {
@@ -227,6 +228,17 @@ public class LaunchController : MonoBehaviour
             if (waves != null && waves.IsAwaitingReady)
             {
                 waves.NudgeReady();
+                return;
+            }
+
+            // a SWAP recall locks the next launch for a moment (the swap button shows the time left)
+            if (beastController != null && beastController.IsLaunchLocked)
+            {
+                if (Time.unscaledTime >= nextLockedSoundTime)
+                {
+                    GameAudio.Play(Sfx.Denied);
+                    nextLockedSoundTime = Time.unscaledTime + 0.4f;
+                }
                 return;
             }
 

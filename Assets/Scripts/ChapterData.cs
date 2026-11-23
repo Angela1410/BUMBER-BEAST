@@ -39,7 +39,8 @@ public static class ChapterData
     {
         "Every enemy wears its element badge. Swap to the Beast that beats it.",
         "A gold glow on an enemy's badge means the Beast on the pad deals double damage.",
-        "Tap SWAP while your Beast is flying to call it straight back as the next Beast.",
+        "Tap SWAP while your Beast is flying to call it back as the next Beast. Its next launch waits a moment.",
+        "Every bumper and wall you bounce off makes that shot hit harder. Bank your shots!",
         "Fire beats Grass, Grass beats Earth, Earth beats Electric, Electric beats Water, Water beats Fire.",
         "Your squad holds 3 Beasts. Choose them in the Shop's Beasts tab.",
         "Boss stages end at once if the boss reaches your barrier. Keep it busy!",

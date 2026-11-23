@@ -10,14 +10,14 @@ public enum BeastState
     Returning
 }
 
+// when the Beast comes back to the pad (after enough bounces or seconds) and how fast it flies back
+// are in GameTuning (Coming back to the pad), so is the bounce power
 public class BeastController : MonoBehaviour
 {
     public Transform launchPad;
     public float skillCooldown = 6f;
-    public float returnSpeed = 12f;
     public float stopDelay = 0.3f;
     public float autoReturnSpeed = 1.5f;
-    public float maximumFlightTime = 3.2f;
     public float maximumSpeed = 9f;
     public float skillBounceSpeed = 6.2f;
     public float skillRadius = 3f;
@@ -29,6 +29,17 @@ public class BeastController : MonoBehaviour
     // the skill only works while the Beast is flying and the skill is recharged
     public bool CanUseSkill => State == BeastState.Flying && IsSkillReady;
     public bool IsDoubleBounceActive { get; private set; }
+
+    // BOUNCE POWER: every bumper or wall the Beast bounces off in one shot adds damage to its hits
+    // for the rest of that shot (GameTuning: Bounce power). it starts at 0 on every launch
+    public int BouncePower { get; private set; }
+    // everything the Beast bounced off in this shot (walls, bumpers, enemies)
+    public int ShotBounces { get; private set; }
+
+    // after SWAP calls a flying Beast back, the next launch waits a moment (the swap button shows it)
+    public bool IsLaunchLocked => Time.time < launchLockUntil;
+    // 1 right when the lock starts, 0 when you can launch again
+    public float LaunchLockLeft => IsLaunchLocked ? Mathf.Clamp01((launchLockUntil - Time.time) / launchLockLength) : 0f;
 
     // the player's Beast in this stage (only one per scene). the enemy badges read it
     public static BeastController Active { get; private set; }
@@ -50,6 +61,12 @@ public class BeastController : MonoBehaviour
     private LineRenderer zapLine;
     private Coroutine zapRoutine;
     private readonly Vector3[] zapPoints = new Vector3[16];
+    private float launchLockUntil;
+    private float launchLockLength = 1f;
+    private SpriteRenderer powerGlow;
+    private TrailRenderer powerTrail;
+    private Material powerTrailMaterial;
+    private float powerFlashUntil;
 
     private static readonly Color FlameRingColor = new Color(1f, 0.48f, 0.08f, 1f);
     private static readonly Color KnockRingColor = new Color(0.78f, 0.56f, 0.32f, 1f);
@@ -154,9 +171,19 @@ public class BeastController : MonoBehaviour
             else
                 stoppedTime = 0f;
 
-            if (stoppedTime >= stopDelay || flightTime >= maximumFlightTime)
+            // fly back to the pad when it stopped moving, or after enough bounces or enough time
+            // (whichever comes first)
+            GameTuning tuning = GameTuning.Get;
+            bool enoughBounces = tuning.returnAfterBounces > 0 && ShotBounces >= tuning.returnAfterBounces;
+            if (stoppedTime >= stopDelay || flightTime >= tuning.returnAfterSeconds || enoughBounces)
                 BeginReturn();
         }
+    }
+
+    // the glow and the trail grow with the bounce power (after LaunchController turned and sized the Beast)
+    void LateUpdate()
+    {
+        UpdatePowerLook();
     }
 
     void FixedUpdate()
@@ -190,10 +217,17 @@ public class BeastController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // sound for hitting a wall (enemies and bumpers play their own hit sounds)
-        if ((State == BeastState.Flying || State == BeastState.UsingSkill) && collision.collider != null &&
-            collision.collider.GetComponentInParent<Enemy>() == null && collision.collider.GetComponent<Bumper>() == null)
-            GameAudio.Play(Sfx.Bounce, Mathf.Clamp01(collision.relativeVelocity.magnitude / 12f) * 0.8f + 0.2f);
+        if ((State == BeastState.Flying || State == BeastState.UsingSkill) && collision.collider != null)
+        {
+            // every bounce counts toward flying back to the pad
+            ShotBounces++;
+            // a wall makes the Beast stronger and plays the wall sound (bumpers and enemies do their own)
+            if (collision.collider.GetComponentInParent<Enemy>() == null && collision.collider.GetComponent<Bumper>() == null)
+            {
+                GainBouncePower();
+                GameAudio.Play(Sfx.Bounce, Mathf.Clamp01(collision.relativeVelocity.magnitude / 12f) * 0.8f + 0.2f);
+            }
+        }
 
         if (!IsDoubleBounceActive || rb == null || collision.collider == null ||
             State == BeastState.AtPad || State == BeastState.Returning)
@@ -226,6 +260,105 @@ public class BeastController : MonoBehaviour
         State = BeastState.Flying;
         stoppedTime = 0f;
         flightTime = 0f;
+        // a new shot starts with no bounce power
+        BouncePower = 0;
+        ShotBounces = 0;
+        if (powerTrail != null)
+            powerTrail.Clear();
+    }
+
+    // a bumper or a wall hit: the Beast gets stronger for the rest of this shot (Bumper calls this too).
+    // returns the power now, so the bumper sound can go up with it
+    public int GainBouncePower()
+    {
+        if (State != BeastState.Flying && State != BeastState.UsingSkill)
+            return BouncePower;
+        GameTuning tuning = GameTuning.Get;
+        BouncePower = Mathf.Min(Mathf.Max(0, tuning.bouncePowerMax), BouncePower + Mathf.Max(0, tuning.bouncePowerPerHit));
+        powerFlashUntil = Time.time + 0.12f;
+        return BouncePower;
+    }
+
+    // SWAP called the Beast back mid-flight: no launching for a moment
+    public void LockLaunch(float seconds)
+    {
+        if (seconds <= 0f)
+            return;
+        launchLockLength = seconds;
+        launchLockUntil = Time.time + seconds;
+    }
+
+    // a soft glow around the Beast and a short trail behind it, both brighter and bigger with more power
+    void UpdatePowerLook()
+    {
+        bool show = BouncePower > 0 && (State == BeastState.Flying || State == BeastState.UsingSkill);
+        if (!show)
+        {
+            if (powerGlow != null && powerGlow.enabled)
+                powerGlow.enabled = false;
+            if (powerTrail != null && powerTrail.emitting)
+                powerTrail.emitting = false;
+            return;
+        }
+
+        CreatePowerLook();
+        float level = Mathf.Clamp01((float)BouncePower / Mathf.Max(1, GameTuning.Get.bouncePowerMax));
+        bool flash = Time.time < powerFlashUntil;
+        Color color = BeastRoster.GetEffectColor(ActiveBeast);
+        float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 16f);
+        color.a = Mathf.Clamp01(0.3f + 0.45f * level + (flash ? 0.25f : 0f) + 0.08f * pulse);
+        powerGlow.color = color;
+        powerGlow.enabled = true;
+        powerGlow.transform.localScale = Vector3.one * GlowScale() * (1.15f + 0.4f * level + (flash ? 0.2f : 0f));
+
+        Color tail = color;
+        tail.a = 0f;
+        Color head = color;
+        head.a = 0.35f + 0.45f * level;
+        powerTrail.startColor = head;
+        powerTrail.endColor = tail;
+        powerTrail.widthMultiplier = BeastRadius() * 2f * (0.35f + 0.5f * level);
+        powerTrail.time = 0.12f + 0.18f * level;
+        powerTrail.emitting = true;
+    }
+
+    void CreatePowerLook()
+    {
+        if (powerGlow != null)
+            return;
+
+        int order = spriteRenderer != null ? spriteRenderer.sortingOrder : 0;
+        powerGlow = GameArt.AddLayer(transform, "BouncePowerGlow", HudVisualUtility.GlowSprite(),
+            GameArt.AdditiveGlow(spriteRenderer != null ? spriteRenderer.sharedMaterial : null), spriteRenderer, -1);
+        powerGlow.enabled = false;
+
+        GameObject trailObject = new GameObject("BouncePowerTrail");
+        trailObject.transform.SetParent(transform, false);
+        powerTrail = trailObject.AddComponent<TrailRenderer>();
+        powerTrail.emitting = false;
+        powerTrail.numCapVertices = 4;
+        powerTrail.minVertexDistance = 0.05f;
+        powerTrail.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0f));
+        powerTrail.sortingLayerID = spriteRenderer != null ? spriteRenderer.sortingLayerID : 0;
+        powerTrail.sortingOrder = order - 2;
+        EnsureSkillRingMaterial();
+        powerTrailMaterial = flameBurstRingMaterial;
+        if (powerTrailMaterial != null)
+            powerTrail.sharedMaterial = powerTrailMaterial;
+    }
+
+    // the glow is about 1.6 times the Beast's size, whatever its own scale is
+    float GlowScale()
+    {
+        Sprite glow = powerGlow != null ? powerGlow.sprite : null;
+        float glowSize = glow != null ? Mathf.Max(0.01f, glow.bounds.size.x) : 1f;
+        float parentScale = Mathf.Max(0.01f, Mathf.Abs(transform.lossyScale.x));
+        return BeastRadius() * 2f * 1.6f / glowSize / parentScale;
+    }
+
+    float BeastRadius()
+    {
+        return CameraFit.WorldRadius(this, 0.5f);
     }
 
     // the skill button calls this
@@ -581,6 +714,9 @@ public class BeastController : MonoBehaviour
 
         IsDoubleBounceActive = false;
         chargedBouncePending = false;
+        // the shot is over, so is its bounce power
+        BouncePower = 0;
+        ShotBounces = 0;
 
         if (launchPad == null)
         {
@@ -606,13 +742,17 @@ public class BeastController : MonoBehaviour
             rb.simulated = false;
         }
 
-        while (targetPad != null &&
-            Vector2.Distance(transform.position, targetPad.position) > 0.05f)
+        // a quick flight back that always takes the same short time (GameTuning: Return Flight Time),
+        // fast at first and gentle at the end
+        float duration = Mathf.Max(0.05f, GameTuning.Get.returnFlightTime);
+        Vector2 start = transform.position;
+        float elapsed = 0f;
+        while (targetPad != null && elapsed < duration)
         {
-            transform.position = Vector2.MoveTowards(
-                transform.position,
-                targetPad.position,
-                Mathf.Max(0.01f, returnSpeed) * Time.deltaTime);
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = 1f - (1f - t) * (1f - t);
+            transform.position = Vector2.LerpUnclamped(start, targetPad.position, eased);
             yield return null;
         }
 

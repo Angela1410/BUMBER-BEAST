@@ -72,6 +72,8 @@ public class BumperBeastSmokeTest
             }
         }
 
+        yield return CheckShot();
+
         Application.logMessageReceived -= CollectErrors;
         string summary = "SMOKE TEST REPORT\n" + report + "\nerrors logged: " + errors.Count +
             (errors.Count > 0 ? "\n" + string.Join("\n", errors) : string.Empty) +
@@ -129,6 +131,75 @@ public class BumperBeastSmokeTest
         }
         report.AppendLine(shape + ": camera size " + camera.orthographicSize.ToString("0.00") + ", walls at +-" +
             halfWidth.ToString("0.00") + ", " + bumpers + " bumpers OK");
+    }
+
+    // fix 2: bounce power stops at its maximum, a SWAP recall locks the next launch for a moment,
+    // and a real shot comes back by itself, with a quick flight back to the pad
+    IEnumerator CheckShot()
+    {
+        AsyncOperation loading = EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/stage-5_Earth.unity",
+            new LoadSceneParameters(LoadSceneMode.Single));
+        while (!loading.isDone)
+            yield return null;
+        for (int frame = 0; frame < 10; frame++)
+            yield return null;
+
+        BeastController beast = BeastController.Active;
+        Rigidbody2D body = beast != null ? beast.GetComponent<Rigidbody2D>() : null;
+        if (beast == null || body == null)
+        {
+            problems.Add("shot: no Beast in stage 5");
+            yield break;
+        }
+        GameTuning tuning = GameTuning.Get;
+
+        beast.NotifyLaunched();
+        for (int hit = 0; hit < 10; hit++)
+            beast.GainBouncePower();
+        if (beast.BouncePower != tuning.bouncePowerMax)
+            problems.Add("shot: bounce power went to " + beast.BouncePower + ", the most is " + tuning.bouncePowerMax);
+        beast.BeginReturn();
+        while (beast.State != BeastState.AtPad)
+            yield return null;
+        if (beast.BouncePower != 0)
+            problems.Add("shot: bounce power stayed after the shot (" + beast.BouncePower + ")");
+
+        beast.LockLaunch(tuning.recallLaunchLock);
+        if (!beast.IsLaunchLocked)
+            problems.Add("shot: the recall lock did not start");
+        yield return new WaitForSeconds(tuning.recallLaunchLock + 0.1f);
+        if (beast.IsLaunchLocked)
+            problems.Add("shot: the recall lock did not end");
+
+        // a real launch: straight up, then wait for the Beast to come back by itself
+        body.linearVelocity = new Vector2(2f, 8.5f);
+        beast.NotifyLaunched();
+        float launched = Time.time, returning = -1f, landed = -1f;
+        int bounces = 0;
+        while (Time.time - launched < tuning.returnAfterSeconds + 2f)
+        {
+            if (returning < 0f && beast.State == BeastState.Returning)
+                returning = Time.time;
+            if (beast.State == BeastState.Flying || beast.State == BeastState.UsingSkill)
+                bounces = beast.ShotBounces;
+            if (returning >= 0f && beast.State == BeastState.AtPad)
+            {
+                landed = Time.time;
+                break;
+            }
+            yield return null;
+        }
+        if (returning < 0f || landed < 0f)
+            problems.Add("shot: the Beast did not come back to the pad by itself");
+        else
+        {
+            if (returning - launched > tuning.returnAfterSeconds + 0.2f)
+                problems.Add("shot: it flew " + (returning - launched).ToString("0.00") + " s before coming back");
+            if (landed - returning > 0.4f)
+                problems.Add("shot: the flight back took " + (landed - returning).ToString("0.00") + " s");
+            report.AppendLine("shot: flew " + (returning - launched).ToString("0.00") + " s with " + bounces +
+                " bounces, flight back " + (landed - returning).ToString("0.00") + " s");
+        }
     }
 
     static Collider2D Wall(string prefix)

@@ -245,6 +245,9 @@ public class Bumper : MonoBehaviour
 
         if (beast != null)
         {
+            // every bumper hit makes the Beast stronger for the rest of this shot (not Thornmaw's brambles)
+            int bouncePower = isBramble ? beast.BouncePower : beast.GainBouncePower();
+
             // POWER BUMPER (red): uses the Beast's power move on the enemies, then breaks.
             // if there are no enemies yet it waits, and bounces the Beast like a green bumper
             bool power = type == BumperType.Red && !isBramble;
@@ -264,7 +267,8 @@ public class Bumper : MonoBehaviour
             }
 
             ApplyEffect(collision.rigidbody, collision);
-            GameAudio.Play(Sfx.Bumper);
+            // the bumper sound goes a little higher with every bounce in the shot
+            GameAudio.PlayPitched(Sfx.Bumper, 1f, 1f + GameTuning.Get.bouncePitchStep * bouncePower);
 
             if (hitEffect != null)
             {
