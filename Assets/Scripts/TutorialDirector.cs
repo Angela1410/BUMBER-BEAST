@@ -216,7 +216,7 @@ public class TutorialDirector : MonoBehaviour
             yield break;
 
         Bumper power = EnsurePowerBumper();
-        coach.Say("<color=#7CD957>GREEN</color> speeds you up, <color=#6FB8FF>BLUE</color> slows you down.\n" +
+        coach.Say("<color=#7CD957>GREEN</color> fills your <color=#FF8030>POWER</color> meter, <color=#6FB8FF>BLUE</color> slows you down.\n" +
             "The glowing <color=#FF6A4D>POWER BUMPER</color> unleashes your Beast!", BubbleTop);
         if (power != null)
             coach.PointAtWorld(power.transform);

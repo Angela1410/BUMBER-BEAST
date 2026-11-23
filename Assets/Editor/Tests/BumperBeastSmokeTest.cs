@@ -73,6 +73,7 @@ public class BumperBeastSmokeTest
         }
 
         yield return CheckShot();
+        CheckPowerMeter();
 
         Application.logMessageReceived -= CollectErrors;
         string summary = "SMOKE TEST REPORT\n" + report + "\nerrors logged: " + errors.Count +
@@ -167,7 +168,10 @@ public class BumperBeastSmokeTest
         beast.LockLaunch(tuning.recallLaunchLock);
         if (!beast.IsLaunchLocked)
             problems.Add("shot: the recall lock did not start");
-        yield return new WaitForSeconds(tuning.recallLaunchLock + 0.1f);
+        // (WaitForSeconds doesn't wait in this kind of test, so we count the time ourselves)
+        float lockEnds = Time.time + tuning.recallLaunchLock + 0.1f;
+        while (Time.time < lockEnds)
+            yield return null;
         if (beast.IsLaunchLocked)
             problems.Add("shot: the recall lock did not end");
 
@@ -199,6 +203,45 @@ public class BumperBeastSmokeTest
                 problems.Add("shot: the flight back took " + (landed - returning).ToString("0.00") + " s");
             report.AppendLine("shot: flew " + (returning - launched).ToString("0.00") + " s with " + bounces +
                 " bounces, flight back " + (landed - returning).ToString("0.00") + " s");
+        }
+    }
+
+    // fix 3: green hits fill the POWER meter, and a full meter turns a green bumper into a red Power Bumper
+    void CheckPowerMeter()
+    {
+        PowerMeter meter = PowerMeter.Current;
+        if (meter == null || GameObject.Find("PowerPanel") == null)
+        {
+            problems.Add("power meter: not in the stage");
+            return;
+        }
+        Bumper green = null;
+        foreach (Bumper bumper in Bumper.All)
+        {
+            if (bumper != null && bumper.type == BumperType.Green && !bumper.isBramble)
+                green = bumper;
+        }
+        if (green == null)
+        {
+            problems.Add("power meter: no green bumper in stage 5");
+            return;
+        }
+        for (int hit = 0; hit < GameTuning.Get.powerMeterHits; hit++)
+            PowerMeter.GreenHit(green);
+        Bumper power = null;
+        foreach (Bumper bumper in Bumper.All)
+        {
+            if (bumper != null && bumper.IsPowerBumper)
+                power = bumper;
+        }
+        if (power == null)
+            problems.Add("power meter: full, but no Power Bumper appeared");
+        else
+        {
+            SpriteRenderer look = power.GetComponent<SpriteRenderer>();
+            if (power.redSprite == null || look == null || look.sprite != power.redSprite)
+                problems.Add("power meter: the Power Bumper doesn't use the red picture");
+            report.AppendLine("power meter: " + GameTuning.Get.powerMeterHits + " green hits made " + power.name + " the Power Bumper");
         }
     }
 

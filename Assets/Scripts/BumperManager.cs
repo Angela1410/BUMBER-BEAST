@@ -75,13 +75,15 @@ public class BumperManager : MonoBehaviour
             Transform selectedPoint = emptyPoints[Random.Range(0, emptyPoints.Count)];
             GameObject spawned = Instantiate(bumperPrefab, selectedPoint.position, Quaternion.identity);
 
-            // the prefab is always one color, so we pick the new bumper's color here
+            // the prefab is always one color, so we pick the new bumper's color here.
+            // never red: the Power Bumper now comes from the POWER meter, not from luck
             if (respawnTypes != null && respawnTypes.Length > 0)
             {
                 Bumper bumper = spawned.GetComponent<Bumper>();
                 if (bumper != null && !bumper.isBramble)
                 {
-                    bumper.type = respawnTypes[Random.Range(0, respawnTypes.Length)];
+                    BumperType picked = respawnTypes[Random.Range(0, respawnTypes.Length)];
+                    bumper.type = picked == BumperType.Red ? BumperType.Green : picked;
                     bumper.RefreshVisuals();
                 }
             }

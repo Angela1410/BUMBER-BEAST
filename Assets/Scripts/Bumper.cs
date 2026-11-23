@@ -125,7 +125,26 @@ public class Bumper : MonoBehaviour
         if (sr == null)
             sr = gameObject.AddComponent<SpriteRenderer>();
 
+        BorrowMissingSprites();
         UpdateVisuals();
+    }
+
+    // some stage bumpers lost their blue and red pictures (a Power Bumper there still looked green),
+    // so we take them from the bumper prefab the BumperManager uses
+    void BorrowMissingSprites()
+    {
+        if (isBramble || (blueSprite != null && redSprite != null))
+            return;
+        BumperManager manager = FindAnyObjectByType<BumperManager>();
+        Bumper source = manager != null && manager.bumperPrefab != null ? manager.bumperPrefab.GetComponent<Bumper>() : null;
+        if (source == null || source == this)
+            return;
+        if (greenSprite == null)
+            greenSprite = source.greenSprite;
+        if (blueSprite == null)
+            blueSprite = source.blueSprite;
+        if (redSprite == null)
+            redSprite = source.redSprite;
     }
 
     void Start()
@@ -282,6 +301,10 @@ public class Bumper : MonoBehaviour
                 StartCoroutine(HitPunchEffect());
                 return;
             }
+
+            // green hits fill the POWER meter (when it's full a Power Bumper appears)
+            if (type == BumperType.Green && !isBramble)
+                PowerMeter.GreenHit(this);
 
             TakeDamage();
             StartCoroutine(HitPunchEffect());

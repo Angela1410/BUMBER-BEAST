@@ -44,6 +44,10 @@ public class GameTuning : ScriptableObject
     [Tooltip("How long the flight back to the pad takes, in seconds.")]
     public float returnFlightTime = 0.3f;
 
+    [Header("Power meter")]
+    [Tooltip("Green bumper hits needed to fill the POWER meter. Full = a green bumper turns into the Power Bumper.")]
+    public int powerMeterHits = 6;
+
     // the editor uses this to save the file again when new settings are added (GameTuningAsset)
     [HideInInspector] public int fileVersion;
 
