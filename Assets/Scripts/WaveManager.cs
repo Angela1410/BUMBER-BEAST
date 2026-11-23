@@ -608,9 +608,23 @@ public class WaveManager : MonoBehaviour
         timedWaveRemaining = wave.spawnDuration;
         timedWaveActive = true;
 
+        // the enemies come in small groups with a short break between them (GameTuning: Waves).
+        // during a break nothing spawns and the wave clock waits too, so the wave still sends the same
+        // number of enemies, just spread out more, and you get a moment to catch up
+        GameTuning tuning = GameTuning.Get;
+        int groupSize = Mathf.Max(0, tuning.enemiesPerGroup);
+        float groupBreak = Mathf.Max(0f, tuning.breakBetweenGroups);
+        int spawnedInGroup = 0;
+        float breakLeft = 0f;
+
         while (elapsed < wave.spawnDuration || nextFixed < fixedSchedule.Count)
         {
             yield return null;
+            if (breakLeft > 0f)
+            {
+                breakLeft -= Time.deltaTime;
+                continue;
+            }
             elapsed += Time.deltaTime;
             timedWaveRemaining = Mathf.Max(0f, wave.spawnDuration - elapsed);
 
@@ -657,6 +671,16 @@ public class WaveManager : MonoBehaviour
             else
             {
                 nextSpawn = elapsed + Random.Range(gapMin, gapMax);
+            }
+
+            // a full group: take a break before the next one
+            spawnedInGroup++;
+            if (groupSize > 0 && groupBreak > 0f && spawnedInGroup >= groupSize)
+            {
+                spawnedInGroup = 0;
+                burstLeft = 0;
+                nextSpawn = elapsed + Random.Range(gapMin, gapMax);
+                breakLeft = groupBreak;
             }
         }
 

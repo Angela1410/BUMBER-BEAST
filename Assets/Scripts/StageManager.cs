@@ -859,6 +859,35 @@ public class StageManager : MonoBehaviour
             Time.timeScale = 1f;
     }
 
+    void OnEnable()
+    {
+        WaveManager.WaveCleared += OnWaveCleared;
+    }
+
+    void OnDisable()
+    {
+        WaveManager.WaveCleared -= OnWaveCleared;
+    }
+
+    // clearing a wave mends the barrier a little (GameTuning: Barrier Heal On Wave Clear), never above
+    // full. not after the last wave: the stage is won then, and the stars count what you kept
+    void OnWaveCleared(int wave, bool lastWave)
+    {
+        int heal = GameTuning.Get.barrierHealOnWaveClear;
+        if (stageFinished || lastWave || heal <= 0 || barrierHealth <= 0 || barrierHealth >= barrierMaxHealth)
+            return;
+
+        int before = barrierHealth;
+        barrierHealth = Mathf.Min(barrierMaxHealth, barrierHealth + heal);
+        UpdateBarrierText();
+        if (barrierVisuals != null)
+            barrierVisuals.ShowHealth(barrierHealth, barrierMaxHealth);
+        GameObject barrierObject = GameObject.Find("Square");
+        Vector2 where = barrierObject != null ? (Vector2)barrierObject.transform.position : new Vector2(0f, barrierY);
+        DamagePopup.ShowText(where + Vector2.up * 0.8f, "+" + (barrierHealth - before) + " BARRIER",
+            new Color(0.55f, 0.95f, 0.45f, 1f));
+    }
+
     // searches this stage's own scene. (while a stage is still loading, the "active" scene can be
     // the old one, so searching that one missed things like stage 2's BarrierHealthText)
     private GameObject FindSceneObjectByName(string objectName)

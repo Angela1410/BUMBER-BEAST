@@ -71,6 +71,8 @@ public class Enemy : MonoBehaviour
     private float routeLaneOffset;
     private float hasteMultiplier = 1f;
     private float hasteUntil;
+    // a hit stops the enemy for a moment (GameTuning: Stagger Seconds)
+    private float staggerUntil;
 
     // how many hits a boss shield (Maelith's Tide Shield) can still block
     public int ShieldHits { get; private set; }
@@ -301,7 +303,9 @@ public class Enemy : MonoBehaviour
         }
 
         Vector2 direction = GetMovementDirection();
-        float effectiveMoveSpeed = isRooted ? 0f : moveSpeed * (Time.time < hasteUntil ? hasteMultiplier : 1f);
+        // rooted or just hit (staggered): it stands still
+        bool standing = isRooted || Time.time < staggerUntil;
+        float effectiveMoveSpeed = standing ? 0f : moveSpeed * (Time.time < hasteUntil ? hasteMultiplier : 1f);
         if (hitFeedback != null)
             hitFeedback.SetWalking(effectiveMoveSpeed > 0.01f && direction.sqrMagnitude > 0.001f);
         if (sr != null && Mathf.Abs(direction.x) > 0.01f)
@@ -380,6 +384,9 @@ public class Enemy : MonoBehaviour
     {
         if (isDead)
             return;
+
+        // every hit (even one a shield blocks) stops the enemy for a moment
+        staggerUntil = Mathf.Max(staggerUntil, Time.time + GameTuning.Get.staggerSeconds);
 
         // a boss shield blocks the hit and uses up one charge instead
         if (ShieldHits > 0)

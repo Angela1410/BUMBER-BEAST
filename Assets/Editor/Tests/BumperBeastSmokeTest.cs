@@ -75,6 +75,8 @@ public class BumperBeastSmokeTest
 
         yield return CheckShot();
         CheckPowerMeter();
+        CheckBarrierHeal();
+        yield return CheckStagger();
 
         Application.logMessageReceived -= CollectErrors;
         string summary = "SMOKE TEST REPORT\n" + report + "\nerrors logged: " + errors.Count +
@@ -286,6 +288,79 @@ public class BumperBeastSmokeTest
         if (count != expected)
             problems.Add(stage + ": " + count + " bumpers, the layout has " + expected);
         report.AppendLine(stage + ": " + count + " bumpers in their layout spots");
+    }
+
+    // fix 5: clearing a wave gives 1 barrier health back (not above full, not after the last wave)
+    void CheckBarrierHeal()
+    {
+        StageManager stage = Object.FindAnyObjectByType<StageManager>();
+        System.Reflection.BindingFlags hidden = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+        System.Reflection.FieldInfo health = typeof(StageManager).GetField("barrierHealth", hidden);
+        System.Reflection.MethodInfo cleared = typeof(StageManager).GetMethod("OnWaveCleared", hidden);
+        if (stage == null || health == null || cleared == null)
+        {
+            problems.Add("barrier heal: StageManager not found");
+            return;
+        }
+        int full = stage.barrierMaxHealth;
+        health.SetValue(stage, full - 2);
+        cleared.Invoke(stage, new object[] { 0, false });
+        int afterOne = (int)health.GetValue(stage);
+        cleared.Invoke(stage, new object[] { 1, true });
+        int afterLast = (int)health.GetValue(stage);
+        health.SetValue(stage, full);
+        cleared.Invoke(stage, new object[] { 0, false });
+        int whenFull = (int)health.GetValue(stage);
+        if (afterOne != full - 1 || afterLast != full - 1 || whenFull != full)
+            problems.Add("barrier heal: " + (full - 2) + " -> " + afterOne + " after a wave, " + afterLast +
+                " after the last wave, " + whenFull + " when full (max " + full + ")");
+        else
+            report.AppendLine("barrier heal: " + (full - 2) + " -> " + afterOne + " after a wave, nothing after the last wave or when full");
+    }
+
+    // fix 5: a hit enemy stands still for a moment, then walks on
+    IEnumerator CheckStagger()
+    {
+        WaveManager waves = WaveManager.Current;
+        Enemy prefab = null;
+        if (waves != null && waves.waves != null)
+        {
+            foreach (EnemyWave wave in waves.waves)
+            {
+                if (wave != null && wave.spawnTable != null && wave.spawnTable.Length > 0 && wave.spawnTable[0].prefab != null)
+                {
+                    prefab = wave.spawnTable[0].prefab;
+                    break;
+                }
+            }
+        }
+        if (prefab == null)
+        {
+            problems.Add("stagger: no enemy to test with");
+            yield break;
+        }
+
+        Enemy enemy = Object.Instantiate(prefab, new Vector3(0f, 4f, 0f), Quaternion.identity);
+        enemy.SetRoute(waves.routeWaypoints, 0f, 1);
+        for (int frame = 0; frame < 5; frame++)
+            yield return null;
+        enemy.TakeDamage(1);
+        Vector2 hitAt = enemy.transform.position;
+        float stopFor = GameTuning.Get.staggerSeconds;
+        float until = Time.time + stopFor * 0.7f;
+        while (Time.time < until && enemy != null)
+            yield return null;
+        float stood = enemy != null ? Vector2.Distance(hitAt, enemy.transform.position) : -1f;
+        until = Time.time + stopFor + 0.3f;
+        while (Time.time < until && enemy != null)
+            yield return null;
+        float walked = enemy != null ? Vector2.Distance(hitAt, enemy.transform.position) : -1f;
+        if (stood < 0f || stood > 0.01f || walked < 0.05f)
+            problems.Add("stagger: moved " + stood.ToString("0.000") + " while staggered and " + walked.ToString("0.000") + " after");
+        else
+            report.AppendLine("stagger: stood still for " + stopFor + " s after a hit, then walked on");
+        if (enemy != null)
+            Object.Destroy(enemy.gameObject);
     }
 
     static Collider2D Wall(string prefix)

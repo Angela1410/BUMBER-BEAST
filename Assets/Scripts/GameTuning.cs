@@ -7,10 +7,11 @@ using UnityEngine;
 public class GameTuning : ScriptableObject
 {
     [Header("Difficulty (one value each for EASY, MEDIUM, HARD, HELL)")]
-    [Tooltip("Enemy walking speed. 1 = normal.")]
-    public float[] enemySpeed = { 0.75f, 1f, 1.2f, 1.45f };
-    [Tooltip("Enemy health. 1 = normal.")]
-    public float[] enemyHealth = { 0.7f, 1f, 1.3f, 1.7f };
+    // MEDIUM was 1 and 1 before v1.4: we moved it halfway toward EASY because late stages were too much
+    [Tooltip("Enemy walking speed. 1 = the speed the stages were made with.")]
+    public float[] enemySpeed = { 0.75f, 0.875f, 1.2f, 1.45f };
+    [Tooltip("Enemy health. 1 = the health the stages were made with.")]
+    public float[] enemyHealth = { 0.7f, 0.85f, 1.3f, 1.7f };
     [Tooltip("Extra barrier health (can be below 0).")]
     public int[] barrierBonus = { 3, 0, -1, -2 };
     [Tooltip("Aim assist strength. 0 = off.")]
@@ -47,6 +48,16 @@ public class GameTuning : ScriptableObject
     [Header("Power meter")]
     [Tooltip("Green bumper hits needed to fill the POWER meter. Full = a green bumper turns into the Power Bumper.")]
     public int powerMeterHits = 6;
+
+    [Header("Waves")]
+    [Tooltip("Timed waves send their enemies in small groups of this many, with a break between groups. 0 = no breaks.")]
+    public int enemiesPerGroup = 4;
+    [Tooltip("Seconds of break between groups. Nothing spawns and the wave clock waits, so the wave still sends the same number of enemies.")]
+    public float breakBetweenGroups = 2f;
+    [Tooltip("Seconds an enemy stops walking after it gets hit.")]
+    public float staggerSeconds = 0.3f;
+    [Tooltip("Barrier health you get back when you clear a wave (never above full).")]
+    public int barrierHealOnWaveClear = 1;
 
     // the editor uses this to save the file again when new settings are added (GameTuningAsset)
     [HideInInspector] public int fileVersion;
