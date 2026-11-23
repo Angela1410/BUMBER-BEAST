@@ -2,10 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Tutorial overlay: a speech bubble, a pointing hand and a pulsing ring that follow a target on
-// screen (a UI element or something in the world), and a looping "drag back" gesture. It never
-// blocks touches (the player plays through the tutorial) and runs on unscaled time, so it keeps
-// moving while the tutorial freezes or slows the game.
+// tutorial overlay: a speech bubble, a pointing hand and a pulsing ring that follow something on
+// screen (a button or something in the game), plus a looping "drag back" hand. it never blocks
+// touches (you play through the tutorial) and uses unscaled time, so it keeps moving even when
+// the tutorial freezes or slows the game
 public class CoachMark : MonoBehaviour
 {
     private static readonly Vector2 FingerTip = new Vector2(0.475f, 0.91f);
@@ -57,13 +57,13 @@ public class CoachMark : MonoBehaviour
 
     void Build()
     {
-        // Pulsing ring around the target.
+        // pulsing ring around the target
         ringImage = CreateImage(transform, "Ring", UiTheme.Gold, HudVisualUtility.RingSprite());
         ring = ringImage.rectTransform;
         ring.sizeDelta = new Vector2(170f, 170f);
         ring.gameObject.SetActive(false);
 
-        // The hand: cream with a dark outline so it reads on any background.
+        // the hand: cream with a dark outline so you can see it on any background
         handImage = CreateImage(transform, "Hand", UiTheme.Cream, UiIcons.Get(UiIcon.Hand));
         hand = handImage.rectTransform;
         hand.pivot = FingerTip;
@@ -76,7 +76,7 @@ public class CoachMark : MonoBehaviour
         shadow.effectDistance = new Vector2(6f, -10f);
         hand.gameObject.SetActive(false);
 
-        // Speech bubble.
+        // speech bubble
         GameObject bubbleObject = new GameObject("Bubble", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         bubble = bubbleObject.GetComponent<RectTransform>();
         bubble.SetParent(transform, false);
@@ -113,11 +113,11 @@ public class CoachMark : MonoBehaviour
         bubble.gameObject.SetActive(false);
     }
 
-    // ------------------------------------------------------------------ API
+    // --- what other scripts call ---
 
     // heightFraction: 0 = bottom of the screen, 1 = top.
-    // heightFraction 0.8 or more = just under the wave bar at the top of the safe area (the field
-    // stays clear); lower values place the bubble's centre at that fraction of the screen.
+    // 0.8 or more puts it just under the wave bar at the top (so the field stays clear),
+    // lower numbers put the bubble's center at that height on the screen
     public void Say(string text, float heightFraction)
     {
         bubble.gameObject.SetActive(true);
@@ -138,7 +138,7 @@ public class CoachMark : MonoBehaviour
             bubble.anchoredPosition = Vector2.zero;
         }
         bubbleText.text = text;
-        // Sized to the message, and never wider than the screen.
+        // sized to fit the message, and never wider than the screen
         int lines = 1;
         foreach (char c in text)
         {
@@ -180,7 +180,7 @@ public class CoachMark : MonoBehaviour
         StartPointing();
     }
 
-    // The hand pulls back from one world point to another, over and over.
+    // the hand pulls back from one point to another, over and over
     public void DragGesture(Vector3 worldFrom, Vector3 worldTo)
     {
         ClearTarget();
@@ -222,7 +222,7 @@ public class CoachMark : MonoBehaviour
         pointShownAt = Time.unscaledTime;
     }
 
-    // ------------------------------------------------------------------ animation
+    // --- animation ---
 
     void LateUpdate()
     {
@@ -237,7 +237,7 @@ public class CoachMark : MonoBehaviour
 
         if (dragging)
         {
-            // 0-0.25 press, 0.25-0.85 pull back, 0.85-1.15 hold, then release and repeat.
+            // 0-0.25 press, 0.25-0.85 pull back, 0.85-1.15 hold, then let go and repeat
             float cycle = (now - pointShownAt) % 1.6f;
             float pull = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.25f, 0.85f, cycle));
             Vector2 from, to;
@@ -308,7 +308,7 @@ public class CoachMark : MonoBehaviour
         return RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screen, OwnCamera(), out point);
     }
 
-    // The coach canvas's camera: none for an overlay canvas, its world camera otherwise.
+    // the camera for the coach canvas: none for an overlay canvas, otherwise its world camera
     Camera OwnCamera()
     {
         return ownCanvas != null && ownCanvas.renderMode != RenderMode.ScreenSpaceOverlay ? ownCanvas.worldCamera : null;

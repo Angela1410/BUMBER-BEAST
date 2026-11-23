@@ -2,11 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// The look shared by the in-stage action buttons (ability and swap): a dark bezel, a soft
-// "ready" glow, an element-coloured rim and face with a gloss highlight, a centre icon, a
-// radial cooldown sweep, and a name ribbon hanging over the bottom edge.
-// Every layer is anchored relative to the button, so resizing the button rescales the art;
-// only font sizes need SetTextScale.
+// the look shared by the buttons in a stage (skill and swap): a dark edge, a soft "ready" glow,
+// an element colored rim and face with a shine, an icon in the middle, a round cooldown sweep,
+// and a name ribbon at the bottom. every layer is placed relative to the button, so resizing
+// the button resizes the art, only the font sizes need SetTextScale
 public sealed class HudRoundButton
 {
     public RectTransform Root { get; private set; }
@@ -27,8 +26,8 @@ public sealed class HudRoundButton
 
     public static readonly Color32 RibbonColor = new Color32(34, 42, 31, 250);
 
-    // ribbonWidth is a multiple of the button width (the ribbon may be wider than the circle).
-    // reuseLabel: an existing label to move into the ribbon, so a scene label is never drawn twice.
+    // ribbonWidth is a multiple of the button width (the ribbon can be wider than the circle).
+    // reuseLabel: a label that already exists to move into the ribbon, so a scene label is never drawn twice
     public static HudRoundButton Build(GameObject buttonObject, TMP_Text reuseLabel, float ribbonWidth)
     {
         HudRoundButton visual = new HudRoundButton();
@@ -41,7 +40,7 @@ public sealed class HudRoundButton
         visual.Bezel.type = Image.Type.Simple;
         visual.Bezel.color = UiTheme.Ink;
         visual.Bezel.raycastTarget = true;
-        // Older versions of these buttons added an Outline to the bezel; keep it invisible.
+        // older versions of these buttons had an Outline on the edge, keep it invisible
         Outline oldOutline = buttonObject.GetComponent<Outline>();
         if (oldOutline != null)
             oldOutline.effectDistance = Vector2.zero;
@@ -105,7 +104,7 @@ public sealed class HudRoundButton
         return visual;
     }
 
-    // Call when the button's size changes. size = the circle's width, fonts in canvas units.
+    // call this when the button's size changes. size = the circle's width, fonts in canvas units
     public void SetTextScale(float size, float ribbonFont, float minimumRibbonFont)
     {
         float unit = size / 210f;

@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// Per-platform defaults applied once before the first scene:
-//  - Phones and tablets (Android, iPhone/iPad) run at 60 fps; Unity's mobile default is 30, which
-//    makes aiming and fast bounces feel choppy.
-//  - The Web build (itch.io, also played in iPhone/Android browsers) keeps -1 so the browser
-//    paces frames with the display; any other value makes it fall back to a slower timer.
-//  - Phones never dim the screen in the middle of a stage (the player may be lining up a shot).
+// settings for each platform, done once before the first scene:
+// - phones and tablets (Android, iPhone/iPad) run at 60 fps. Unity's phone default is 30, which
+// makes aiming and fast bounces look choppy
+// - the web version (itch.io, also played in phone browsers) keeps -1 so the browser times the
+// frames with the screen, any other value makes it use a slower timer
+// - phones never dim the screen in the middle of a stage (the player might be lining up a shot)
 public static class PlatformSetup
 {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]

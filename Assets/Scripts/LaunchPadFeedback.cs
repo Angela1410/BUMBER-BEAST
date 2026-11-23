@@ -15,8 +15,8 @@ public class LaunchPadFeedback : MonoBehaviour
     private LineRenderer vineLine;
     private SpriteRenderer padSpriteRenderer;
 
-    // The painted crystal slingshot (Assets/Resources/Art/Launcher.png). When present it replaces
-    // the old stump art and the vine; without it everything behaves exactly as before.
+    // the painted crystal slingshot (Assets/Resources/Art/Launcher.png). if it's there it replaces
+    // the old stump art and the vine, if not everything works like before
     private LauncherArt launcherArt;
 
     void Start()
@@ -45,8 +45,8 @@ public class LaunchPadFeedback : MonoBehaviour
         }
     }
 
-    // Called every frame while the player drags.
-    // ratio: 0 = no pull, 1 = full pull. Scrubs through the pulling-back clip.
+    // called every frame while the player drags.
+    // ratio: 0 = no pull, 1 = full pull. it moves through the pulling back clip
     public void SetPull(float ratio)
     {
         SetPull(ratio, transform.position);
@@ -70,7 +70,7 @@ public class LaunchPadFeedback : MonoBehaviour
     {
         if (launcherArt != null)
         {
-            // The energy bands follow the Beast; there is no vine or pull-back clip to scrub.
+            // the energy bands follow the Beast, there's no vine or pull back clip to move through
             launcherArt.SetPull(ratio, chomaPosition);
             isPulling = ratio >= 0.05f;
             return;
@@ -82,10 +82,9 @@ public class LaunchPadFeedback : MonoBehaviour
         if (vineLine.enabled && chomaSpriteRenderer != null)
         {
             vineLine.sortingLayerID = chomaSpriteRenderer.sortingLayerID;
-            // The vine ends at Choma's center, so it must always sort strictly
-            // below Choma; otherwise it draws a green line across his sprite
-            // (e.g. stage-1, where the pad's order is 1 and Choma's is 0).
-            // Sit just above the pad only when that is still below Choma.
+            // the vine ends at Choma's center, so it always has to be drawn below Choma, otherwise it draws
+            // a green line across his sprite (like on stage 1, where the pad's order is 1 and Choma's is 0).
+            // it only sits just above the pad when that's still below Choma
             int belowChomaOrder = chomaSpriteRenderer.sortingOrder - 1;
             vineLine.sortingOrder = padSpriteRenderer != null
                 ? Mathf.Min(padSpriteRenderer.sortingOrder + 1, belowChomaOrder)
@@ -97,8 +96,8 @@ public class LaunchPadFeedback : MonoBehaviour
             Vector3 anchor = padSpriteRenderer != null
                 ? BoundsEdgeToward(padSpriteRenderer.bounds, chomaPosition)
                 : transform.position;
-            // End at Choma's center so the vine stays visibly connected as the
-            // curl animation changes the sprite bounds. Choma renders above it.
+            // end at Choma's center so the vine stays connected while the curl animation changes the
+            // sprite size. Choma is drawn on top of it
             Vector3 vineTip = chomaPosition;
             Vector3 midpoint = Vector3.Lerp(anchor, vineTip, 0.5f);
             float curve = Mathf.Clamp01(ratio) * 0.12f;

@@ -1,33 +1,32 @@
 using System.Collections;
 using UnityEngine;
 
-// The painted guardian wall for chapters 3-5 (stages 9-20). BarrierVisuals creates it on the
-// barrier object ("Square") from that chapter's art in Resources/Art/Electric, /Water or /Fire
-// (falling back to the shared Resources/Art set). Stages 1-8 keep their own animated barrier.
-//
-// Layout comes from the camera view and the barrier line (the wall's top edge sits where enemies
-// count as reaching it), never from the barrier object's own scale, so every stage's tuned
-// transform, collider and health rules stay exactly as they are. The wall shows the barrier's
-// condition (healthy, damaged, critical), reacts to hits, and shatters when it falls.
+// the painted wall for chapters 3-5 (stages 9-20). BarrierVisuals makes it on the barrier object
+// ("Square") using that chapter's art in Resources/Art/Electric, /Water or /Fire (or the shared
+// Resources/Art set if it's missing). stages 1-8 keep their own animated barrier.
+// the size and position come from the camera and the barrier line (the top of the wall is where
+// enemies count as reaching it), not from the barrier object's scale, so every stage's tuned
+// transform, collider and health rules stay the same. the wall shows how healthy the barrier is
+// (healthy, damaged, critical), reacts to hits, and breaks apart when it falls
 public class BarrierArt : MonoBehaviour
 {
-    // One painted wall: its art folder under Resources/Art, where its glowing parts are, and its
-    // energy colours. Anchors are measured on that folder's Barrier_Healthy.png, as fractions
-    // from the bottom-left corner; new art with a different composition needs new numbers.
+    // one painted wall: its art folder in Resources/Art, where its glowing parts are, and its colors.
+    // the positions are measured on that folder's Barrier_Healthy.png as fractions from the bottom left,
+    // so new art with a different layout needs new numbers
     private sealed class Style
     {
         public string folder;
-        public float wallTopFromBottom;   // the wall's top edge: where enemies count as reaching it
-        public Vector2[] lights;          // crystals / orbs / pearls on the pylons
-        public float lightSize;           // their glow diameter, in sprite heights
+        public float wallTopFromBottom; // the top edge of the wall, where enemies count as reaching it
+        public Vector2[] lights; // crystals / orbs / pearls on the posts
+        public float lightSize; // how big their glow is, in sprite heights
         public Vector2 crest;
-        public Vector2 crestSize;         // crest glow width and height, in sprite heights
+        public Vector2 crestSize; // glow width and height on top of the wall, in sprite heights
         public Color energy;
         public Color weakEnergy;
         public Color chip;
     }
 
-    // Stages 1-8: the crystal wall (Barrier_Healthy.png, 1540 x 310).
+    // stages 1-8: the crystal wall (Barrier_Healthy.png, 1540 x 310)
     private static readonly Style Shared = new Style
     {
         folder = "",
@@ -45,7 +44,7 @@ public class BarrierArt : MonoBehaviour
         chip = new Color(0.9f, 0.8f, 0.6f, 1f)
     };
 
-    // Chapter 3 (stages 9-12): slate and copper storm wall with tesla-coil orbs (1527 x 456).
+    // chapter 3 (stages 9-12): stone and copper storm wall with tesla coil orbs (1527 x 456)
     private static readonly Style Electric = new Style
     {
         folder = "Electric/",
@@ -63,7 +62,7 @@ public class BarrierArt : MonoBehaviour
         chip = new Color(0.55f, 0.6f, 0.72f, 1f)
     };
 
-    // Chapter 4 (stages 13-16): coral sea wall with pearls in clam shells (1537 x 472).
+    // chapter 4 (stages 13-16): coral sea wall with pearls in clam shells (1537 x 472)
     private static readonly Style Water = new Style
     {
         folder = "Water/",
@@ -81,7 +80,7 @@ public class BarrierArt : MonoBehaviour
         chip = new Color(0.75f, 0.82f, 0.88f, 1f)
     };
 
-    // Chapter 5 (stages 17-20): basalt and obsidian wall with fire crystals (1533 x 434).
+    // chapter 5 (stages 17-20): dark lava rock wall with fire crystals (1533 x 434)
     private static readonly Style Fire = new Style
     {
         folder = "Fire/",
@@ -134,14 +133,14 @@ public class BarrierArt : MonoBehaviour
     private float stateChangeTime = -10f;
     private bool destroyed;
 
-    // Bottom edge of the painted wall in world space (the launcher stays clear of it).
+    // bottom edge of the painted wall in the world (the launcher stays above it)
     public float WallBottomWorldY { get; private set; }
     public bool IsLaidOut { get; private set; }
 
     public static BarrierArt TryCreate(GameObject barrier)
     {
-        // The chapter's own wall when its art is in the project, otherwise the shared crystal wall.
-        // Chapters 1-2 (null folder) keep the scene's own animated barrier.
+        // use the chapter's own wall if we have its art, otherwise the shared crystal wall.
+        // chapters 1-2 (null folder) keep the scene's own animated barrier
         string folder = GameArt.StageArtFolder();
         if (folder == null)
             return null;
@@ -178,7 +177,7 @@ public class BarrierArt : MonoBehaviour
         sortSource = GetComponent<SpriteRenderer>();
         Material wallMaterial = sortSource != null ? sortSource.sharedMaterial : null;
         if (sortSource != null)
-            sortSource.enabled = false;   // the old log art; its Animator is stopped by BarrierVisuals
+            sortSource.enabled = false; // the old log art, BarrierVisuals stops its Animator
 
         StageManager stage = Object.FindAnyObjectByType<StageManager>();
         if (stage != null)
@@ -206,7 +205,7 @@ public class BarrierArt : MonoBehaviour
         crestGlow.transform.localPosition = AnchorToLocal(style.crest, size);
         crestGlow.transform.localScale = new Vector3(size.y * style.crestSize.x, size.y * style.crestSize.y, 1f);
 
-        // A thin curtain of energy along the wall top: the actual "barrier" the enemies hit.
+        // a thin glowing curtain along the top of the wall: this is the "barrier" the enemies actually hit
         shield = GameArt.AddLayer(root, "ShieldCurtain", soft, glow, sortSource, 2);
         shield.transform.localPosition = new Vector3(0f, size.y * (style.wallTopFromBottom - 0.5f) + size.y * 0.12f, 0f);
         shield.transform.localScale = new Vector3(size.x * 1.08f, size.y * 0.55f, 1f);
@@ -235,7 +234,7 @@ public class BarrierArt : MonoBehaviour
         return new Vector3((anchor.x - 0.5f) * size.x, (anchor.y - 0.5f) * size.y, 0f);
     }
 
-    // Spans the camera's width (within limits) with the wall's top edge on the barrier line.
+    // stretches across the camera's width (within limits) with the top edge on the barrier line
     void Layout()
     {
         Camera camera = Camera.main;
@@ -278,7 +277,7 @@ public class BarrierArt : MonoBehaviour
         if (next == condition)
             return;
 
-        // Cross-fade from the old look and kick up dust, so the change reads as damage.
+        // fade from the old look and kick up dust, so you can tell it got damaged
         fadingWall.sprite = wall.sprite;
         fadingWall.enabled = true;
         fadingWall.color = Color.white;
@@ -330,7 +329,7 @@ public class BarrierArt : MonoBehaviour
 
         if (!destroyed)
         {
-            // A short shake on impact (unscaled: the stage may already be frozen).
+            // a short shake when hit (unscaled time, because the stage might already be frozen)
             float sinceHit = now - hitTime;
             Vector3 shake = Vector3.zero;
             if (sinceHit < 0.22f)
@@ -380,7 +379,7 @@ public class BarrierArt : MonoBehaviour
                 break;
             case Condition.Damaged:
                 energy = style.weakEnergy;
-                // Flickers: most of the time steady, sometimes it sputters.
+                // flickers: steady most of the time, sometimes it sputters
                 steadiness = Mathf.PerlinNoise(now * 5f, 0.3f) > 0.32f ? 0.75f : 0.25f;
                 break;
             default:
@@ -408,7 +407,7 @@ public class BarrierArt : MonoBehaviour
         shield.color = curtain;
     }
 
-    // Stone chips and energy sparks thrown from a point (pooled; nothing is allocated).
+    // stone chips and sparks thrown from a point (we reuse them, so nothing new is made)
     void BurstAt(Vector3 world, int count, bool dust)
     {
         float unit = healthySprite.bounds.size.y;
@@ -458,8 +457,8 @@ public class BarrierArt : MonoBehaviour
         }
     }
 
-    // The wall breaks apart: a flash, then vertical slices of the (critical) art fly off and
-    // fade while dust and corruption spill out. Runs on unscaled time (the stage is frozen).
+    // the wall breaks apart: a flash, then slices of the (critical) art fly off and fade while dust and
+    // corruption spill out. uses unscaled time because the stage is frozen
     IEnumerator Shatter()
     {
         Sprite art = criticalSprite;
@@ -468,7 +467,7 @@ public class BarrierArt : MonoBehaviour
         Rect rect = art.rect;
         float pixelsPerUnit = art.pixelsPerUnit;
 
-        // Flash.
+        // flash
         float start = Time.unscaledTime;
         while (Time.unscaledTime - start < 0.08f)
         {
@@ -494,7 +493,7 @@ public class BarrierArt : MonoBehaviour
         for (int i = 0; i < FragmentCount; i++)
         {
             Rect slice = new Rect(rect.x + sliceWidth * i, rect.y, sliceWidth, rect.height);
-            // FullRect: a tight mesh would need a readable texture.
+            // FullRect: a tight mesh would need a readable texture
             Sprite piece = Sprite.Create(art.texture, slice, new Vector2(0.5f, 0.5f), pixelsPerUnit, 0,
                 SpriteMeshType.FullRect);
             pieces[i] = GameArt.AddLayer(root, "Fragment" + i, piece, wallMaterial, sortSource, 1);

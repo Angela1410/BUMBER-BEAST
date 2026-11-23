@@ -47,10 +47,10 @@ public class Bumper : MonoBehaviour
     private SpriteRenderer powerGlow;
     private float powerGlowScale = 1f;
 
-    // Raised when a Power Bumper fires (the tutorial waits for it).
+    // sent when a Power Bumper fires (the tutorial waits for this)
     public static event System.Action<Bumper> PowerBumperHit;
 
-    // Every bumper in the stage, for the tutorial's pointer.
+    // every bumper in the stage, so the tutorial can point at one
     public static readonly System.Collections.Generic.List<Bumper> All = new System.Collections.Generic.List<Bumper>();
 
     public bool IsPowerBumper => type == BumperType.Red && !isBramble;
@@ -66,7 +66,7 @@ public class Bumper : MonoBehaviour
         All.Remove(this);
     }
 
-    // Turns this bumper into a Power Bumper (the stage 2 tutorial guarantees one).
+    // turns this bumper into a Power Bumper (the stage 2 tutorial makes sure there's one)
     public void MakePowerBumper()
     {
         if (isBramble)
@@ -79,7 +79,7 @@ public class Bumper : MonoBehaviour
     {
         if (powerGlow == null)
             return;
-        // A slow, warm pulse marks the Power Bumper.
+        // a slow warm pulse shows which one is the Power Bumper
         float pulse = 0.5f + 0.5f * Mathf.Sin(Time.time * 4f);
         Color color = powerGlow.color;
         color.a = 0.35f + 0.4f * pulse;
@@ -240,8 +240,8 @@ public class Bumper : MonoBehaviour
 
         if (beast != null)
         {
-            // POWER BUMPER (red): unleashes the hitting Beast's power at the enemies, then breaks.
-            // With no enemy on the field it waits, bouncing the Beast like a green bumper.
+            // POWER BUMPER (red): uses the Beast's power move on the enemies, then breaks.
+            // if there are no enemies yet it waits, and bounces the Beast like a green bumper
             bool power = type == BumperType.Red && !isBramble;
             if (power && PowerBurst.HasTargets())
             {
@@ -284,7 +284,7 @@ public class Bumper : MonoBehaviour
         GameAudio.Play(Sfx.BumperExplode);
         float radiusSquared = explosionRadius * explosionRadius;
         System.Collections.Generic.List<Enemy> enemies = Enemy.ActiveEnemies;
-        // TakeDamage may Destroy() an enemy, which is deferred, so the list is stable here.
+        // TakeDamage might Destroy() an enemy, but that only happens later, so the list won't change while we loop
         for (int index = 0; index < enemies.Count; index++)
         {
             Enemy enemy = enemies[index];
@@ -315,7 +315,7 @@ public class Bumper : MonoBehaviour
             return;
         }
 
-        // Green, and a Power Bumper waiting for enemies, both kick the Beast away.
+        // green bumpers, and a Power Bumper that's waiting for enemies, both push the Beast away
         if (type == BumperType.Green || type == BumperType.Red)
         {
             Vector2 awayFromBumper = beastRb.position - (Vector2)transform.position;

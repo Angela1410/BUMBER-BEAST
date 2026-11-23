@@ -3,8 +3,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Shared pressed/disabled feedback for themed buttons. Uses unscaled time so it
-// also works on result screens, where the stage pauses Time.timeScale.
+// the shared pressed/disabled effect for our buttons. uses unscaled time so it also works
+// on result screens, where the stage pauses Time.timeScale
 [DisallowMultipleComponent]
 public class UiButtonFeedback : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
 {
@@ -41,7 +41,7 @@ public class UiButtonFeedback : MonoBehaviour, IPointerDownHandler, IPointerUpHa
             transform.localScale, target, 1f - Mathf.Exp(-speed * Time.unscaledDeltaTime));
     }
 
-    // Layout code moves/resizes buttons; call this if it also changes their scale.
+    // layout code moves and resizes buttons, call this if it changes their scale too
     public void SetBaseScale(Vector3 scale)
     {
         baseScale = scale;

@@ -6,12 +6,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Ui = LoadingScreen.Ui;
 
-// The SETTINGS and PLAYER PROFILE cards, opened from the title screen, the hub header and the
-// pause menu. Each card sits on its own overlay canvas above everything else, scales down to fit
-// any screen, and closes with its X, DONE, a tap outside it or the Android back button.
-//  SETTINGS        music and sound volume, screen shake, the profile, the game version.
-//  PLAYER PROFILE  the player's name and lead Beast, rank, campaign stats, reset progress.
-// Everything is stored on the device (GameSettings, GameProgress); there is no online account.
+// the SETTINGS and PLAYER PROFILE cards. you can open them from the title screen, the map header
+// and the pause menu. each card is on its own overlay canvas above everything, shrinks to fit any
+// screen, and closes with its X, DONE, a tap outside it or the android back button.
+// SETTINGS: music and sound volume, difficulty, aim settings, screen shake, the profile, the version.
+// PLAYER PROFILE: your name and lead Beast, rank, campaign stats, reset progress.
+// everything is saved on the phone (GameSettings, GameProgress), there's no online account
 public class GameMenus : MonoBehaviour
 {
     private const float CardWidth = 900f;
@@ -26,29 +26,29 @@ public class GameMenus : MonoBehaviour
     private int lastHeight;
     private Rect lastSafeArea;
 
-    // Settings card state.
+    // settings card stuff
     private TMP_Text musicValue;
     private TMP_Text sfxValue;
     private Button shakeToggle;
     private TMP_Text sensitivityValue;
     private float lastPreviewTime;
 
-    // Profile card state.
+    // profile card stuff
     private Button resetButton;
     private float resetArmedUntil = -1f;
 
     public static bool IsOpen => open != null;
 
-    // ------------------------------------------------------------------ entry points
+    // --- how other scripts open the cards ---
 
-    // showProfileButton: false in a stage (the profile's reset would end the run).
+    // showProfileButton: false during a stage (resetting your progress there would end the run)
     public static void OpenSettings(bool showProfileButton, Func<BeastId, Sprite> portraits = null, Action onClosed = null)
     {
         GameMenus menu = Create("SettingsMenu", new Vector2(CardWidth, 1615f), onClosed);
         menu.BuildSettings(showProfileButton, portraits);
     }
 
-    // The daily gift card, when today's gift has not been claimed yet. Returns false otherwise.
+    // the daily gift card, if today's gift isn't claimed yet. returns false otherwise
     public static bool OpenDailyGiftIfReady(Action onClosed)
     {
         if (!DailyGift.IsReady)
@@ -86,7 +86,7 @@ public class GameMenus : MonoBehaviour
         menu.closed = onClosed;
         open = menu;
 
-        // A tap on the dimmed background closes the card.
+        // tapping the dark background closes the card
         Image dim = Ui.Image(root.transform, "Dim", new Color(0.02f, 0.03f, 0.02f, 0.78f), null);
         Ui.Stretch(dim.rectTransform);
         dim.raycastTarget = true;
@@ -118,7 +118,7 @@ public class GameMenus : MonoBehaviour
         return card;
     }
 
-    // ------------------------------------------------------------------ settings
+    // --- settings ---
 
     void BuildSettings(bool showProfileButton, Func<BeastId, Sprite> portraits)
     {
@@ -135,7 +135,7 @@ public class GameMenus : MonoBehaviour
         {
             GameSettings.SfxVolume = value;
             sfxValue.text = Percent(value);
-            // Let the player hear the new level while dragging (a few times a second at most).
+            // let the player hear the new volume while dragging (a few times a second at most)
             if (Time.unscaledTime - lastPreviewTime > 0.18f)
             {
                 lastPreviewTime = Time.unscaledTime;
@@ -143,8 +143,8 @@ public class GameMenus : MonoBehaviour
             }
         });
         y -= 175f;
-        // How quickly the aim follows the finger: low = steady (a shaky finger is smoothed out),
-        // high = instant. Power always comes from the pull length, not from this slider.
+        // how fast the aim follows your finger: low = steady (smooths out a shaky finger), high = instant.
+        // the launch power always comes from how far you pull, not from this slider
         sensitivityValue = VolumeRow(card, y, UiIcon.ArrowUp, "AIM SENSITIVITY", GameSettings.AimSensitivitySlider, UiTheme.Green, value =>
         {
             GameSettings.AimSensitivitySlider = value;
@@ -221,7 +221,7 @@ public class GameMenus : MonoBehaviour
         rect.SetParent(parent, false);
         Ui.Place(rect, position, new Vector2(width, 76f));
         Image hitArea = sliderObject.GetComponent<Image>();
-        hitArea.color = Color.clear;   // the whole row height reacts to touch, not only the thin track
+        hitArea.color = Color.clear; // the whole row reacts to touch, not just the thin bar
         hitArea.raycastTarget = true;
 
         Image track = Ui.Image(rect, "Track", SliderTrack, HudVisualUtility.RoundedSprite());
@@ -274,7 +274,7 @@ public class GameMenus : MonoBehaviour
         rect.sizeDelta = new Vector2(0f, height);
     }
 
-    // A label with an ON/OFF pill on the right.
+    // a label with an ON/OFF pill on the right
     Button ToggleRow(RectTransform card, float y, UiIcon icon, string label, Func<bool> get, Action<bool> set)
     {
         Image iconImage = Ui.Image(card, label + "Icon", UiTheme.MutedText, UiIcons.Get(icon));
@@ -305,8 +305,8 @@ public class GameMenus : MonoBehaviour
         return slider < 0.34f ? "STEADY" : slider > 0.66f ? "SNAPPY" : "NORMAL";
     }
 
-    // DIFFICULTY: four pills with a one-line summary of the selected one. Locked during a stage
-    // (its enemies, barrier and reward were set when it started); change it on the title or map.
+    // DIFFICULTY: four pills and a one-line summary of the one you picked. it's locked during a stage
+    // (its enemies, barrier and coins were set when the stage started), so change it on the title or map
     void DifficultyRow(RectTransform card, float y, bool locked)
     {
         Image iconImage = Ui.Image(card, "DifficultyIcon", UiTheme.MutedText, UiIcons.Get(UiIcon.Crown));
@@ -376,7 +376,7 @@ public class GameMenus : MonoBehaviour
         return Mathf.RoundToInt(value * 100f).ToString(CultureInfo.InvariantCulture) + "%";
     }
 
-    // ------------------------------------------------------------------ profile
+    // --- profile ---
 
     void BuildProfile(Func<BeastId, Sprite> portraits)
     {
@@ -387,15 +387,15 @@ public class GameMenus : MonoBehaviour
 
         float top = cardSize.y * 0.5f;
 
-        // Avatar: the squad's lead Beast.
+        // picture: the squad's lead Beast
         BeastId lead = progress.Squad.Count > 0 ? progress.Squad[0] : BeastId.Choma;
         Image ring = Ui.Image(card, "AvatarRing", UiTheme.Gold, HudVisualUtility.CircleSprite());
         Ui.Place(ring.rectTransform, new Vector2(0f, top - 265f), new Vector2(230f, 230f));
         Image face = Ui.Image(ring.rectTransform, "Face", ElementVisuals.GetColor(BeastRoster.GetElement(lead)) * 0.55f, HudVisualUtility.CircleSprite());
         face.color = new Color(face.color.r, face.color.g, face.color.b, 1f);
         Ui.Fill(face.rectTransform, 0.05f);
-        // The hub's portraits when it is there (painted ones for Choma and Thistle), otherwise the
-        // Beast's own art in Resources/Placeholders, otherwise its initial.
+        // use the map's portraits if it's there (painted ones for Choma and Thistle), otherwise the
+        // Beast's art in Resources/Placeholders, otherwise its first letter
         if (portraits == null)
         {
             GameHubController hub = FindAnyObjectByType<GameHubController>();
@@ -419,7 +419,7 @@ public class GameMenus : MonoBehaviour
         element.rectTransform.anchorMin = element.rectTransform.anchorMax = new Vector2(0.86f, 0.14f);
         element.rectTransform.sizeDelta = new Vector2(70f, 70f);
 
-        // Name (tap to rename).
+        // name (tap to change it)
         TMP_InputField nameField = CreateNameField(card, new Vector2(0f, top - 450f), new Vector2(660f, 104f));
         nameField.SetTextWithoutNotify(GameSettings.PlayerName);
         TMP_Text hint = Ui.Text(card, "NameHint", "TAP YOUR NAME TO CHANGE IT", 22f, UiTheme.MutedText);
@@ -450,7 +450,7 @@ public class GameMenus : MonoBehaviour
         StatTile(card, new Vector2(-205f, gridTop - 244f), "LAUNCH POWER", "LV " + progress.LaunchPowerLevel);
         StatTile(card, new Vector2(205f, gridTop - 244f), "SKILL COOLDOWN", "LV " + progress.SkillCooldownLevel);
 
-        // Campaign bar.
+        // campaign progress bar
         float barY = gridTop - 375f;
         float ratio = cleared / (float)ChapterData.StageCount;
         TMP_Text barLabel = Ui.Text(card, "CampaignLabel", "CAMPAIGN  " + Mathf.RoundToInt(ratio * 100f) + "%", 26f, UiTheme.MutedText);
@@ -503,7 +503,7 @@ public class GameMenus : MonoBehaviour
 
     static TMP_InputField CreateNameField(RectTransform parent, Vector2 position, Vector2 size)
     {
-        // Built inactive so the input field only wakes up once all of its parts are connected.
+        // made inactive first so the input field only starts once all its parts are connected
         GameObject fieldObject = new GameObject("NameField", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         fieldObject.SetActive(false);
         RectTransform rect = fieldObject.GetComponent<RectTransform>();
@@ -535,7 +535,7 @@ public class GameMenus : MonoBehaviour
         field.customCaretColor = true;
         field.caretWidth = 4;
         field.selectionColor = new Color(1f, 0.8f, 0.26f, 0.35f);
-        // Letters, digits, spaces and dashes only (the game font has no other symbols), upper case.
+        // only letters, numbers, spaces and dashes (the game font has no other symbols), in upper case
         field.onValidateInput = (input, index, character) =>
         {
             if (character >= 'a' && character <= 'z')
@@ -574,7 +574,7 @@ public class GameMenus : MonoBehaviour
     {
         if (Time.unscaledTime > resetArmedUntil)
         {
-            // First tap only arms the button; a second tap within a few seconds resets.
+            // the first tap only gets it ready, a second tap within a few seconds resets
             resetArmedUntil = Time.unscaledTime + 3f;
             resetButton.GetComponent<Image>().color = UiTheme.Danger;
             UiTheme.SetLabel(resetButton, "TAP AGAIN TO RESET");
@@ -586,11 +586,11 @@ public class GameMenus : MonoBehaviour
         if (GameProgress.Instance != null)
             GameProgress.Instance.ResetProgress();
         Close();
-        // Rebuild the map from the fresh save.
+        // rebuild the map from the new save
         LoadingScreen.LoadHub();
     }
 
-    // ------------------------------------------------------------------ daily gift
+    // --- daily gift ---
 
     private RectTransform giftTodayTile;
     private float giftClosesAt = -1f;
@@ -668,7 +668,7 @@ public class GameMenus : MonoBehaviour
         }
     }
 
-    // ------------------------------------------------------------------ shared widgets
+    // --- shared parts ---
 
     static Button TextButton(RectTransform parent, string name, string label, Vector2 position, Vector2 size,
         UiButtonRole role, float fontSize)
@@ -720,14 +720,14 @@ public class GameMenus : MonoBehaviour
         return button;
     }
 
-    // ------------------------------------------------------------------ lifetime
+    // --- update ---
 
     void Update()
     {
         if (Screen.width != lastWidth || Screen.height != lastHeight || Screen.safeArea != lastSafeArea)
             Fit();
 
-        // Android back button.
+        // android back button
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Close();
@@ -744,7 +744,7 @@ public class GameMenus : MonoBehaviour
         }
     }
 
-    // Shrinks the card to fit inside the safe area of small or wide screens.
+    // shrinks the card to fit inside the safe area on small or wide screens
     void Fit()
     {
         lastWidth = Screen.width;

@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// Stage environment: a generated backdrop (or a painted one) plus drifting motes.
-// Built for the Earth chapter, and reused by chapters 3-5 through Theme (storm sparks,
-// tide bubbles, embers). The generated renderer lives on a hidden, non-saved child, so the
-// scene file never stores generated textures and nothing is marked dirty in edit mode.
+// the stage background: a generated one (or a painted one) plus floating particles.
+// made for the Earth chapter and reused by chapters 3-5 with a Theme (storm sparks, bubbles,
+// embers). the generated part lives on a hidden child that isn't saved, so the scene file never
+// stores generated textures and nothing gets marked as changed while editing
 [ExecuteAlways]
 public class EarthEnvironment : MonoBehaviour
 {
@@ -19,8 +19,8 @@ public class EarthEnvironment : MonoBehaviour
     public int sortingOrder = -10;
     public Color tint = Color.white;
 
-    // Written by the editor's ChapterBuilder when it gives stages 9-20 their painted background
-    // (0 = never applied), so the art is assigned once and later inspector changes are kept.
+    // ChapterBuilder writes this when it gives stages 9-20 their painted background (0 = never),
+    // so the art is set once and changes we make in the Inspector later are kept
     [HideInInspector] public int paintedBackdropVersion;
 
     [Header("Ambient Dust (Play Mode)")]
@@ -103,7 +103,7 @@ public class EarthEnvironment : MonoBehaviour
         generatedRenderer.sortingOrder = sortingOrder;
         generatedRenderer.enabled = true;
 
-        // Keep the backdrop in world units regardless of this object's own scale.
+        // keep the background in world units no matter what this object's own scale is
         Vector3 parentScale = transform.lossyScale;
         Vector2 spriteSize = sprite.bounds.size;
         Vector2 targetSize = worldSize;
@@ -112,8 +112,8 @@ public class EarthEnvironment : MonoBehaviour
 
         if (background != null)
         {
-            // Painted art keeps its aspect ratio: scale uniformly until it covers the
-            // camera's view, centred on the camera so safe-area offsets never show an edge.
+            // painted art keeps its shape: scale it evenly until it covers the camera view,
+            // centered on the camera so the safe area offset never shows an edge
             Camera camera = Camera.main;
             float cover;
             if (camera != null && camera.orthographic)
@@ -146,13 +146,13 @@ public class EarthEnvironment : MonoBehaviour
         builtBackground = background;
     }
 
-    // A painted background was fitted to a camera whose view has since changed
-    // (resolution, orientation or an inspector tweak): refit it.
+    // a painted background was fitted to a camera view that changed since then
+    // (resolution, rotation or an Inspector change), so fit it again
     bool CameraViewChanged()
     {
         if (fittedCamera == null)
         {
-            // Not fitted yet: only worth a rebuild once an orthographic main camera exists.
+            // not fitted yet: only worth rebuilding once there's an orthographic main camera
             Camera camera = background != null ? Camera.main : null;
             return camera != null && camera.orthographic;
         }

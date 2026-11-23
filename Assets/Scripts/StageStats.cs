@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// Combo chains and per-stage totals. Every enemy hit after a launch (bounces, skills, Power
-// Bumpers) extends the chain; the next launch starts a new one. From the second hit on, the chain
-// shows "COMBO xN" with a ding that climbs in pitch, and every hit past the second earns a bonus
-// coin, paid on the result screen (capped per stage). Big moments get a hit-stop and a callout.
+// combos and totals for each stage. every enemy hit after a launch (bounces, skills, Power Bumpers)
+// adds to the combo, and the next launch starts a new one. from the 2nd hit the combo shows
+// "COMBO xN" with a ding that gets higher, and every hit after the 2nd gives a bonus coin,
+// paid on the result screen (with a max per stage). big moments get a hit-stop and a callout
 public static class StageStats
 {
     public const int MaxComboCoinsPerStage = 40;
@@ -18,7 +18,7 @@ public static class StageStats
     public static int TotalHits { get; private set; }
     public static int Defeated { get; private set; }
 
-    // Raised on every hit (position, super effective, knocked out); the tutorial listens.
+    // sent on every hit (position, super effective, knocked out), the tutorial listens to it
     public static event System.Action<Vector3, bool, bool> EnemyHit;
 
     public static void BeginStage()
@@ -30,11 +30,13 @@ public static class StageStats
         Defeated = 0;
     }
 
+    // a new launch starts a new combo
     public static void OnLaunch()
     {
         Combo = 0;
     }
 
+    // called on every hit: adds to the combo, shows COMBO xN and gives bonus coins from the 3rd hit
     public static void RegisterHit(Vector3 position, bool superEffective, bool knockedOut, bool boss)
     {
         TotalHits++;
@@ -48,6 +50,7 @@ public static class StageStats
             Color color = Combo >= 8 ? ComboHigh : Combo >= 4 ? ComboMid : ComboLow;
             DamagePopup.ShowText((Vector2)position + new Vector2(0f, 0.75f), "COMBO x" + Combo, color);
             GameAudio.PlayPitched(Sfx.Combo, 0.8f, Mathf.Min(2.2f, 0.9f + 0.09f * Combo));
+            // from the 3rd hit in a row each hit gives 1 bonus coin (max 40 per stage)
             if (Combo >= 3 && ComboCoins < MaxComboCoinsPerStage)
                 ComboCoins++;
         }
@@ -72,7 +75,7 @@ public static class StageStats
         HitStop.Pause(0.06f);
     }
 
-    // 3 stars: barrier untouched. 2: at least 60% left. 1: cleared.
+    // 3 stars: the barrier wasn't touched. 2 stars: at least 60% left. 1 star: you cleared it
     public static int StarsFor(int barrierHealth, int barrierMaxHealth)
     {
         if (barrierMaxHealth <= 0)

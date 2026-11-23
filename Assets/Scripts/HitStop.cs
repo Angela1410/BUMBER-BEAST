@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// "Hit-stop": the game nearly freezes for a few hundredths of a second on a big hit (a
-// super-effective knockout, a boss hit, a Power Bumper), which makes impacts feel heavy. It only
-// runs while the game is playing normally and gives way to anything else that changes the time
-// scale (the pause menu, the stage result, the tutorial's slow motion).
+// "hit-stop": the game almost freezes for a few hundredths of a second on a big hit (a super
+// effective knockout, a boss hit, a Power Bumper), which makes hits feel heavy. it only runs while
+// the game is playing normally and backs off for anything else that changes the time scale
+// (the pause menu, the stage result, the tutorial's slow motion)
 public class HitStop : MonoBehaviour
 {
     private const float FrozenScale = 0.05f;
@@ -18,7 +18,7 @@ public class HitStop : MonoBehaviour
     public static void Pause(float seconds)
     {
         if (Time.timeScale <= 0.001f && (instance == null || !instance.active))
-            return;   // paused or finished: no hit-stop
+            return; // paused or finished: no hit-stop
         if (instance == null)
             instance = new GameObject("HitStop").AddComponent<HitStop>();
         instance.Begin(seconds);
@@ -36,7 +36,7 @@ public class HitStop : MonoBehaviour
         if (!active)
             return;
 
-        // Something else set the time scale (pause, result screen): leave it alone.
+        // something else changed the time scale (pause, result screen), so leave it alone
         if (!Mathf.Approximately(Time.timeScale, FrozenScale))
         {
             active = false;

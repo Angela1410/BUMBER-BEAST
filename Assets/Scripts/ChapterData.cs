@@ -12,18 +12,19 @@ public struct ChapterInfo
     public bool hasRescue;
     public BeastId rescue;
     public Color accent;
-    // One line of matchup advice ("Earth beats Electric - bring Mossback").
+    // one line of matchup advice ("Earth beats Electric - bring Mossback")
     public string advice;
 }
 
-// The campaign's chapters and stages in one place, so the map, loading screen, pause menu,
-// result cards and rescue scenes all describe the same world.
+// all the chapters and stages in one place, so the map, loading screen, pause menu,
+// result cards and rescue scenes all describe the same world
 public static class ChapterData
 {
     public const int StagesPerChapter = 4;
     public const int ChapterCount = 5;
     public const int StageCount = ChapterCount * StagesPerChapter;
 
+    // the names of all 20 stages, in order
     private static readonly string[] StageNames =
     {
         "Mossy Trail", "Briar Hollow", "Tangled Grove", "Thornmaw's Den",
@@ -33,6 +34,7 @@ public static class ChapterData
         "Cinder Road", "Ashfall Basin", "Magma Gate", "Pyrax's Caldera"
     };
 
+    // tips shown on the loading screen
     private static readonly string[] Tips =
     {
         "Every enemy wears its element badge. Swap to the Beast that beats it.",
@@ -62,6 +64,7 @@ public static class ChapterData
         return Mathf.Min(StageCount, (chapter + 1) * StagesPerChapter);
     }
 
+    // every 4th stage (4, 8, 12, 16, 20) is a boss stage
     public static bool IsBossStage(int stage)
     {
         return stage >= 1 && stage <= StageCount && stage % StagesPerChapter == 0;

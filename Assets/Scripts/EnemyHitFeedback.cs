@@ -17,7 +17,7 @@ public class EnemyHitFeedback : MonoBehaviour
     public float walkCyclesPerSecond = 2.2f;
 
     [Header("Optional Spark")]
-    public ParticleSystem hitEffect;   // you can reuse BumperHitEffect
+    public ParticleSystem hitEffect; // you can reuse BumperHitEffect
 
     private Coroutine running;
     private Vector3 baseScale;
@@ -67,7 +67,7 @@ public class EnemyHitFeedback : MonoBehaviour
             Restore();
     }
 
-    // Called by Enemy.TakeDamage so collision and ability hits use the same feedback.
+    // Enemy.TakeDamage calls this, so bumps and skill hits show the same effect
     public void PlayHit(Vector2 point)
     {
         if (hitEffect != null)
@@ -79,7 +79,7 @@ public class EnemyHitFeedback : MonoBehaviour
             Destroy(fx.gameObject, 1f);
         }
 
-        // If a punch is already running, restore its scale before restarting.
+        // if a punch animation is already running, put its scale back before starting again
         if (running != null)
         {
             StopCoroutine(running);

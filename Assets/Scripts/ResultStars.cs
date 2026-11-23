@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// The star row on the stage-complete card: three dim slots, then the earned stars pop in one by
-// one with a rising chime (unscaled time: the stage is frozen behind the card). Stars beaten for
-// the first time get a small "NEW" tag.
+// the row of stars on the stage complete card: three dim slots, then the stars you earned pop in one
+// by one with a rising chime (unscaled time, the stage is frozen behind the card). stars you got for
+// the first time get a small "NEW" tag
 public class ResultStars : MonoBehaviour
 {
     private const float StarSize = 96f;
@@ -51,7 +51,7 @@ public class ResultStars : MonoBehaviour
         for (int index = 0; index < 3; index++)
         {
             float x = (index - 1) * Spacing;
-            // The middle star sits a little higher and larger, like a podium.
+            // the middle star is a bit higher and bigger, like a podium
             float y = index == 1 ? 14f : 0f;
             float size = index == 1 ? StarSize * 1.12f : StarSize;
 
@@ -102,7 +102,7 @@ public class ResultStars : MonoBehaviour
             float local = t - (FirstDelay + index * StepDelay);
             if (index >= earned || local < 0f)
                 continue;
-            // Overshoot pop, then a gentle shimmer on the glow.
+            // pop a bit too big, then settle, then a soft shimmer on the glow
             float pop = local < 0.18f ? Mathf.Lerp(0f, 1.3f, local / 0.18f)
                 : local < 0.3f ? Mathf.Lerp(1.3f, 1f, (local - 0.18f) / 0.12f) : 1f;
             stars[index].rectTransform.localScale = Vector3.one * pop;

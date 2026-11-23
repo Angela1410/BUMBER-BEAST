@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 
-// Vector-style painter for PLACEHOLDER art (enemies, bosses and Beasts that have no painted
-// sprites yet). Every shape is a signed distance function on a -1..1 canvas (y up), drawn with
-// an ink outline and analytic anti-aliasing, so one sample per pixel gives clean edges.
-// Deliberately free of UnityEngine types: the exact same drawings can be rendered outside Unity
-// for review. PlaceholderArtGenerator turns them into PNG sprites under Assets/Resources.
+// draws the PLACEHOLDER art (enemies, bosses and Beasts that don't have painted sprites yet).
+// every shape is a math distance function on a -1..1 canvas (y goes up), drawn with an outline
+// and smooth edges, so one sample per pixel already looks clean.
+// it doesn't use any UnityEngine types, so the same drawings can be made outside Unity to check them.
+// PlaceholderArtGenerator turns them into PNG sprites in Assets/Resources
 public static class PlaceholderPainter
 {
-    // ------------------------------------------------------------------ colour
+    // --- colors ---
 
     public struct Rgba
     {
@@ -63,7 +63,7 @@ public static class PlaceholderPainter
         public Rgba ink;
     }
 
-    // ------------------------------------------------------------------ sketch
+    // --- sketch ---
 
     public sealed class Sketch
     {
@@ -92,7 +92,7 @@ public static class PlaceholderPainter
             return this;
         }
 
-        // Flat detail without an outline (stripes, shine, glow, pupils).
+        // flat detail with no outline (stripes, shine, glow, pupils)
         public Sketch Detail(Shape shape, Rgba color)
         {
             return Add(shape, Solid(color), 0f);
@@ -103,7 +103,7 @@ public static class PlaceholderPainter
             return Add(shape, paint, 0f);
         }
 
-        // RGBA32 bytes, bottom row first (the layout Unity's Texture2D expects).
+        // RGBA32 bytes, bottom row first (the way Unity's Texture2D wants them)
         public byte[] Render(int size)
         {
             byte[] data = new byte[size * size * 4];
@@ -114,7 +114,7 @@ public static class PlaceholderPainter
                 for (int x = 0; x < size; x++)
                 {
                     float u = (x + 0.5f) / size * 2f - 1f;
-                    float pr = 0f, pg = 0f, pb = 0f, pa = 0f;   // premultiplied
+                    float pr = 0f, pg = 0f, pb = 0f, pa = 0f; // premultiplied
                     for (int i = 0; i < layers.Count; i++)
                     {
                         Layer layer = layers[i];
@@ -163,7 +163,7 @@ public static class PlaceholderPainter
         }
     }
 
-    // ------------------------------------------------------------------ shapes
+    // --- shapes ---
 
     public static Shape Circle(float cx, float cy, float r)
     {
@@ -186,7 +186,7 @@ public static class PlaceholderPainter
         return (x, y) => SegmentDistance(x, y, ax, ay, bx, by, out _) - r;
     }
 
-    // A stroke whose radius runs from ra at A to rb at B (horns, claws, flame tongues).
+    // a stroke that goes from radius ra at A to rb at B (horns, claws, flames)
     public static Shape Taper(float ax, float ay, float bx, float by, float ra, float rb)
     {
         return (x, y) =>
@@ -207,7 +207,7 @@ public static class PlaceholderPainter
         };
     }
 
-    // Closed polygon from x0, y0, x1, y1, ...
+    // closed polygon from x0, y0, x1, y1, ...
     public static Shape Polygon(params float[] xy)
     {
         int count = xy.Length / 2;
@@ -245,7 +245,7 @@ public static class PlaceholderPainter
         };
     }
 
-    // Smooth union: k is the blend radius.
+    // smooth union: k is how round the join is
     public static Shape Blend(Shape a, Shape b, float k)
     {
         return (x, y) =>
@@ -266,7 +266,7 @@ public static class PlaceholderPainter
         return (x, y) => Math.Max(a(x, y), b(x, y));
     }
 
-    // Mirrors a shape drawn on the right (x > 0) to both sides.
+    // copies a shape drawn on the right side (x > 0) to both sides
     public static Shape Mirror(Shape shape)
     {
         return (x, y) => shape(Math.Abs(x), y);
@@ -288,7 +288,7 @@ public static class PlaceholderPainter
         };
     }
 
-    // Everything below the line y = level (for half-moon mouths and bellies).
+    // everything below the line y = level (for half-moon mouths and bellies)
     public static Shape Below(float level)
     {
         return (x, y) => y - level;
@@ -299,7 +299,7 @@ public static class PlaceholderPainter
         return (x, y) => level - y;
     }
 
-    // A thick polyline (lightning zig-zags, cracks, smiles).
+    // a thick line through points (lightning zig-zags, cracks, smiles)
     public static Shape Path(float radius, params float[] xy)
     {
         int count = xy.Length / 2;
@@ -315,14 +315,14 @@ public static class PlaceholderPainter
         };
     }
 
-    // ------------------------------------------------------------------ paints
+    // --- paints ---
 
     public static Paint Solid(Rgba color)
     {
         return (x, y) => color;
     }
 
-    // Light from the upper left, shade toward the lower right.
+    // light from the top left, shadow toward the bottom right
     public static Paint Lit(Rgba color, float cx, float cy, float radius)
     {
         Rgba dark = color.Times(0.68f);
@@ -344,9 +344,9 @@ public static class PlaceholderPainter
         return (x, y) => centre.Mix(edge, Len(x - cx, y - cy) / radius);
     }
 
-    // ------------------------------------------------------------------ face kit
+    // --- face parts ---
 
-    // Two eyes mirrored about x = 0. lookX < 0 looks inward (cross-eyed menace), > 0 outward.
+    // two eyes mirrored around x = 0. lookX < 0 looks inward (angry cross-eyed), > 0 looks outward
     public static void Eyes(Sketch sketch, float spacing, float cy, float rx, float ry, Rgba white, Rgba pupil,
         float pupilRadius, float lookX, float lookY)
     {
@@ -356,21 +356,21 @@ public static class PlaceholderPainter
             pupilRadius * 0.34f)), White);
     }
 
-    // Angry brows that cut into the top of the eyes (inner end low).
+    // angry eyebrows that cut into the top of the eyes (inner end low)
     public static void AngryBrows(Sketch sketch, float spacing, float cy, float rx, float ry, float thickness)
     {
         sketch.Detail(Mirror(Capsule(spacing - rx * 0.95f, cy + ry * 0.55f, spacing + rx * 1.05f, cy + ry * 1.2f, thickness)),
             sketch.Ink);
     }
 
-    // Friendly raised brows (Beasts).
+    // friendly raised eyebrows (for Beasts)
     public static void HappyBrows(Sketch sketch, float spacing, float cy, float rx, float thickness)
     {
         sketch.Detail(Mirror(Path(thickness, spacing - rx * 0.8f, cy, spacing, cy + thickness * 1.6f, spacing + rx * 0.8f, cy)),
             sketch.Ink);
     }
 
-    // Wide dark grin with a row of jagged teeth along the top.
+    // wide dark grin with jagged teeth along the top
     public static void Grin(Sketch sketch, float cy, float halfWidth, float depth, Rgba mouth, Rgba teeth, int toothCount)
     {
         Shape mouthShape = Clip(Ellipse(0f, cy, halfWidth, depth), Below(cy + depth * 0.12f));
@@ -386,7 +386,7 @@ public static class PlaceholderPainter
         sketch.Detail(Clip(Union(spikes), mouthShape), teeth);
     }
 
-    // Fangs only (two teeth from the corners of a closed mouth line).
+    // just fangs (two teeth from the corners of a closed mouth)
     public static void FangMouth(Sketch sketch, float cy, float halfWidth, float thickness, Rgba fang)
     {
         sketch.Detail(Path(thickness, -halfWidth, cy + thickness, 0f, cy - thickness * 0.6f, halfWidth, cy + thickness), sketch.Ink);
@@ -394,7 +394,7 @@ public static class PlaceholderPainter
             fang, 0.02f);
     }
 
-    // A friendly curved smile.
+    // a friendly curved smile
     public static void Smile(Sketch sketch, float cy, float halfWidth, float curve, float thickness)
     {
         const int steps = 8;
@@ -409,7 +409,7 @@ public static class PlaceholderPainter
         sketch.Detail(Path(thickness, xy), sketch.Ink);
     }
 
-    // Open happy mouth with a tongue (Beasts).
+    // open happy mouth with a tongue (for Beasts)
     public static void OpenSmile(Sketch sketch, float cy, float halfWidth, float depth, Rgba mouth, Rgba tongue)
     {
         Shape mouthShape = Clip(Ellipse(0f, cy, halfWidth, depth), Below(cy));
@@ -422,7 +422,7 @@ public static class PlaceholderPainter
         sketch.Detail(Rotate(Ellipse(cx, cy, rx, ry), cx, cy, 35f), White.Alpha(alpha));
     }
 
-    // ------------------------------------------------------------------ catalogue
+    // --- list of drawings ---
 
     public static readonly string[] EnemyNames =
     {
@@ -461,10 +461,10 @@ public static class PlaceholderPainter
         }
     }
 
-    // ------------------------------------------------------------------ enemies
+    // --- enemies ---
 
-    // Electric, fast: an angry spiky spark ball. (Only drawn if the stage-8 file goes missing;
-    // the original PNG from the first wave update is kept as it is.)
+    // Electric, fast: an angry spiky spark ball. (only drawn if the stage 8 file goes missing,
+    // the first PNG we made is kept as it is)
     private static Sketch SparkMite()
     {
         Sketch s = new Sketch();
@@ -479,7 +479,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Electric, tough: a domed storm beetle with spark antennae.
+    // Electric, tough: a round storm beetle with spark antennas
     private static Sketch VoltBeetle()
     {
         Sketch s = new Sketch();
@@ -505,7 +505,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Water: a glossy droplet slime.
+    // Water: a shiny water drop slime
     private static Sketch DripSlime()
     {
         Sketch s = new Sketch();
@@ -527,7 +527,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Water, tough: a shelled crab raising both claws.
+    // Water, tough: a crab with a shell raising both claws
     private static Sketch ShellCrab()
     {
         Sketch s = new Sketch();
@@ -555,7 +555,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Fire, fast: a grinning living flame.
+    // Fire, fast: a grinning living flame
     private static Sketch EmberImp()
     {
         Sketch s = new Sketch();
@@ -577,7 +577,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Fire, tough: a basalt brute split by glowing lava.
+    // Fire, tough: a rock brute with glowing lava cracks
     private static Sketch MagmaBrute()
     {
         Sketch s = new Sketch();
@@ -600,9 +600,9 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // ------------------------------------------------------------------ bosses
+    // --- bosses ---
 
-    // Electric boss: a storm-crowned thunder beast.
+    // Electric boss: a thunder beast with a storm crown
     private static Sketch Voltrex()
     {
         Sketch s = new Sketch();
@@ -623,7 +623,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Water boss: a crowned tide queen with trailing tentacles.
+    // Water boss: a tide queen with a crown and tentacles
     private static Sketch Maelith()
     {
         Sketch s = new Sketch();
@@ -650,7 +650,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Fire boss: a horned volcano drake with a burning mane.
+    // Fire boss: a horned volcano dragon with a burning mane
     private static Sketch Pyrax()
     {
         Sketch s = new Sketch();
@@ -677,9 +677,9 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // ------------------------------------------------------------------ Beasts
+    // --- Beasts ---
 
-    // Earth Beast: a mossy little shell-turtle.
+    // Earth Beast: a little mossy turtle
     private static Sketch MossbackIdle()
     {
         Sketch s = new Sketch();
@@ -720,7 +720,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Electric Beast: a bright fox with lightning ears and tail.
+    // Electric Beast: a bright fox with lightning ears and tail
     private static Sketch VoltisIdle()
     {
         Sketch s = new Sketch();
@@ -762,7 +762,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // Water Beast: a round otter with a droplet crest and fin tail.
+    // Water Beast: a round otter with a water drop crest and a fin tail
     private static Sketch RippleIdle()
     {
         Sketch s = new Sketch();
@@ -806,7 +806,7 @@ public static class PlaceholderPainter
         return s;
     }
 
-    // ------------------------------------------------------------------ maths
+    // --- math helpers ---
 
     private static float Len(float x, float y)
     {

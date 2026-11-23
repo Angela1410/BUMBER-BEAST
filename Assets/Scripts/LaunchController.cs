@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-// Art for Beasts other than Choma. Fill this in on the Launch Controller.
+// art for the Beasts other than Choma. fill this in on the Launch Controller
 [System.Serializable]
 public class BeastSpriteSet
 {
@@ -46,10 +46,10 @@ public class LaunchController : MonoBehaviour
     public TMP_Text launchesText;
 
     [Header("Beast Sprites")]
-    public Sprite idleSprite;                 // Choma's normal sprite
-    public Sprite ballSprite;                 // Choma's curled sprite
+    public Sprite idleSprite; // Choma's normal sprite
+    public Sprite ballSprite; // Choma's curled up sprite
     public LaunchPadFeedback launchPadFeedback;
-    public BeastSpriteSet[] beastSprites;     // art for Thistle and the other Beasts
+    public BeastSpriteSet[] beastSprites; // art for Thistle and the other Beasts
     public BeastAnimSet[] beastAnimations;
 
     [Header("Choma Animator (state names must match)")]
@@ -61,7 +61,7 @@ public class LaunchController : MonoBehaviour
     public float launchPopAmount = 0.18f;
     public float animationSpeed = 12f;
     public ParticleSystem chargeEffect;
-    public TrailRenderer flightTrail;         // optional, leave empty if you don't have one
+    public TrailRenderer flightTrail; // optional, leave empty if you don't have one
 
     [Header("Pull-back Spin (sprite-sheet Beasts such as Thistle)")]
     [Tooltip("Spin speed (degrees/second) at a full pull. The Beast revs up as it is pulled back " +
@@ -75,7 +75,7 @@ public class LaunchController : MonoBehaviour
 
     public bool IsAiming => isDragging;
 
-    // Raised each time the Beast is launched from the pad.
+    // sent every time the Beast is launched from the pad
     public static event System.Action<LaunchController> Launched;
 
     private Vector3 originalScale;
@@ -93,7 +93,7 @@ public class LaunchController : MonoBehaviour
     private SpriteRenderer[] trajectoryDots;
 
     private Vector2 dragStart;
-    // Full power at this much finger drag (world units), so a comfortable pull is enough.
+    // full power at this much finger drag (in world units), so a comfortable pull is enough
     private const float FullPowerDrag = 1.9f;
     private const float EasyMinimumDrag = 0.25f;
     private const float ReleaseGuardSeconds = 0.06f;
@@ -189,7 +189,7 @@ public class LaunchController : MonoBehaviour
         UpdateLaunchAnimation();
         SyncAnimatorForBeast();
 
-        // Make sure the Beast looks normal whenever it is back at the launch pad.
+        // make sure the Beast looks normal whenever it's back on the launch pad
         if (beastController != null &&
             beastController.State == BeastState.AtPad &&
             !isDragging &&
@@ -203,7 +203,7 @@ public class LaunchController : MonoBehaviour
         if (!unlimitedLaunches && launchesLeft <= 0)
             return;
 
-        // Only allow aiming when the Beast is at the launch pad.
+        // you can only aim when the Beast is on the launch pad
         if (beastController != null &&
             beastController.State != BeastState.AtPad)
         {
@@ -212,19 +212,17 @@ public class LaunchController : MonoBehaviour
             return;
         }
 
-        // Don't allow another launch while the Beast is moving.
+        // no new launch while the Beast is still moving
         if (rb != null && rb.linearVelocity.magnitude > 0.1f)
             return;
 
-        // --------------------------------
-        // START AIMING
-        // --------------------------------
+        // --- START AIMING ---
         if (PointerDownThisFrame())
         {
             if (IsPointerOverUI())
                 return;
 
-            // The wave has not started yet: the plan card's READY comes first.
+            // the wave hasn't started yet: you have to tap READY on the plan card first
             WaveManager waves = WaveManager.Current;
             if (waves != null && waves.IsAwaitingReady)
             {
@@ -232,8 +230,8 @@ public class LaunchController : MonoBehaviour
                 return;
             }
 
-            // Settings > DRAG ANYWHERE: a touch anywhere on the field starts the pull; otherwise
-            // the touch has to land on the Beast.
+            // Settings > DRAG ANYWHERE: touching anywhere on the field starts the pull, otherwise
+            // you have to touch the Beast itself
             Vector2 pressPosition = GetMouseWorldPosition();
             if (!GameSettings.DragAnywhere && chomaCollider != null && !chomaCollider.OverlapPoint(pressPosition))
                 return;
@@ -253,9 +251,7 @@ public class LaunchController : MonoBehaviour
             SetAimingVisual();
         }
 
-        // --------------------------------
-        // AIMING / DRAGGING
-        // --------------------------------
+        // --- AIMING / DRAGGING ---
         if (isDragging)
         {
             if (launchPadFeedback == null)
@@ -263,12 +259,14 @@ public class LaunchController : MonoBehaviour
 
             Vector2 currentMousePosition = GetMouseWorldPosition();
 
-            // Settings > AIM SENSITIVITY: the aim eases toward the finger (low = steadier), on
-            // unscaled time so it feels the same in slow motion.
+            // the aim is where the drag started minus where the finger is now, so pulling down aims up.
+            // it moves toward the finger smoothly (Settings > AIM SENSITIVITY, low = steadier),
+            // using unscaled time so it feels the same in slow motion
             Vector2 rawAim = dragStart - currentMousePosition;
             smoothedAim = Vector2.Lerp(smoothedAim, rawAim,
                 1f - Mathf.Exp(-GameSettings.AimResponse * Time.unscaledDeltaTime));
             RecordAim(smoothedAim);
+            // turn the drag into a launch direction and strength
             Vector2 launchVector = AimToLaunch(smoothedAim);
 
             float dragDistance = Mathf.Min(
@@ -300,7 +298,7 @@ public class LaunchController : MonoBehaviour
             );
             currentDragRatio = dragRatio;
 
-            // Sprite-sheet Beasts rev up a spin as they are pulled back.
+            // Beasts made from sprite sheets spin faster as you pull them back
             if (SpinsOnPull())
             {
                 float spinRatio = Mathf.InverseLerp(curlPortionOfPull, 1f, dragRatio);
@@ -309,7 +307,7 @@ public class LaunchController : MonoBehaviour
                 ApplySpinRotation();
             }
 
-            // Choma's curl follows the pull (frozen and scrubbed by drag distance).
+            // Choma's curl follows the pull (frozen and moved along by the drag distance)
             if (UseAnimator())
             {
                 anim.speed = 0f;
@@ -321,7 +319,7 @@ public class LaunchController : MonoBehaviour
                 launchSpeed = Mathf.Min(launchSpeed, beastController.maximumSpeed);
             UpdateTrajectory(direction, launchSpeed);
 
-            // Keep the vine attached to the Beast as it follows the pointer.
+            // keep the vine attached to the Beast while it follows the finger
             if (launchPadFeedback != null)
                 launchPadFeedback.SetPull(dragRatio, pulledPosition, Vector2.down, spriteRenderer);
 
@@ -331,18 +329,17 @@ public class LaunchController : MonoBehaviour
                 emission.rateOverTime = Mathf.Lerp(8f, 45f, dragRatio);
             }
 
-            // Preserve each Beast's normal colors while it is being pulled.
+            // keep each Beast's normal colors while you pull it
             if (spriteRenderer != null)
                 spriteRenderer.color = CurrentBaseColor();
 
         }
 
-        // --------------------------------
-        // RELEASE / LAUNCH
-        // --------------------------------
+        // --- RELEASE / LAUNCH ---
+        // when the finger lifts, we launch the Beast
         if (PointerUpThisFrame() && isDragging)
         {
-            // The aim from just before the finger lifted: lifting often slides it a little.
+            // use the aim from just before the finger lifted, because lifting often slides it a little
             Vector2 launchVector = AimToLaunch(AimBeforeRelease());
             EndAimSlowMotion();
 
@@ -351,18 +348,20 @@ public class LaunchController : MonoBehaviour
                 maxDragDistance
             );
 
+            // only launch if the player really pulled back
             if (dragDistance > 0.1f)
             {
                 Vector2 direction = launchVector.normalized;
 
+                // a longer pull = a faster launch, up to the max speed
                 float launchSpeed = Mathf.Min(
                     dragDistance * launchPower,
                     maxLaunchSpeed
                 );
 
-                // Launch from the pulled position so the Beast does not snap back.
+                // launch from where it was pulled to, so the Beast doesn't snap back first
                 transform.localScale = originalScale;
-                // A spinning Beast keeps its spin into the flight and winds it down there.
+                // a spinning Beast keeps spinning in the air and slows down there
                 flightSpinActive = SpinsOnPull() && pullSpinSpeed > 0f;
                 if (!flightSpinActive)
                     transform.rotation = Quaternion.identity;
@@ -371,29 +370,29 @@ public class LaunchController : MonoBehaviour
 
                 StopChargeEffect();
 
-                // Small launch "pop".
+                // small launch "pop"
                 PlayLaunchPop();
                 GameAudio.Play(Sfx.Launch, Mathf.Lerp(0.6f, 1f, dragDistance / Mathf.Max(0.01f, maxDragDistance)));
 
-                // Make the launch pad snap.
+                // make the launch pad snap
                 if (launchPadFeedback != null)
                     launchPadFeedback.PlayLaunchEffect();
 
-                // Choma spins while flying.
+                // Choma spins while flying
                 if (UseAnimator())
                 {
                     anim.speed = 1f;
                     anim.Play(spinState);
                 }
 
-                // Start the flight trail, if there is one.
+                // start the flight trail, if there is one
                 if (flightTrail != null)
                 {
                     flightTrail.Clear();
                     flightTrail.emitting = true;
                 }
 
-                // Launch the Beast.
+                // launch! give the Beast its speed in the aim direction, then the physics does the flying and bouncing
                 rb.linearVelocity = direction * launchSpeed;
 
                 if (!unlimitedLaunches)
@@ -408,14 +407,14 @@ public class LaunchController : MonoBehaviour
                 if (aimHintText != null)
                     aimHintText.gameObject.SetActive(false);
 
-                // Combo chains and the tutorial start counting from each launch.
+                // combos and the tutorial start counting again on every launch
                 StageStats.OnLaunch();
                 if (Launched != null)
                     Launched(this);
             }
             else
             {
-                // Player barely dragged, so cancel the launch.
+                // the player barely dragged, so cancel the launch
                 if (launchPadFeedback != null)
                     launchPadFeedback.ReturnToIdle();
 
@@ -429,7 +428,7 @@ public class LaunchController : MonoBehaviour
 
     private void CreateAimHint()
     {
-        // The stage 1 tutorial teaches aiming itself; this hint is for players who skipped past it.
+        // the stage 1 tutorial already teaches aiming, this hint is for players who skipped it
         if (SceneManager.GetActiveScene().name != "stage-1" ||
             (GameProgress.Instance != null && GameProgress.Instance.HighestClearedStage > 0) ||
             !TutorialDirector.IsDone(TutorialDirector.Stage1Key))
@@ -471,9 +470,7 @@ public class LaunchController : MonoBehaviour
             -235f - safeTop);
     }
 
-    // ============================================
-    // PER-BEAST ART AND COLOR
-    // ============================================
+    // --- ART AND COLOR FOR EACH BEAST ---
 
     BeastId CurrentBeast()
     {
@@ -482,7 +479,7 @@ public class LaunchController : MonoBehaviour
             : BeastId.Choma;
     }
 
-    // Only Choma has an Animator setup. Other Beasts use plain sprites.
+    // only Choma has an Animator, the other Beasts use plain sprites
     bool UseAnimator()
     {
         return anim != null &&
@@ -535,8 +532,8 @@ public class LaunchController : MonoBehaviour
     }
 
     // Beasts without painted art yet (Mossback, Voltis, Ripple) use the generated PLACEHOLDER
-    // stills from Assets/Resources/Placeholders: idle, plus the curled ball for curl and spin
-    // (the pull-back spin turns the whole sprite). Assigned art always wins.
+    // pictures from Assets/Resources/Placeholders: idle, plus the curled ball for curling and spinning
+    // (the pull back spin turns the whole sprite). art we assign always wins
     private static readonly Dictionary<BeastId, BeastAnimSet> placeholderAnimationSets =
         new Dictionary<BeastId, BeastAnimSet>();
 
@@ -596,7 +593,7 @@ public class LaunchController : MonoBehaviour
         return (set != null && set.ball != null) ? set.ball : ballSprite;
     }
 
-    // A still of the Beast for HUD portraits (the swap button). Null if it has no art yet.
+    // a picture of the Beast for HUD portraits (the swap button). null if it has no art yet
     public Sprite GetPortraitSprite(BeastId beast)
     {
         BeastAnimSet animationSet = GetAnimationSet(beast);
@@ -627,7 +624,7 @@ public class LaunchController : MonoBehaviour
         BeastSpriteSet set = GetSpriteSet();
         BeastAnimSet animationSet = GetAnimationSet();
 
-        // Real art keeps its own colors, so only tint placeholders.
+        // real art keeps its own colors, so we only tint placeholders
         if ((set != null && set.idle != null) || animationSet != null)
             return Color.white;
 
@@ -636,7 +633,7 @@ public class LaunchController : MonoBehaviour
             : Color.white;
     }
 
-    // Called by PadSwapSystem when the player swaps Beasts.
+    // PadSwapSystem calls this when the player swaps Beasts
     public void PlaySwapPop()
     {
         SyncAnimatorForBeast();
@@ -667,8 +664,8 @@ public class LaunchController : MonoBehaviour
         return pullSpinDegreesPerSecond > 0f && !UseAnimator() && GetAnimationSet() != null;
     }
 
-    // After launch: keep the pull-back spin, slow it down, and stop exactly upright
-    // (at the next full turn) so the Beast never lands tilted.
+    // after launching: keep the pull back spin, slow it down, and stop exactly upright
+    // (at the next full turn) so the Beast never lands tilted
     void UpdateFlightSpin()
     {
         if (!flightSpinActive)
@@ -703,8 +700,7 @@ public class LaunchController : MonoBehaviour
         KeepChildrenUpright();
     }
 
-    // Only the Beast's own sprite turns; local-space particles parented to it would
-    // otherwise orbit along with the spin.
+    // only the Beast's own sprite turns, otherwise particles attached to it would spin around too
     void KeepChildrenUpright()
     {
         for (int i = 0; i < uprightChildren.Length; i++)
@@ -756,8 +752,8 @@ public class LaunchController : MonoBehaviour
             Sprite[] spinFrames = animationSet.spin;
             bool canSpin = SpinsOnPull() && spinFrames != null && spinFrames.Length > 0;
 
-            // First part of the pull: curl into a ball. Past that: the spin frames, cycling
-            // faster the further the Beast is pulled.
+            // first part of the pull: curl into a ball. after that: the spin frames, going
+            // faster the further the Beast is pulled
             if (canSpin && currentDragRatio > curlPortionOfPull)
             {
                 float spinRatio = Mathf.InverseLerp(curlPortionOfPull, 1f, currentDragRatio);
@@ -828,9 +824,7 @@ public class LaunchController : MonoBehaviour
         }
     }
 
-    // ============================================
-    // VISUALS
-    // ============================================
+    // --- VISUALS ---
 
     private void StopChargeEffect()
     {
@@ -1215,12 +1209,10 @@ public class LaunchController : MonoBehaviour
         }
     }
 
-    // ============================================
-    // AIM SMOOTHING, RELEASE GUARD, SLOW MOTION
-    // ============================================
+    // --- AIM SMOOTHING, RELEASE GUARD, SLOW MOTION ---
 
-    // A finger drag as a launch vector: full power is reached at a comfortable FullPowerDrag;
-    // on EASY any real drag launches at full power, so only the direction matters.
+    // turns a finger drag into a launch vector: full power at a comfortable pull (FullPowerDrag).
+    // on EASY any real drag launches at full power, so only the direction matters
     Vector2 AimToLaunch(Vector2 aim)
     {
         float fullDrag = Mathf.Min(maxDragDistance, FullPowerDrag);
@@ -1237,7 +1229,7 @@ public class LaunchController : MonoBehaviour
         aimHistoryTime[aimHistoryIndex] = Time.unscaledTime;
     }
 
-    // The aim a moment before release, unless the player flicked so fast that it was still tiny.
+    // the aim from a moment before letting go, unless the player flicked so fast it was still tiny
     Vector2 AimBeforeRelease()
     {
         float cutoff = Time.unscaledTime - ReleaseGuardSeconds;
@@ -1255,8 +1247,8 @@ public class LaunchController : MonoBehaviour
         return bestTime >= 0f && best.magnitude >= smoothedAim.magnitude * 0.6f ? best : smoothedAim;
     }
 
-    // Slows the stage while the player lines up a shot (per difficulty), never over a tutorial
-    // freeze or the pause menu.
+    // slows the stage down while the player lines up a shot (depends on difficulty), but never
+    // during a tutorial freeze or the pause menu
     void BeginAimSlowMotion()
     {
         float scale = Difficulty.AimSlowMotion;
@@ -1336,8 +1328,8 @@ public class LaunchController : MonoBehaviour
         {
             anim.speed = 1f;
 
-            // This runs every frame while at the pad, so only start the idle
-            // clip if it isn't already playing (otherwise it would restart forever).
+            // this runs every frame while on the pad, so only start the idle clip if it isn't already
+            // playing (otherwise it would keep restarting)
             if (!anim.GetCurrentAnimatorStateInfo(0).IsName(idleState))
                 anim.Play(idleState);
         }
@@ -1401,9 +1393,7 @@ public class LaunchController : MonoBehaviour
         }
     }
 
-    // ============================================
-    // CAMERA / MOUSE
-    // ============================================
+    // --- CAMERA / MOUSE ---
 
     Vector2 GetMouseWorldPosition()
     {
@@ -1462,9 +1452,7 @@ public class LaunchController : MonoBehaviour
             : EventSystem.current.IsPointerOverGameObject();
     }
 
-    // ============================================
-    // LAUNCH TEXT
-    // ============================================
+    // --- LAUNCH TEXT ---
 
     void UpdateLaunchText()
     {

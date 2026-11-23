@@ -3,10 +3,9 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-// Writes the PLACEHOLDER sprites (PlaceholderPainter's drawings) to Assets/Resources/Placeholders,
-// where the game loads them by name (PlaceholderArt). Files that already exist are never
-// overwritten, so replacing a PNG with real art (same file name, imported as a Sprite) is all it
-// takes to swap a placeholder out.
+// saves the PLACEHOLDER sprites (drawn by PlaceholderPainter) to Assets/Resources/Placeholders,
+// where the game loads them by name (PlaceholderArt). files that already exist are never overwritten,
+// so to swap in real art you just save a PNG with the same file name
 public static class PlaceholderArtGenerator
 {
     public const string Folder = "Assets/Resources/Placeholders";
@@ -21,7 +20,7 @@ public static class PlaceholderArtGenerator
         return Folder + "/" + name + ".png";
     }
 
-    // Makes sure every placeholder exists and returns them all by name.
+    // makes sure every placeholder exists and returns them all by name
     public static Dictionary<string, Sprite> EnsureAll(List<string> problems)
     {
         Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
@@ -52,9 +51,8 @@ public static class PlaceholderArtGenerator
         return sprites;
     }
 
-    // Painted art saved over a placeholder (same file name) keeps the placeholder's on-screen
-    // size: its pixels-per-unit follows the file's own width, so a larger, sharper image fills
-    // exactly the same space. Painted art is also compressed instead of stored raw.
+    // real art saved over a placeholder (same file name) stays the same size on screen: its pixels per unit
+    // follows the file's width, so a bigger, sharper picture fills the same space. real art also gets compressed
     private static void FitReplacedArt(string path, int placeholderSize, float worldSize, List<string> problems)
     {
         if (!TryReadPngSize(path, out int width, out int height))
@@ -94,7 +92,7 @@ public static class PlaceholderArtGenerator
             importer.SaveAndReimport();
     }
 
-    // Width and height from the PNG header (bytes 16-23 of the IHDR chunk).
+    // width and height from the PNG header (bytes 16-23 of the IHDR chunk)
     private static bool TryReadPngSize(string path, out int width, out int height)
     {
         width = height = 0;
@@ -124,8 +122,8 @@ public static class PlaceholderArtGenerator
         return name == "Enemy_VoltBeetle" || name == "Enemy_ShellCrab" || name == "Enemy_MagmaBrute";
     }
 
-    // The Spark Mite was first written to Sprites/Placeholders; moving it keeps its GUID, so the
-    // stage-8 waves that already use it stay wired.
+    // the Spark Mite was first saved in Sprites/Placeholders. moving it keeps its GUID,
+    // so the stage 8 waves that already use it still work
     private static void MoveLegacySparkMite(List<string> problems)
     {
         string target = AssetPath(SparkMite);
@@ -151,7 +149,7 @@ public static class PlaceholderArtGenerator
         Sprite existing = AssetDatabase.LoadAssetAtPath<Sprite>(path);
         if (existing != null)
         {
-            // Already made, or replaced with real art: keep it, at the placeholder's size.
+            // already made, or replaced with real art: keep it, at the placeholder's size
             FitReplacedArt(path, size, worldSize, problems);
             Sprite fitted = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             return fitted != null ? fitted : existing;
@@ -197,8 +195,8 @@ public static class PlaceholderArtGenerator
         return created;
     }
 
-    // Same on-screen size as the Dust Scout whose body the placeholder enemies borrow
-    // (area-matched: the placeholders are round).
+    // same size on screen as the Dust Scout, whose body the placeholder enemies use
+    // (matched by area, because the placeholders are round)
     private static float EnemyWorldSize()
     {
         Enemy scout = AssetDatabase.LoadAssetAtPath<Enemy>(DustScoutPrefab);
@@ -209,7 +207,7 @@ public static class PlaceholderArtGenerator
         return Mathf.Max(0.2f, Mathf.Sqrt(size.x * size.y) * 1.1f);
     }
 
-    // Same size as Choma, so swapped-in Beasts fill the launch pad the same way.
+    // same size as Choma, so swapped-in Beasts fill the launch pad the same way
     private static float BeastWorldSize()
     {
         GameObject choma = AssetDatabase.LoadAssetAtPath<GameObject>(ChomaPrefab);
@@ -227,8 +225,8 @@ public static class PlaceholderArtGenerator
     }
 }
 
-// Art dropped into the placeholder folder while the editor is open is fitted to its
-// placeholder's size right away (otherwise that happens on the next script reload).
+// art dropped into the placeholder folder while the editor is open gets fitted to the
+// placeholder's size right away (otherwise it happens on the next script reload)
 public class PlaceholderArtWatcher : AssetPostprocessor
 {
     private static bool scheduled;

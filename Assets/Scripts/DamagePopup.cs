@@ -31,7 +31,7 @@ public class DamagePopup : MonoBehaviour
         popupObject.AddComponent<DamagePopup>().Animate(text, worldPos);
     }
 
-    // A short word instead of a number ("BLOCKED", "OVERCHARGE!").
+    // shows a short word instead of a number ("BLOCKED", "OVERCHARGE!")
     public static void ShowText(Vector2 worldPos, string message, Color color)
     {
         GameObject popupObject = new GameObject("DamagePopup");

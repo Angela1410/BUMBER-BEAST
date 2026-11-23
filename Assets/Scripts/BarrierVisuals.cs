@@ -8,13 +8,13 @@ public class BarrierVisuals : MonoBehaviour
     private Animator anim;
     private string currentState;
 
-    // The painted guardian wall (Assets/Resources/Art/Barrier_*.png). When it exists it replaces
-    // the old animated log; without it the Animator clips play exactly as before.
+    // the painted wall (Assets/Resources/Art/Barrier_*.png). if it exists it replaces the old animated log,
+    // if not the Animator clips play like before
     private BarrierArt art;
     private int shownHealth = 1;
     private int shownMaxHealth = 1;
 
-    // Bottom edge of the visible barrier art, or NaN before it is laid out.
+    // bottom edge of the barrier art we can see, or NaN before it's placed
     public float ArtBottomWorldY
     {
         get { return art != null && art.IsLaidOut ? art.WallBottomWorldY : float.NaN; }
@@ -27,7 +27,7 @@ public class BarrierVisuals : MonoBehaviour
         if (art != null)
         {
             if (anim != null)
-                anim.enabled = false;   // it would keep writing the log sprites
+                anim.enabled = false; // otherwise it keeps drawing the log sprites
             art.SetHealth(shownHealth, shownMaxHealth);
             return;
         }
@@ -35,7 +35,7 @@ public class BarrierVisuals : MonoBehaviour
         PlayIdle();
     }
 
-    // Shows the barrier's condition (healthy / damaged / critical). Visual only.
+    // shows how healthy the barrier is (healthy / damaged / critical). only changes how it looks
     public void ShowHealth(int current, int max)
     {
         shownHealth = current;
@@ -66,7 +66,7 @@ public class BarrierVisuals : MonoBehaviour
         Invoke(nameof(PlayIdle), hitReturnDelay);
     }
 
-    // A hit where an enemy reached the barrier; the painted wall ripples at that point.
+    // an enemy reached the barrier, the painted wall ripples at that spot
     public void PlayHit(Vector3 impact)
     {
         if (art != null)
@@ -87,8 +87,8 @@ public class BarrierVisuals : MonoBehaviour
             return;
         }
 
-        // The stage freezes time (timeScale 0) as soon as the barrier falls, so the break
-        // animation has to run on unscaled time or it never leaves its first frame.
+        // the stage stops time (timeScale 0) as soon as the barrier falls, so the break animation
+        // has to use unscaled time or it gets stuck on the first frame
         if (anim != null)
             anim.updateMode = AnimatorUpdateMode.UnscaledTime;
         ChangeAnimationState("Barrier_Destroyed");

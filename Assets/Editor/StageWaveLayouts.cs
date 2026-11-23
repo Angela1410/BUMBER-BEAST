@@ -8,25 +8,24 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Writes timed waves into all 20 stages: each regular wave keeps spawning random enemies from a
-// table until its time runs out. Every enemy's element matches its art:
-//   Grass     Thorn Pup (Enemy_1, the Chapter 1 critter) - the one Grass enemy.
-//   Earth     Dust Scout, Burrower, Rollstone (Chapter 2 rock creatures).
-//   Electric  Spark Mite (fast), Volt Beetle (tough)      - PLACEHOLDER art
-//   Water     Drip Slime, Shell Crab (tough)              - PLACEHOLDER art
-//   Fire      Ember Imp (fast), Magma Brute (tough)       - PLACEHOLDER art
-// Each chapter mixes its own element with the one before it, so the Beast rescued in the previous
-// chapter always has a job; each boss stage previews the next chapter's element.
-//   Ch1 Grass (stage 4 adds four Earth)   Ch2 Earth + Grass (stage 8 adds Electric)
-//   Ch3 Electric + Earth (12 adds Water)  Ch4 Water + Electric (16 adds Fire)
-//   Ch5 Fire + Water, the finale mixes everything.
-// Bosses 12/16/20 (Voltrex, Maelith, Pyrax) get generated boss waves; Thornmaw and Terrathorn
+// writes timed waves into all 20 stages. each normal wave keeps spawning random enemies from a
+// table until its time is up. every enemy's element matches its art:
+// Grass: Thorn Pup (Enemy_1, the chapter 1 critter), the only Grass enemy
+// Earth: Dust Scout, Burrower, Rollstone (chapter 2 rock creatures)
+// Electric: Spark Mite (fast), Volt Beetle (tough), PLACEHOLDER art
+// Water: Drip Slime, Shell Crab (tough), PLACEHOLDER art
+// Fire: Ember Imp (fast), Magma Brute (tough), PLACEHOLDER art
+// each chapter mixes its own element with the one before it, so the Beast you rescued in the last
+// chapter still has a job, and each boss stage gives a preview of the next chapter's element:
+// Ch1 Grass (stage 4 adds four Earth), Ch2 Earth + Grass (stage 8 adds Electric),
+// Ch3 Electric + Earth (12 adds Water), Ch4 Water + Electric (16 adds Fire),
+// Ch5 Fire + Water, and the finale mixes everything.
+// bosses 12/16/20 (Voltrex, Maelith, Pyrax) get generated boss waves, Thornmaw and Terrathorn
 // keep the boss waves their scenes already have.
-//
-// It runs by itself after every script reload: placeholder art is generated, stages 9-20 are
-// built from the stage-5 layout (ChapterBuilder), and any stage whose waves are older than its
-// layout version is rewritten once. The menu item re-applies on demand. Only
-// WaveManager.waves / randomizeElements / timedLayoutVersion change here.
+// it runs by itself after every script reload: makes the placeholder art, builds stages 9-20
+// from stage 5 (ChapterBuilder), and rewrites any stage whose waves are older than its layout
+// version, once. the menu item does it again on demand. it only changes
+// WaveManager.waves / randomizeElements / timedLayoutVersion
 [InitializeOnLoad]
 public static class StageWaveLayouts
 {
@@ -46,7 +45,7 @@ public static class StageWaveLayouts
         public readonly string prefab;
         public readonly ElementType element;
         public readonly string name;
-        public readonly string spriteName;   // null = the prefab's own sprite
+        public readonly string spriteName; // null = use the prefab's own sprite
         public readonly int extraHealth;
         public readonly float speed;
 
@@ -61,7 +60,7 @@ public static class StageWaveLayouts
         }
     }
 
-    // Placeholder kinds borrow the Dust Scout's body (its light tint keeps the art's own colours).
+    // placeholder enemies use the Dust Scout's body (its light tint keeps the art's own colors)
     private static readonly Dictionary<Kind, KindInfo> Kinds = new Dictionary<Kind, KindInfo>
     {
         { Kind.ThornPup, new KindInfo(Critter, ElementType.Grass, "Thorn Pup", null, 0, 1f) },
@@ -93,8 +92,8 @@ public static class StageWaveLayouts
         public readonly Vector2 gap;
         public readonly int maxAlive;
         public readonly Pick[] picks;
-        // Explicit difficulty (new stages). When not tuned, health and speed carry over from the
-        // wave that sat in the same slot before (stages 1-8 were tuned by hand).
+        // difficulty set by hand (new stages). if not set, health and speed come from the wave that
+        // was in the same slot before (we tuned stages 1-8 by hand)
         public readonly bool tuned;
         public readonly int extraHealth;
         public readonly float speed;
@@ -119,7 +118,7 @@ public static class StageWaveLayouts
         }
     }
 
-    // A generated classic boss wave: the minions march first, the boss arrives last.
+    // a generated boss wave: the minions walk in first, the boss comes last
     private sealed class BossSpec
     {
         public readonly string name;
@@ -143,7 +142,7 @@ public static class StageWaveLayouts
     private sealed class StageSpec
     {
         public readonly int stage;
-        public readonly int version;   // bump to rewrite this stage's waves once
+        public readonly int version; // change this to rewrite this stage's waves once
         public readonly BossSpec boss; // null: keep the scene's own boss waves
         public readonly WaveSpec[] waves;
 
@@ -160,10 +159,10 @@ public static class StageWaveLayouts
 
     private static readonly StageSpec[] Stages =
     {
-        // ---- Chapter 1: Thorn Pups only, gentle pacing (Choma alone, Fire beats Grass) ----
-        // Stage 1 is the learning stage: Pups have 2 HP (one Choma hit), walk slower and come in
-        // ones and twos. Stage 2 keeps that for two waves; stage 3 brings back full-strength Pups
-        // a little slower; from stage 4 on the normal pace holds.
+        // ---- Chapter 1: Thorn Pups only, slow pace (just Choma, Fire beats Grass) ----
+        // stage 1 is for learning: Pups have 2 HP (one Choma hit), walk slower and come one or two
+        // at a time. stage 2 keeps that for two waves, stage 3 brings back full strength Pups a bit
+        // slower, and from stage 4 the normal pace stays
         new StageSpec(1, 4, null,
             new WaveSpec("Thorn Pups", 18f, 3.4f, 4.2f, 2, -2, 0.68f, W(Kind.ThornPup, 1f)),
             new WaveSpec("Pup Pack", 22f, 3.2f, 4.0f, 3, -2, 0.74f, W(Kind.ThornPup, 1f)),
@@ -197,7 +196,7 @@ public static class StageWaveLayouts
             new WaveSpec("Boulderbacks", 40f, 2.0f, 2.7f, 5, W(Kind.Rollstone, 1f), W(Kind.Burrower, 1f), W(Kind.ThornPup, 1f)),
             new WaveSpec("Stampede", 50f, 1.7f, 2.4f, 7,
                 W(Kind.Rollstone, 1f), W(Kind.DustScout, 1f), W(Kind.Burrower, 1f), W(Kind.ThornPup, 2f))),
-        // Boss stage: three Electric Spark Mites (placeholder art) join before Terrathorn.
+        // boss stage: three Electric Spark Mites (placeholder art) come before Terrathorn
         new StageSpec(8, 3, null,
             new WaveSpec("Last Tunnel", 45f, 1.8f, 2.5f, 6,
                 W(Kind.DustScout, 1f), W(Kind.Burrower, 1f), W(Kind.Rollstone, 1f), W(Kind.ThornPup, 2f),
@@ -222,7 +221,7 @@ public static class StageWaveLayouts
                 Fixed(Kind.Rollstone, 3), W(Kind.VoltBeetle, 1f), W(Kind.SparkMite, 2f), W(Kind.DustScout, 1f)),
             new WaveSpec("Overload", 55f, 1.8f, 2.4f, 7, 1, 1.04f,
                 W(Kind.SparkMite, 2f), W(Kind.VoltBeetle, 1f), W(Kind.DustScout, 1f), W(Kind.Burrower, 1f), W(Kind.Rollstone, 1f))),
-        // Boss stage: three Drip Slimes preview the Water chapter, then Voltrex.
+        // boss stage: three Drip Slimes preview the Water chapter, then Voltrex
         new StageSpec(12, 1, new BossSpec("Voltrex", ElementType.Electric, Kind.SparkMite, 6, 1, 1.2f),
             new WaveSpec("Storm Front", 45f, 1.9f, 2.5f, 6, 1, 1.04f,
                 W(Kind.SparkMite, 2f), W(Kind.VoltBeetle, 1f), W(Kind.DustScout, 1f), Fixed(Kind.DripSlime, 3))),
@@ -246,7 +245,7 @@ public static class StageWaveLayouts
                 W(Kind.SparkMite, 2f), W(Kind.VoltBeetle, 1f), W(Kind.DripSlime, 2f)),
             new WaveSpec("Flood", 55f, 1.7f, 2.3f, 7, 1, 1.06f,
                 Fixed(Kind.ShellCrab, 3), W(Kind.DripSlime, 2f), W(Kind.SparkMite, 1f), W(Kind.VoltBeetle, 1f))),
-        // Boss stage: three Ember Imps preview the Fire chapter, then Maelith.
+        // boss stage: three Ember Imps preview the Fire chapter, then Maelith
         new StageSpec(16, 1, new BossSpec("Maelith", ElementType.Water, Kind.DripSlime, 6, 1, 1.2f),
             new WaveSpec("Grotto Guard", 50f, 1.8f, 2.4f, 6, 1, 1.06f,
                 W(Kind.DripSlime, 2f), W(Kind.ShellCrab, 1f), W(Kind.SparkMite, 1f), Fixed(Kind.EmberImp, 3))),
@@ -269,7 +268,7 @@ public static class StageWaveLayouts
                 W(Kind.ShellCrab, 1f), W(Kind.DripSlime, 1f), W(Kind.EmberImp, 2f), W(Kind.MagmaBrute, 1f)),
             new WaveSpec("Inferno", 55f, 1.6f, 2.2f, 7, 2, 1.1f,
                 Fixed(Kind.MagmaBrute, 3), W(Kind.EmberImp, 2f), W(Kind.DripSlime, 1f), W(Kind.ShellCrab, 1f))),
-        // The finale: every element at once, then Pyrax.
+        // the finale: every element at once, then Pyrax
         new StageSpec(20, 1, new BossSpec("Pyrax", ElementType.Fire, Kind.EmberImp, 6, 2, 1.1f),
             new WaveSpec("Last Stand", 55f, 1.6f, 2.2f, 7, 2, 1.1f,
                 W(Kind.EmberImp, 2f), W(Kind.MagmaBrute, 1f), W(Kind.DripSlime, 1f), W(Kind.SparkMite, 1f),
@@ -286,7 +285,7 @@ public static class StageWaveLayouts
         EditorApplication.update += AutoApplyWhenIdle;
     }
 
-    // Runs once after each script reload, as soon as the editor is idle in Edit Mode.
+    // runs once after each script reload, as soon as the editor is idle and not playing
     private static void AutoApplyWhenIdle()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating)
@@ -295,9 +294,9 @@ public static class StageWaveLayouts
         ApplyPendingChanges();
     }
 
-    // Everything the editor applies by itself after a script reload (placeholder art, stages 9-20,
-    // their painted backgrounds, stage waves). Builds call it too, because batch mode skips the hook.
-    // Each step is versioned, so running it again changes nothing.
+    // everything the editor does by itself after a script reload (placeholder art, stages 9-20,
+    // their painted backgrounds, stage waves). the build script calls it too, because batch mode
+    // skips the hook. every step has a version, so running it again changes nothing
     public static void ApplyPendingChanges()
     {
         List<string> problems = new List<string>();
@@ -400,7 +399,7 @@ public static class StageWaveLayouts
                 continue;
             }
 
-            // A stage that is already open is edited in place (never closed or reloaded under the user).
+            // if a stage is already open we edit it there (we never close or reload it on you)
             Scene scene = SceneManager.GetSceneByPath(path);
             bool wasOpen = scene.IsValid() && scene.isLoaded;
             bool hadUnsavedEdits = wasOpen && scene.isDirty;
@@ -504,7 +503,7 @@ public static class StageWaveLayouts
         List<EnemyWave> newWaves = new List<EnemyWave>();
         for (int index = 0; index < stage.waves.Length; index++)
         {
-            // Health / speed tuning carries over from whichever wave sat in this slot before.
+            // health / speed tuning comes from the wave that was in this slot before
             EnemyWave tuning = index < regular.Count ? regular[index]
                 : regular.Count > 0 ? regular[regular.Count - 1] : null;
             newWaves.Add(BuildWave(stage.waves[index], tuning, prefabs, sprites, sceneScales));
@@ -516,14 +515,14 @@ public static class StageWaveLayouts
             newWaves.AddRange(bosses);
 
         waveManager.waves = newWaves.ToArray();
-        // Elements come from each enemy kind; random rolls would break the art/element match.
+        // elements come from each enemy kind, random ones would break the art/element match
         waveManager.randomizeElements = false;
         waveManager.timedLayoutVersion = stage.version;
     }
 
-    // Boss-wave minions built from the shared critter are Thorn Pups, which are Grass art, so they
-    // are tagged Grass even when the boss is another element (Terrathorn is Earth). The boss spawn
-    // keeps the wave's element; prefabs, counts and the boss itself are untouched.
+    // boss wave minions made from the shared critter are Thorn Pups, which look like Grass, so they're
+    // set to Grass even if the boss is another element (Terrathorn is Earth). the boss keeps the wave's
+    // element, and prefabs, counts and the boss itself don't change
     private static void MatchMinionElementsToArt(EnemyWave wave, Enemy critter)
     {
         if (wave.element == ElementType.Grass || wave.enemyPrefabs == null || wave.enemyPrefabs.Length == 0)
@@ -531,7 +530,7 @@ public static class StageWaveLayouts
         foreach (Enemy prefab in wave.enemyPrefabs)
         {
             if (prefab != critter)
-                return;   // other art: leave its elements alone
+                return; // other art: leave its elements alone
         }
 
         int count = Mathf.Max(1, wave.enemyCount);
@@ -546,8 +545,8 @@ public static class StageWaveLayouts
         wave.elementPattern = pattern;
     }
 
-    // Keeps any per-prefab size the scene already used (e.g. Rollstones at 0.85), whether it came
-    // from an older classic wave or from a previous timed layout.
+    // keeps any size the scene already used per prefab (like Rollstones at 0.85), whether it came
+    // from an older wave or a previous timed layout
     private static void CollectSceneScales(EnemyWave wave, Dictionary<Enemy, float> sceneScales)
     {
         if (wave.IsTimed)
@@ -608,7 +607,7 @@ public static class StageWaveLayouts
             spawnTable = table,
             spawnGap = spec.gap,
             maxAlive = spec.maxAlive,
-            // Classic fallback, used only if Spawn Duration is set back to 0 in the Inspector.
+            // old fallback, only used if Spawn Duration gets set back to 0 in the Inspector
             enemyPrefabs = distinctPrefabs.ToArray(),
             elementPattern = distinctElements.ToArray(),
             element = distinctElements[0],

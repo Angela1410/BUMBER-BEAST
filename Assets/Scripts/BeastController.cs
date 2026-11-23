@@ -26,10 +26,11 @@ public class BeastController : MonoBehaviour
     public BeastId ActiveBeast { get; private set; } = BeastId.Choma;
     public float CooldownRemaining { get; private set; }
     public bool IsSkillReady => CooldownRemaining <= 0f;
+    // the skill only works while the Beast is flying and the skill is recharged
     public bool CanUseSkill => State == BeastState.Flying && IsSkillReady;
     public bool IsDoubleBounceActive { get; private set; }
 
-    // The player's Beast in the running stage (one per scene); read by enemy element badges.
+    // the player's Beast in this stage (only one per scene). the enemy badges read it
     public static BeastController Active { get; private set; }
 
     private Rigidbody2D rb;
@@ -92,19 +93,19 @@ public class BeastController : MonoBehaviour
             skillCooldown = Mathf.Max(1f,
                 skillCooldown - GameProgress.Instance.SkillCooldownLevel * 0.5f);
 
-        // Aim assist is strongest in chapter 1, where players are still learning to aim.
+        // aim assist is strongest in chapter 1, when players are still learning to aim
         StageManager stage = FindAnyObjectByType<StageManager>();
         bool firstChapter = stage == null || ChapterData.ChapterOfStage(stage.stageNumber) == 0;
         assistRadius = firstChapter ? 2.1f : 1.6f;
         assistTurnDegrees = firstChapter ? 280f : 190f;
-        // Settings > DIFFICULTY: strong on EASY, weak on HARD, off on HELL.
+        // Settings > DIFFICULTY: strong on EASY, weak on HARD, off on HELL
         float strength = Difficulty.AssistStrength;
         assistRadius *= 0.5f + 0.5f * strength;
         assistTurnDegrees *= strength;
     }
 
-    // Settings > AIM ASSIST: bends the flight toward the nearest enemy just ahead, never more than
-    // a few degrees per physics step, keeping the Beast's speed.
+    // Settings > AIM ASSIST: bends the flight a little toward the closest enemy ahead, only a few
+    // degrees per physics step, and the Beast keeps its speed
     void ApplyAimAssist()
     {
         if (!GameSettings.AimAssist || State != BeastState.Flying || assistTurnDegrees <= 0f)
@@ -189,7 +190,7 @@ public class BeastController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // Wall thuds; enemies and bumpers play their own hit sounds.
+        // sound for hitting a wall (enemies and bumpers play their own hit sounds)
         if ((State == BeastState.Flying || State == BeastState.UsingSkill) && collision.collider != null &&
             collision.collider.GetComponentInParent<Enemy>() == null && collision.collider.GetComponent<Bumper>() == null)
             GameAudio.Play(Sfx.Bounce, Mathf.Clamp01(collision.relativeVelocity.magnitude / 12f) * 0.8f + 0.2f);
@@ -227,6 +228,7 @@ public class BeastController : MonoBehaviour
         flightTime = 0f;
     }
 
+    // the skill button calls this
     public void ActivateSkill()
     {
         if (!CanUseSkill)
@@ -377,7 +379,7 @@ public class BeastController : MonoBehaviour
             if (closest == null)
                 break;
 
-            // A jagged bolt from the last point to this target.
+            // a zig-zag lightning bolt from the last point to this target
             Vector3 from = currentPosition;
             Vector3 to = closest.transform.position;
             Vector3 side = Vector3.Cross((to - from).normalized, Vector3.forward);
@@ -475,7 +477,7 @@ public class BeastController : MonoBehaviour
         return enemy != null && ElementChart.IsSuperEffective(attackerElement, enemy.element);
     }
 
-    // An expanding ring in the ability's colour (every Beast's skill shows one).
+    // a ring that grows in the skill's color (every Beast's skill shows one)
     void ShowSkillRing(Color color)
     {
         skillRingColor = color;
@@ -565,7 +567,7 @@ public class BeastController : MonoBehaviour
         return found;
     }
 
-    // A wave was cleared: a Beast still in the air flies straight home to the pad.
+    // a wave was cleared: if the Beast is still flying it goes straight back to the pad
     public void RecallToPad()
     {
         if (State == BeastState.Flying || State == BeastState.UsingSkill)

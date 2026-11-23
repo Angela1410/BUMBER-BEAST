@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// all the Beasts you can play as
 public enum BeastId
 {
     Choma,
@@ -25,6 +26,7 @@ public class BeastRoster : MonoBehaviour
         return beast.ToString();
     }
 
+    // each Beast's element
     public static ElementType GetElement(BeastId beast)
     {
         switch (beast)
@@ -37,6 +39,7 @@ public class BeastRoster : MonoBehaviour
         }
     }
 
+    // you have to beat this stage first to free the Beast
     public static int GetUnlockStage(BeastId beast)
     {
         switch (beast)
@@ -49,6 +52,7 @@ public class BeastRoster : MonoBehaviour
         }
     }
 
+    // how many coins it costs to recruit the Beast
     public static int GetPrice(BeastId beast)
     {
         switch (beast)
@@ -61,6 +65,7 @@ public class BeastRoster : MonoBehaviour
         }
     }
 
+    // the name of each Beast's skill
     public static string GetAbilityName(BeastId beast)
     {
         switch (beast)
@@ -73,8 +78,8 @@ public class BeastRoster : MonoBehaviour
         }
     }
 
-    // Placeholder tint, only used while a Beast has no art of its own.
-    // Once real sprites are assigned, LaunchController ignores this.
+    // placeholder color, only used while a Beast has no art yet.
+    // once real sprites are set, LaunchController ignores this
     public static Color GetColor(BeastId beast)
     {
         switch (beast)
@@ -87,7 +92,7 @@ public class BeastRoster : MonoBehaviour
         }
     }
 
-    // Color of the charging sparks while aiming
+    // color of the charging sparks while aiming
     public static Color GetEffectColor(BeastId beast)
     {
         switch (beast)

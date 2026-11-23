@@ -8,15 +8,15 @@ public enum GameDifficulty
     Hell
 }
 
-// What each difficulty changes (Settings > DIFFICULTY; Medium is the game as designed):
-//                 enemy speed  enemy/boss HP  barrier  aim assist  slow-mo while aiming  coins
-//   EASY             75%           70%          +3      strong       strong (35%)        x1   + every shot full power
-//   MEDIUM          100%          100%           0      normal       light (65%)         x1
-//   HARD            120%          130%          -1      weak         none                x1.5
-//   HELL            145%          170%          -2      off          none                x2
-// Enemy speed and health apply as enemies spawn; the barrier and rewards per stage.
+// what each difficulty changes (Settings > DIFFICULTY, MEDIUM is the normal game):
+// EASY: enemies 75% speed, 70% health, barrier +3, strong aim assist, strong slow-mo (35%), x1 coins, every shot is full power
+// MEDIUM: enemies 100% speed, 100% health, normal barrier, normal aim assist, light slow-mo (65%), x1 coins
+// HARD: enemies 120% speed, 130% health, barrier -1, weak aim assist, no slow-mo, x1.5 coins
+// HELL: enemies 145% speed, 170% health, barrier -2, no aim assist, no slow-mo, x2 coins
+// enemy speed and health are set when enemies spawn, the barrier and coins once per stage
 public static class Difficulty
 {
+    // one value per difficulty, in this order: EASY, MEDIUM, HARD, HELL
     private static readonly float[] Speed = { 0.75f, 1f, 1.2f, 1.45f };
     private static readonly float[] Health = { 0.7f, 1f, 1.3f, 1.7f };
     private static readonly int[] Barrier = { 3, 0, -1, -2 };
@@ -33,6 +33,7 @@ public static class Difficulty
     public static GameDifficulty Current => GameSettings.Difficulty;
     static int Index => Mathf.Clamp((int)Current, 0, Names.Length - 1);
 
+    // other scripts read these to get the value for the difficulty we picked
     public static float EnemySpeed => Speed[Index];
     public static float EnemyHealth => Health[Index];
     public static int BarrierBonus => Barrier[Index];
@@ -56,6 +57,7 @@ public static class Difficulty
         return ColorUtility.ToHtmlStringRGB(ColorOf(difficulty));
     }
 
+    // multiplies the coins we earn (x1.5 on HARD, x2 on HELL)
     public static int ScaleReward(int coins)
     {
         return Mathf.RoundToInt(coins * RewardMultiplier);

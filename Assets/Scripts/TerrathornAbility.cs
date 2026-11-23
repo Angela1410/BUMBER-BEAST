@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Earth chapter boss. Lives on the shared enemy prefab next to ThornmawAbility
-// and only activates for a boss whose name contains "Terrathorn".
-//
-// Rockfall: a shadow telegraphs where a boulder will land, then a temporary
-// boulder drops into the arena. Boulders block and deflect shots (the aim
-// preview shows the bounce) and crumble after a few hits or a short time, so
-// the player always has a clear lane.
+// the Earth chapter boss. it's on the shared enemy prefab next to ThornmawAbility
+// and only turns on for a boss whose name has "Terrathorn" in it.
+// Rockfall: a shadow shows where a boulder will land, then a boulder drops into the field.
+// boulders block and bounce shots (the aim line shows the bounce) and break after a few
+// hits or a short time, so the player always has an open path
 [RequireComponent(typeof(Enemy))]
 public class TerrathornAbility : MonoBehaviour
 {
@@ -37,8 +35,8 @@ public class TerrathornAbility : MonoBehaviour
     private readonly List<GameObject> activeBoulders = new List<GameObject>();
     private SpriteRenderer sr;
     private Enemy enemy;
-    // Painted Terrathorn art (Assets/Resources/Art) keeps its own colours; the stone tint only
-    // dresses up the borrowed sprite assigned on the prefab.
+    // the painted Terrathorn art (Assets/Resources/Art) keeps its own colors, the stone tint is only
+    // for the borrowed sprite on the prefab
     private Color baseColor;
 
     public static bool IsTerrathorn(Enemy candidate)
@@ -117,7 +115,7 @@ public class TerrathornAbility : MonoBehaviour
             if (Vector2.Distance(candidate, transform.position) < minDistanceFromBoss)
                 continue;
 
-            // Keep clear of bumpers, walls, other boulders and the Beast.
+            // stay away from bumpers, walls, other boulders and the Beast
             bool blocked = false;
             foreach (Collider2D overlap in Physics2D.OverlapCircleAll(candidate, clearanceRadius))
             {
@@ -141,7 +139,7 @@ public class TerrathornAbility : MonoBehaviour
 
     IEnumerator DropBoulder(Vector2 landing)
     {
-        // Telegraph: the boss glows and a shadow grows where the rock will land.
+        // warning: the boss glows and a shadow grows where the rock will land
         if (sr != null)
             sr.color = new Color(1f, 0.62f, 0.3f, 1f);
 
@@ -179,7 +177,7 @@ public class TerrathornAbility : MonoBehaviour
         boulderRenderer.color = rock != null ? Color.white : new Color(0.55f, 0.45f, 0.36f, 1f);
         boulderRenderer.sortingOrder = 2;
 
-        // Scale the art so the visible rock matches the collider.
+        // scale the art so the rock you see matches the collider
         Vector2 spriteSize = boulderRenderer.sprite.bounds.size;
         float spriteDiameter = Mathf.Max(0.01f, Mathf.Max(spriteSize.x, spriteSize.y));
         float scale = boulderRadius * 2.2f / spriteDiameter;

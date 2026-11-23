@@ -1,8 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Sound effects, in the order of GameAudio's table. Each one is Assets/Resources/Audio/Sfx_<Name>.wav;
-// replacing a file with another sound under the same name swaps it.
+// sound effects, in the same order as GameAudio's table. each one is Assets/Resources/Audio/Sfx_<Name>.wav,
+// so to change a sound just replace the file with one that has the same name
 public enum Sfx
 {
     Click,
@@ -41,7 +41,7 @@ public enum Sfx
     Gift
 }
 
-// Music loops: Assets/Resources/Audio/Music_<Name>.wav (same swap-by-name rule).
+// music loops: Assets/Resources/Audio/Music_<Name>.wav (swap them by name too)
 public enum MusicTrack
 {
     None,
@@ -54,10 +54,10 @@ public enum MusicTrack
     Boss
 }
 
-// The game's one audio player. It starts itself before the first scene, survives scene changes,
-// picks each scene's music (the hub theme, the chapter's theme on a stage, the boss theme on boss
-// stages) and cross-fades between them, and plays sound effects on a small pool of voices.
-// Volumes come from GameSettings. Clips that are missing are reported once and then skipped.
+// the one audio player for the whole game. it starts itself before the first scene, stays when
+// scenes change, picks the music for each scene (map theme, the chapter's theme on a stage, the
+// boss theme on boss stages), fades between them, and plays sound effects on a few voices.
+// volumes come from GameSettings. if a sound file is missing it reports it once and skips it
 public class GameAudio : MonoBehaviour
 {
     private const string Folder = "Audio/";
@@ -65,8 +65,8 @@ public class GameAudio : MonoBehaviour
     private const float MusicBaseVolume = 0.55f;
     private const float CrossfadeSeconds = 1.2f;
 
-    // Per-effect mix: base volume, the shortest gap between two plays (stops a skill that hits
-    // eight enemies from stacking eight copies) and random pitch spread so repeats sound alive.
+    // mix for each effect: volume, the shortest time between two plays (so a skill that hits eight
+    // enemies doesn't play eight copies at once) and a bit of random pitch so repeats sound alive
     private static readonly float[] SfxVolume =
     {
         0.5f, 0.8f, 0.6f, 0.32f, 0.75f, 0.42f, 0.6f, 0.85f, 0.62f, 0.8f, 0.6f, 0.6f, 0.95f, 0.8f, 1f,
@@ -126,7 +126,7 @@ public class GameAudio : MonoBehaviour
         return instance;
     }
 
-    // ------------------------------------------------------------------ public API
+    // --- what other scripts call ---
 
     public static void Play(Sfx sfx)
     {
@@ -140,7 +140,7 @@ public class GameAudio : MonoBehaviour
             audio.PlayEffect(sfx, volumeScale, 0f);
     }
 
-    // A fixed pitch (1 = as recorded), e.g. a combo sound that climbs with each hit.
+    // a fixed pitch (1 = normal), like the combo sound that gets higher with each hit
     public static void PlayPitched(Sfx sfx, float volumeScale, float pitch)
     {
         GameAudio audio = EnsureInstance();
@@ -148,7 +148,7 @@ public class GameAudio : MonoBehaviour
             audio.PlayEffect(sfx, volumeScale, Mathf.Clamp(pitch, 0.25f, 3f));
     }
 
-    // The skill sound of a Beast's element.
+    // the skill sound for a Beast's element
     public static void PlaySkill(ElementType element)
     {
         switch (element)
@@ -168,7 +168,7 @@ public class GameAudio : MonoBehaviour
             audio.SwitchMusic(track);
     }
 
-    // Boss stages get the boss theme; every other stage its chapter's theme.
+    // boss stages get the boss theme, every other stage gets its chapter's theme
     public static MusicTrack TrackForStage(int stageNumber)
     {
         if (ChapterData.IsBossStage(stageNumber))
@@ -183,7 +183,7 @@ public class GameAudio : MonoBehaviour
         }
     }
 
-    // ------------------------------------------------------------------ lifetime
+    // --- start up ---
 
     void Awake()
     {
@@ -213,7 +213,7 @@ public class GameAudio : MonoBehaviour
         musicCurrent = CreateSource(true, 0);
         musicPrevious = CreateSource(true, 0);
 
-        // The hub scene has no AudioListener of its own; this one fills in wherever none exists.
+        // the map scene doesn't have its own AudioListener, so this one fills in wherever there's none
         fallbackListener = gameObject.AddComponent<AudioListener>();
         fallbackListener.enabled = false;
 
@@ -244,7 +244,7 @@ public class GameAudio : MonoBehaviour
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         CheckListener();
-        // Objects of the scene that is being replaced can linger for a frame; check again shortly.
+        // objects from the old scene can stay for one more frame, so check again soon
         listenerCheckAt = Time.unscaledTime + 0.3f;
 
         if (scene.name == LoadingScreen.HubScene)
@@ -298,7 +298,7 @@ public class GameAudio : MonoBehaviour
         float target = now < duckUntil ? duckTarget : 1f;
         if (!Mathf.Approximately(duck, target))
         {
-            // Ducks down quickly, comes back up gently.
+            // goes quiet fast, comes back slowly
             duck = Mathf.MoveTowards(duck, target, delta * (target < duck ? 4f : 0.8f));
             changed = true;
         }
@@ -316,9 +316,9 @@ public class GameAudio : MonoBehaviour
             musicPrevious.volume = music * (1f - fade);
     }
 
-    // ------------------------------------------------------------------ sound effects
+    // --- sound effects ---
 
-    // fixedPitch 0 = the effect's own random pitch spread.
+    // fixedPitch 0 = use the effect's own random pitch
     void PlayEffect(Sfx sfx, float volumeScale, float fixedPitch)
     {
         int index = (int)sfx;
@@ -344,7 +344,7 @@ public class GameAudio : MonoBehaviour
         voice.Play();
         voiceStarted[voiceIndex] = now;
 
-        // Jingles and big moments push the music down while they play.
+        // jingles and big moments make the music quieter while they play
         if (sfx == Sfx.Victory || sfx == Sfx.Defeat || sfx == Sfx.Unlock || sfx == Sfx.BossDefeat || sfx == Sfx.BarrierBreak)
             Duck(clip.length + 0.3f, 0.25f);
     }
@@ -361,7 +361,7 @@ public class GameAudio : MonoBehaviour
             }
         }
 
-        // Every voice is busy: reuse the one that started longest ago.
+        // every voice is busy, so reuse the one that started the longest ago
         int oldest = 0;
         for (int index = 1; index < voices.Length; index++)
         {
@@ -390,7 +390,7 @@ public class GameAudio : MonoBehaviour
         return sfxClips[index];
     }
 
-    // ------------------------------------------------------------------ music
+    // --- music ---
 
     void SwitchMusic(MusicTrack track)
     {
@@ -400,7 +400,7 @@ public class GameAudio : MonoBehaviour
         currentTrack = track;
         AudioClip clip = track == MusicTrack.None ? null : LoadMusic((int)track);
 
-        // The old track fades out on the spare source while the new one fades in.
+        // the old song fades out on the spare source while the new one fades in
         AudioSource old = musicCurrent;
         musicCurrent = musicPrevious;
         musicPrevious = old;

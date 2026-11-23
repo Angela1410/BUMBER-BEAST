@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Loads the generated PLACEHOLDER sprites in Assets/Resources/Placeholders by name, for the
-// Beasts, bosses and enemies that have no painted art yet. To swap one out, replace its PNG
-// with real art under the same name (imported as a Sprite); nothing else needs rewiring.
+// loads the generated PLACEHOLDER sprites in Assets/Resources/Placeholders by name, for the Beasts,
+// bosses and enemies that don't have painted art yet. to swap one, replace its PNG with real art
+// with the same name (imported as a Sprite), nothing else needs to change
 public static class PlaceholderArt
 {
     private const string Folder = "Placeholders/";
@@ -20,7 +20,7 @@ public static class PlaceholderArt
         if (sprite == null)
             Debug.LogWarning("Placeholder art Assets/Resources/" + Folder + name + ".png is missing; a plain " +
                 "shape is used instead. The Unity editor generates it after the next script reload.");
-        Cache[name] = sprite;   // a miss is cached too, so the warning appears once
+        Cache[name] = sprite; // a miss gets saved too, so the warning only shows once
         return sprite;
     }
 
@@ -34,7 +34,7 @@ public static class PlaceholderArt
         return Get("Beast_" + beast + "_Ball");
     }
 
-    // "VOLTREX" / "Voltrex" -> Boss_Voltrex.
+    // "VOLTREX" / "Voltrex" -> Boss_Voltrex
     public static Sprite Boss(string bossName)
     {
         if (string.IsNullOrEmpty(bossName))
@@ -44,7 +44,7 @@ public static class PlaceholderArt
         return Get("Boss_" + title);
     }
 
-    // Beasts that ship with painted art (Choma, Thistle) never fall back to a placeholder.
+    // Beasts that already have painted art (Choma, Thistle) never use a placeholder
     public static bool HasPaintedArt(BeastId beast)
     {
         return beast == BeastId.Choma || beast == BeastId.Thistle;

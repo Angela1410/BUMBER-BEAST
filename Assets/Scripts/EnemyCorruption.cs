@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// Marks every enemy as corrupted: layered violet glow hugging the sprite's silhouette, a violet
-// tint over the body, a dark aura and a bright violet haze behind it, a pool of corruption under
-// its feet, purple smoke wisps and motes rising off it; bosses get a stronger, larger version.
-// Added automatically by Enemy.Start, so wave spawns, reinforcements and bosses all get it.
-// Visual only: child renderers, no colliders or physics, and the enemy's own renderer is never
-// touched, so hit flashes, element tints, sprite swaps and movement behave exactly as before.
+// makes every enemy look corrupted: purple glow around its outline, a purple tint on the body,
+// a dark aura and a bright purple haze behind it, a puddle of corruption under its feet, and purple
+// smoke and particles rising off it. bosses get a bigger, stronger version.
+// Enemy.Start adds it, so wave spawns, extra enemies and bosses all get it.
+// it only changes the looks: child sprites with no colliders or physics, and it never touches the
+// enemy's own sprite, so hit flashes, element tints, sprite swaps and movement work like before
 [DisallowMultipleComponent]
 public class EnemyCorruption : MonoBehaviour
 {
@@ -76,9 +76,9 @@ public class EnemyCorruption : MonoBehaviour
         Sprite glow = HudVisualUtility.GlowSprite();
         Sprite smoke = HudVisualUtility.SmokeSprite();
 
-        // Silhouette glow: copies of the enemy's own sprite drawn slightly larger, behind it (bright
-        // violet rims, then a dark violet shadow that keeps the shape readable on light ground),
-        // plus one on top that tints the body violet.
+        // outline glow: copies of the enemy's own sprite drawn a bit bigger behind it (bright purple edges,
+        // then a dark purple shadow so the shape is still clear on light ground), plus one on top
+        // that tints the body purple
         if (silhouette != null)
         {
             rimScales = boss ? new[] { 1.05f, 1.14f, 1.26f, 1.42f, 1.58f } : new[] { 1.06f, 1.15f, 1.3f, 1.44f };
@@ -96,7 +96,7 @@ public class EnemyCorruption : MonoBehaviour
             rims = new SpriteRenderer[0];
             bodyTint = null;
         }
-        // Everything else sits behind the rims, each kind on its own order so the stacking is fixed.
+        // everything else goes behind the edges, each kind on its own layer so the order never changes
         behind = -(rims.Length + 1);
 
         aura = GameArt.AddLayer(layerRoot, "Aura", glow, soft, source, behind - 1);
@@ -118,7 +118,7 @@ public class EnemyCorruption : MonoBehaviour
         moteSeeds = new float[moteCount];
         for (int i = 0; i < moteCount; i++)
         {
-            // Alternate in front of / behind the body so the motes wrap around it.
+            // switch between in front of and behind the body, so the particles wrap around it
             motes[i] = GameArt.AddLayer(layerRoot, "Mote" + i, glow, bright, source, i % 2 == 0 ? 1 : behind);
             moteSeeds[i] = (i + 0.37f) / moteCount;
         }
@@ -163,7 +163,7 @@ public class EnemyCorruption : MonoBehaviour
             rim.flipY = source.flipY;
             float scale = rimScales[i] * (1f + 0.015f * Mathf.Sin(time * 2.1f + i * 1.7f));
             rim.transform.localScale = new Vector3(scale, scale, 1f);
-            // Scale about the sprite's visual centre rather than its pivot.
+            // scale around the middle of the picture instead of its pivot
             rim.transform.localPosition = center * (1f - scale);
             Color color = rimColors[i];
             color.a = rimAlphas[i] * pulse * fade;
@@ -191,7 +191,7 @@ public class EnemyCorruption : MonoBehaviour
         aura.color = auraColor;
         SetSorting(aura, layer, order + behind - 1);
 
-        // A brighter violet haze around the dark aura, so the corruption reads on dark ground too.
+        // a brighter purple haze around the dark aura, so the corruption shows on dark ground too
         float hazeBreathe = 1f + 0.05f * Mathf.Sin(time * 1.7f);
         haze.transform.localPosition = center;
         haze.transform.localScale = new Vector3(bounds.size.x * auraScale * 1.3f * hazeBreathe,
@@ -201,7 +201,7 @@ public class EnemyCorruption : MonoBehaviour
         haze.color = hazeColor;
         SetSorting(haze, layer, order + behind - 2);
 
-        // Corrupted ground under its feet.
+        // corrupted ground under its feet
         float poolBreathe = 1f + 0.08f * Mathf.Sin(time * 1.9f);
         pool.transform.localPosition = new Vector3(center.x, center.y - bounds.extents.y * 0.86f, 0f);
         pool.transform.localScale = new Vector3(bounds.size.x * (boss ? 1.5f : 1.3f) * poolBreathe,
@@ -222,7 +222,7 @@ public class EnemyCorruption : MonoBehaviour
             SetSorting(bossCloud, layer, order + behind - 3);
         }
 
-        // Purple smoke rising off the body like dark flames.
+        // purple smoke rising off the body like dark flames
         float wispLife = boss ? 1.4f : 1.6f;
         for (int i = 0; i < wisps.Length; i++)
         {
@@ -270,7 +270,7 @@ public class EnemyCorruption : MonoBehaviour
         renderer.sortingOrder = order;
     }
 
-    // Stable pseudo-random value in [0, 1) per mote and cycle (no allocation, no Random state).
+    // a fixed random-looking number from 0 to 1 for each particle and cycle (no Random needed)
     static float Hash(int index, int cycle)
     {
         float value = Mathf.Sin(index * 12.9898f + cycle * 78.233f) * 43758.5453f;

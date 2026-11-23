@@ -1,7 +1,6 @@
 using UnityEngine;
 
-// Small scale + fade entrance for panels. Runs on unscaled time so it plays
-// on paused result screens.
+// small grow + fade in animation for panels. uses unscaled time so it plays on paused result screens
 [DisallowMultipleComponent]
 public class UiPopIn : MonoBehaviour
 {
@@ -29,7 +28,7 @@ public class UiPopIn : MonoBehaviour
 
         elapsed = Mathf.Min(duration, elapsed + Time.unscaledDeltaTime);
         float t = elapsed / duration;
-        // Ease-out-back for a little overshoot.
+        // ease-out-back for a little overshoot
         float c = 1.7f;
         float eased = 1f + (c + 1f) * Mathf.Pow(t - 1f, 3f) + c * Mathf.Pow(t - 1f, 2f);
         transform.localScale = Vector3.one * Mathf.LerpUnclamped(startScale, 1f, eased);

@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// Shared element colours, names and icons (generated once, no art files needed), used by the
-// enemy element badges and the wave planning card so the matchups read the same everywhere.
+// shared element colors, names and icons (made by code once, no art files needed). the enemy
+// badges and the wave plan card use them, so the matchups look the same everywhere
 public static class ElementVisuals
 {
     private const int IconSize = 96;
@@ -28,13 +28,13 @@ public static class ElementVisuals
         return element.ToString().ToUpperInvariant();
     }
 
-    // Hex colour for TMP rich text.
+    // hex color for TMP rich text
     public static string GetHex(ElementType element)
     {
         return ColorUtility.ToHtmlStringRGB(GetColor(element));
     }
 
-    // The element that deals double damage to the given one.
+    // the element that does double damage to this one
     public static ElementType GetCounter(ElementType defender)
     {
         foreach (ElementType attacker in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
@@ -45,7 +45,7 @@ public static class ElementVisuals
         return defender;
     }
 
-    // Round badge: dark rim, element-coloured disc, white glyph.
+    // round badge: dark edge, element colored circle, white symbol
     public static Sprite GetIcon(ElementType element)
     {
         int index = (int)element;
@@ -84,7 +84,7 @@ public static class ElementVisuals
                             sample = glyphColor;
                         else
                             sample = disc;
-                        // Premultiply so edge samples blend without dark fringes.
+                        // premultiply so the edges blend without dark borders
                         sum += new Color(sample.r * sample.a, sample.g * sample.a, sample.b * sample.a, sample.a) * sampleWeight;
                     }
                 }
@@ -105,7 +105,7 @@ public static class ElementVisuals
         return icons[index];
     }
 
-    // The element's glyph alone (white on transparent), for big HUD buttons. Tint it with Image.color.
+    // just the element's symbol (white on clear) for big HUD buttons. tint it with Image.color
     public static Sprite GetGlyphSprite(ElementType element)
     {
         int index = (int)element;
@@ -121,7 +121,7 @@ public static class ElementVisuals
         return glyphSprites[index];
     }
 
-    // Two chasing arrows in a circle (the "swap" symbol), white on transparent.
+    // two arrows chasing each other in a circle (the "swap" symbol), white on clear
     public static Sprite GetSwapArrowsSprite()
     {
         if (swapArrowsSprite != null)
@@ -142,7 +142,7 @@ public static class ElementVisuals
         return swapArrowsSprite;
     }
 
-    // Arrow head at the counter-clockwise end of an arc, centred on the band.
+    // arrow head at the end of an arc, centered on the band
     private static bool InsideArrowHead(float u, float v, float endAngle)
     {
         float radians = endAngle * Mathf.Deg2Rad;
@@ -165,7 +165,7 @@ public static class ElementVisuals
         return !(negative && positive);
     }
 
-    // Supersampled white shape; inside(x, y) is asked in pixels from the centre (y up).
+    // a smooth white shape: inside(x, y) is checked in pixels from the center (y goes up)
     private static Sprite RasterizeWhite(string name, System.Func<float, float, bool> inside)
     {
         Color[] pixels = new Color[GlyphSize * GlyphSize];
@@ -201,7 +201,7 @@ public static class ElementVisuals
         return sprite;
     }
 
-    // Glyph outlines in a unit space (roughly -1..1, y up).
+    // symbol outlines in a small space (about -1..1, y goes up)
     private static Vector2[] GetGlyph(ElementType element)
     {
         switch (element)
@@ -236,7 +236,7 @@ public static class ElementVisuals
                 };
             default:
             {
-                // Leaf: a pointed lens, tilted.
+                // leaf: a pointed oval, tilted
                 const int steps = 12;
                 Vector2[] leaf = new Vector2[steps * 2];
                 float cos = Mathf.Cos(-0.7f), sin = Mathf.Sin(-0.7f);

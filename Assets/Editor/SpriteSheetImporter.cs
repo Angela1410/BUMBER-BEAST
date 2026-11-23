@@ -22,9 +22,9 @@ public static class SpriteSheetImporter
         public readonly string path;
         public readonly int columns;
         public readonly int rows;
-        // 0 = derive from the cell height (one cell = one world unit); otherwise fixed.
+        // 0 = work it out from the cell height (one cell = one world unit), otherwise use this number
         public readonly float pixelsPerUnit;
-        // Normalised pivot shared by every cell (Unity convention: origin bottom-left).
+        // pivot shared by every cell, as 0-1 (Unity counts from the bottom left)
         public readonly Vector2 pivot;
 
         public SheetDefinition(string path, int columns, int rows, float pixelsPerUnit = 0f)
@@ -42,9 +42,9 @@ public static class SpriteSheetImporter
         }
     }
 
-    // Earth barrier pivot: (512, 512) px from the cell's top-left corner. Every frame is drawn
-    // centred at x 576 with its base on row 736, so this pivot keeps the wall exactly where the
-    // (user-tuned) Square transform shows it, and identical across all frames.
+    // Earth barrier pivot: (512, 512) px from the cell's top left. every frame is drawn centered at
+    // x 576 with its base on row 736, so this pivot keeps the wall exactly where the Square transform
+    // (that we tuned by hand) shows it, the same on every frame
     private static readonly Vector2 EarthBarrierPivot = new Vector2(512f / 1152f, 256f / 768f);
 
     private static readonly SheetDefinition[] Sheets =
@@ -54,19 +54,18 @@ public static class SpriteSheetImporter
         new SheetDefinition("Assets/Sprites/Chapter2/Ch2_Enemies_Sheet.png", 3, 2),
         new SheetDefinition("Assets/Sprites/Chapter2/Terrathorn_Sheet.png", 2, 2),
         new SheetDefinition("Assets/Sprites/Chapter2/Ch2_Bumpers_Sheet.png", 3, 2),
-        // Earth barrier: 1152x768 cells at PPU 300 give the same 3.84x2.56-unit cell as the
-        // Chapter 1 log sheets (384x256 at PPU 100), so the Square prefab's scale still applies.
+        // Earth barrier: 1152x768 cells at PPU 300 are the same 3.84x2.56 units as the chapter 1 log
+        // sheets (384x256 at PPU 100), so the Square prefab's scale still works
         new SheetDefinition("Assets/Sprites/Chapter2/Earth_Barrier_Hit.png", 2, 2, 300f, EarthBarrierPivot),
         new SheetDefinition("Assets/Sprites/Chapter2/Earth_Barrier_Destroyed.png", 2, 2, 300f, EarthBarrierPivot)
     };
 
-    // Versioned so a fix to the hook runs again in an Editor session that already ran the old one.
+    // has a version number so a fixed hook runs again even if the old one already ran this session
     private const string AutoImportSessionKey = "BumperBeast.ThistleAutoImport.Done.v2";
 
-    // After a script reload, slice and wire the Thistle sheet automatically if that
-    // has not happened yet, so the art works without a manual menu step. Only the
-    // texture import and the Choma prefab are touched here; the Stage 1 test unlock
-    // (a scene save) stays behind the menu item.
+    // after a script reload, slice and set up the Thistle sheet by itself if it hasn't been done yet,
+    // so the art works without clicking a menu. only the texture import and the Choma prefab are
+    // changed here, the stage 1 test unlock (which saves a scene) stays in the menu item
     [InitializeOnLoadMethod]
     private static void AutoImportThistleOnLoad()
     {
@@ -79,12 +78,12 @@ public static class SpriteSheetImporter
                 !File.Exists(ThistlePath))
                 return;
 
-            // Not imported by Unity yet (no importer): try again after the next reload.
+            // Unity hasn't imported it yet (no importer), so try again after the next reload
             if (!(AssetImporter.GetAtPath(ThistlePath) is TextureImporter importer))
                 return;
 
-            // Only the grid slices count: Unity's Automatic slicing (or a hand slice) leaves
-            // differently named rects that ConfigureThistlePrefab cannot use.
+            // only our grid slices count. Unity's Automatic slicing (or slicing by hand) makes rects with
+            // other names that ConfigureThistlePrefab can't use
             SessionState.SetBool(AutoImportSessionKey, true);
             if (importer.spriteImportMode == SpriteImportMode.Multiple && HasGridSlices(Sheets[0]))
                 return;
@@ -106,8 +105,8 @@ public static class SpriteSheetImporter
         };
     }
 
-    // Slices one of the known sheets if its grid slices are missing. Returns false when the
-    // file is unknown, missing, or not imported yet. Used by the Chapter 2 art wiring.
+    // slices one of the known sheets if its grid slices are missing. returns false if the file
+    // is unknown, missing or not imported yet. the chapter 2 art setup uses this
     public static bool EnsureGridSlices(string path)
     {
         SheetDefinition sheet = null;
@@ -224,7 +223,7 @@ public static class SpriteSheetImporter
             throw new InvalidOperationException("Sprite data provider unavailable for " + sheet.path);
 
         provider.InitSpriteEditorDataProvider();
-        // Keep the IDs of slices that already exist so prefab/scene references survive a re-import.
+        // keep the IDs of slices that already exist so prefab and scene references don't break on re-import
         Dictionary<string, SpriteRect> existingByName =
             new Dictionary<string, SpriteRect>(StringComparer.Ordinal);
         foreach (SpriteRect existingRect in provider.GetSpriteRects())
@@ -233,8 +232,8 @@ public static class SpriteSheetImporter
                 existingByName[existingRect.name] = existingRect;
         }
 
-        // Sprite rects live in SOURCE pixels. texture.width/height are the imported size, which
-        // maxTextureSize shrinks for sheets over 2048 px, so they must not be used here.
+        // sprite rects use the SOURCE pixels. texture.width/height are the imported size, which
+        // maxTextureSize shrinks for sheets over 2048 px, so we can't use them here
         importer.GetSourceTextureWidthAndHeight(out int sourceWidth, out int sourceHeight);
         bool centred = sheet.pivot == new Vector2(0.5f, 0.5f);
         SpriteRect[] spriteRects = new SpriteRect[sheet.columns * sheet.rows];
@@ -253,8 +252,8 @@ public static class SpriteSheetImporter
                     alignment = centred ? SpriteAlignment.Center : SpriteAlignment.Custom,
                     pivot = sheet.pivot
                 };
-                // A new SpriteRect generates its own ID the first time spriteID is read,
-                // so only existing slices need theirs copied across.
+                // a new SpriteRect makes its own ID the first time spriteID is read,
+                // so we only copy IDs over for slices that already exist
                 if (existingByName.TryGetValue(spriteName, out SpriteRect existing))
                     rect.spriteID = existing.spriteID;
                 spriteRects[index] = rect;
@@ -273,9 +272,8 @@ public static class SpriteSheetImporter
         return new Rect(column * cellWidth, sourceHeight - (row + 1) * cellHeight, cellWidth, cellHeight);
     }
 
-    // True when every cell of the grid exists as a slice under the importer's naming scheme,
-    // with the expected source-pixel rect and pivot (so a sheet sliced with wrong geometry,
-    // e.g. by the old downscaled-size slicing, gets re-sliced).
+    // true if every cell of the grid exists as a slice with our naming, the right source-pixel rect
+    // and pivot (so a sheet sliced wrong, like by the old shrunk-size slicing, gets sliced again)
     private static bool HasGridSlices(SheetDefinition sheet)
     {
         if (!(AssetImporter.GetAtPath(sheet.path) is TextureImporter importer))

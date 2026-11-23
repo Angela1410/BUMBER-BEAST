@@ -85,7 +85,7 @@ public static class HudVisualUtility
         return circleSprite;
     }
 
-    // A thin circular ring (outer edge at the sprite edge), for button rims.
+    // a thin round ring (outer edge at the sprite edge), for button rims
     public static Sprite RingSprite()
     {
         if (ringSprite != null)
@@ -103,7 +103,7 @@ public static class HudVisualUtility
         return ringSprite;
     }
 
-    // Soft round glow that fades to nothing at the edge, for "ready" halos.
+    // soft round glow that fades out at the edge, for "ready" halos
     public static Sprite GlowSprite()
     {
         if (glowSprite != null)
@@ -117,8 +117,8 @@ public static class HudVisualUtility
         return glowSprite;
     }
 
-    // A fuller soft blob than GlowSprite (smooth falloff instead of a quadratic one), for smoke and
-    // haze that must still read a little way out from its centre.
+    // a fuller soft blob than GlowSprite (smoother fade), for smoke and haze that should still
+    // show a bit away from its center
     public static Sprite SmokeSprite()
     {
         if (smokeSprite != null)
@@ -225,8 +225,8 @@ public static class HudVisualUtility
         tmp.color = new Color32(255, 244, 214, 255);
         tmp.raycastTarget = false;
 
-        // TMP's outline writes to its material, which only exists once the text
-        // object has been active; on inactive text it throws a NullReferenceException.
+        // TMP's outline writes to its material, which only exists once the text has been active,
+        // so on inactive text it would throw a NullReferenceException
         if (tmp.gameObject.activeInHierarchy)
         {
             tmp.outlineWidth = 0.25f;

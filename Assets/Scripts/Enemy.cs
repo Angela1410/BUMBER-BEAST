@@ -24,13 +24,13 @@ public class Enemy : MonoBehaviour
     public bool IsRooted => isRooted;
     public bool IsDead => isDead;
     public int CurrentHealth => currentHealth;
-    // Full health after the wave bonus and the difficulty (Settings > DIFFICULTY).
+    // full health after the wave bonus and the difficulty (Settings > DIFFICULTY)
     public int MaxHealthTotal => Mathf.Max(1, Mathf.RoundToInt(Mathf.Max(1, maxHealth + waveHealthBonus) * Difficulty.EnemyHealth));
     public float HealthRatio => Mathf.Clamp01(
         (float)currentHealth / MaxHealthTotal);
 
-    // Live enemies, kept current from OnEnable/OnDisable so per-frame checks
-    // (barrier contact, boss alive) don't have to allocate with FindObjectsByType.
+    // list of the enemies that are alive right now, updated in OnEnable/OnDisable so the checks every
+    // frame (barrier contact, is a boss alive) don't have to search the whole scene
     public static readonly System.Collections.Generic.List<Enemy> ActiveEnemies =
         new System.Collections.Generic.List<Enemy>();
 
@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
     private float hasteMultiplier = 1f;
     private float hasteUntil;
 
-    // Hits a boss shield (Maelith's Tide Shield) still absorbs.
+    // how many hits a boss shield (Maelith's Tide Shield) can still block
     public int ShieldHits { get; private set; }
     public bool IsHasted => Time.time < hasteUntil;
     public int RouteIndex => currentRouteIndex;
@@ -125,11 +125,11 @@ public class Enemy : MonoBehaviour
         if (damagedSprite != null)
             damagedSprite.Initialize();
 
-        // Element icon above the enemy, so matchups can be planned.
+        // element icon above the enemy, so you can plan which Beast to use
         if (GetComponent<EnemyElementBadge>() == null)
             gameObject.AddComponent<EnemyElementBadge>();
 
-        // Every enemy wears the violet corruption glow, so it never reads as one of the player's Beasts.
+        // every enemy gets the purple corruption glow, so it never looks like one of your Beasts
         EnemyCorruption.Attach(this);
 
         if (isBoss && bossHealthText == null)
@@ -142,7 +142,7 @@ public class Enemy : MonoBehaviour
         UpdateHealthText();
     }
 
-    // Health of each chapter's boss (0 = not a chapter boss: keeps the old minimum).
+    // health of each chapter's boss (0 = not a chapter boss, keeps the old minimum)
     public static int ChapterBossHealth(string name)
     {
         if (string.IsNullOrEmpty(name))
@@ -161,8 +161,7 @@ public class Enemy : MonoBehaviour
         isBoss = true;
         maxHealth = Mathf.Max(maxHealth, MinimumBossHealth);
         bossName = string.IsNullOrEmpty(bossNameText) ? bossName : bossNameText;
-        // Chapter bosses get a real health pool (it grows chapter by chapter); the wave's small
-        // bonus still adds on top.
+        // chapter bosses get a real health bar (more every chapter), and the wave's small bonus still adds on top
         int chapterHealth = ChapterBossHealth(bossName);
         waveHealthBonus = Mathf.Clamp(bossHealth, 0, MaximumBossBonusHealth) +
             (chapterHealth > maxHealth ? chapterHealth - maxHealth : 0);
@@ -217,7 +216,7 @@ public class Enemy : MonoBehaviour
         routeLaneOffset = laneOffset;
     }
 
-    // Moves faster for a while (Voltrex's Overcharge). Never slows an enemy down.
+    // moves faster for a while (Voltrex's Overcharge). it never slows an enemy down
     public void Haste(float multiplier, float seconds)
     {
         if (isDead || seconds <= 0f)
@@ -280,10 +279,11 @@ public class Enemy : MonoBehaviour
 
     void ApplyWaveStats()
     {
-        // Beginner waves can lower health (negative bonus), but never below one hit. The difficulty
-        // scales health and speed for every enemy and boss.
+        // easy waves can lower health (negative bonus) but never below one hit. the difficulty
+        // changes health and speed for every enemy and boss
         currentHealth = MaxHealthTotal;
         float speed = isBoss ? BossMoveSpeed : baseMoveSpeed;
+        // walking speed, changed by the difficulty (faster on HARD and HELL)
         moveSpeed = speed * Mathf.Max(0.1f, waveSpeedMultiplier) * Difficulty.EnemySpeed;
         statsApplied = true;
     }
@@ -349,6 +349,7 @@ public class Enemy : MonoBehaviour
         return Vector2.zero;
     }
 
+    // Unity calls this when something bumps into the enemy. if it's a Beast we deal damage
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (isDead)
@@ -359,6 +360,8 @@ public class Enemy : MonoBehaviour
 
         if (attacker != null)
         {
+            // check the element chart: is the Beast strong against this enemy?
+            // if yes it does 2 damage, if not just 1
             bool superEffective = ElementChart.IsSuperEffective(attacker.element, element);
             TakeDamage(superEffective ? 2 : 1, superEffective);
         }
@@ -369,11 +372,13 @@ public class Enemy : MonoBehaviour
         TakeDamage(amount, false);
     }
 
+    // lowers the enemy's health and shows the hit (damage number, shake, sound)
     public void TakeDamage(int amount, bool superEffective)
     {
         if (isDead)
             return;
 
+        // a boss shield blocks the hit and uses up one charge instead
         if (ShieldHits > 0)
         {
             ShieldHits--;
@@ -392,6 +397,7 @@ public class Enemy : MonoBehaviour
         if (hitFeedback != null)
             hitFeedback.PlayHit(transform.position);
 
+        // take the damage away from the enemy's health
         currentHealth -= amount;
         if (damagedSprite != null)
             damagedSprite.Refresh();
@@ -400,8 +406,10 @@ public class Enemy : MonoBehaviour
         GameAudio.Play(superEffective ? Sfx.HitSuper : Sfx.Hit);
         if (currentHealth <= 0)
             GameAudio.Play(isBoss ? Sfx.BossDefeat : Sfx.EnemyDefeat);
+        // count this hit for the combo and the stats
         StageStats.RegisterHit(transform.position, superEffective, currentHealth <= 0, isBoss);
 
+        // no health left: the enemy is defeated
         if (currentHealth <= 0)
         {
             isDead = true;
@@ -596,9 +604,8 @@ public class Enemy : MonoBehaviour
         bossHealthFill.color = new Color32(111, 191, 58, 255);
         bossHealthFill.raycastTarget = false;
 
-        // Keep the label in the same coordinate space as the panel. The label
-        // was previously laid out against the full Canvas and then stretched,
-        // which separated it from the bar on device resolutions.
+        // keep the label in the same space as the panel. before, the label was placed against the whole
+        // Canvas and stretched, which moved it away from the bar on some phone screens
         bossHealthRect.SetParent(panelObject.transform, false);
         bossHealthRect.SetAsLastSibling();
 
@@ -710,7 +717,7 @@ public class Enemy : MonoBehaviour
         hitFlashRoutine = null;
     }
 
-    // The renderer colour: the element colour faded toward white by elementTintStrength.
+    // the sprite color: the element color mixed toward white by elementTintStrength
     Color ElementTint()
     {
         return Color.Lerp(Color.white, GetElementColor(), Mathf.Clamp01(elementTintStrength));

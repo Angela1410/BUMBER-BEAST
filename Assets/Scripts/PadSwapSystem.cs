@@ -18,14 +18,14 @@ public class PadSwapSystem : MonoBehaviour
 
     [Header("Testing")]
     [Tooltip("Editor only: every Beast joins the squad without being unlocked. Ignored in built games.")]
-    public bool unlockAllForTesting = false;   // turn OFF for the real game
+    public bool unlockAllForTesting = false; // turn this OFF for the real game
 
-    // The test switch never reaches players: a build always uses the real unlocks.
+    // the test switch never reaches players: a build always uses the real unlocks
     private bool TestUnlockAll => unlockAllForTesting && Application.isEditor;
 
     private readonly List<BeastId> activeSquad = new List<BeastId>(3);
     private int activeSquadIndex;
-    // Squad index waiting to be swapped in once the Beast is back at the pad; -1 = none.
+    // which squad member is waiting to swap in once the Beast is back on the pad, -1 = none
     private int pendingSquadIndex = -1;
     private int displayedPendingIndex = -2;
     private LaunchController launchController;
@@ -130,8 +130,8 @@ public class PadSwapSystem : MonoBehaviour
             return;
         }
 
-        // Not at the pad: queue the swap (each extra tap moves on to the next squad member;
-        // cycling back to the current Beast cancels it).
+        // not on the pad: wait to swap (each extra tap moves to the next squad member,
+        // going back around to the current Beast cancels it)
         int from = pendingSquadIndex >= 0 ? pendingSquadIndex : activeSquadIndex;
         int next = (from + 1) % activeSquad.Count;
         pendingSquadIndex = next == activeSquadIndex ? -1 : next;
@@ -200,7 +200,7 @@ public class PadSwapSystem : MonoBehaviour
         BeastId selected = GameProgress.Instance != null
             ? GameProgress.Instance.SelectedBeast
             : BeastId.Choma;
-        // The squad picked in the Shop (lead first).
+        // the squad picked in the shop (leader first)
         if (!hasConfiguredSquad && !TestUnlockAll && GameProgress.Instance != null)
         {
             foreach (BeastId candidate in GameProgress.Instance.Squad)
@@ -257,7 +257,7 @@ public class PadSwapSystem : MonoBehaviour
         if (swapButton != null && (!canSwapInitialized || displayedCanSwap != canSwap))
         {
             swapButton.interactable = canSwap;
-            // A one-Beast squad has nothing to swap to, so the button is hidden, not just greyed.
+            // with only one Beast there's nothing to swap to, so the button is hidden, not just greyed out
             if (swapGroup != null)
             {
                 swapGroup.alpha = canSwap ? 1f : 0f;
@@ -286,7 +286,7 @@ public class PadSwapSystem : MonoBehaviour
             portrait != null ? new Vector2(0.12f, 0.16f) : new Vector2(0.27f, 0.3f),
             portrait != null ? new Vector2(0.88f, 0.92f) : new Vector2(0.73f, 0.76f));
 
-        // The ribbon names who comes in next; gold "NEXT UP" while a swap waits for the pad.
+        // the ribbon says who comes in next, gold "NEXT UP" while a swap waits for the pad
         swapVisual.RibbonText.text = pending
             ? "<color=#2B1A0E>NEXT UP</color>"
             : BeastRoster.GetName(next).ToUpperInvariant();
@@ -298,7 +298,7 @@ public class PadSwapSystem : MonoBehaviour
         displayedPendingIndex = pendingSquadIndex;
     }
 
-    // Re-applies the corner layout until it succeeds, and again whenever the screen size changes.
+    // keeps trying to place it in the corner until it works, and again when the screen size changes
     private void RefreshLayout(bool force)
     {
         if (swapRect == null)
@@ -334,22 +334,22 @@ public class PadSwapSystem : MonoBehaviour
         if (swapButton == null || swapRect == null)
             return;
 
-        // Exactly ONE label: reuse the original if it lives inside this button, otherwise create one.
+        // only ONE label: reuse the old one if it's inside this button, otherwise make one
         TMP_Text label = null;
         if (swapLabel != null && swapLabel.transform.IsChildOf(swapButton.transform))
             label = swapLabel;
         else if (swapLabel != null)
-            swapLabel.gameObject.SetActive(false);   // a stray copy outside the button
+            swapLabel.gameObject.SetActive(false); // a stray copy outside the button
         if (legacySwapLabel != null)
             legacySwapLabel.gameObject.SetActive(false);
 
-        // Hide every other text under this button (this is the doubled-label fix), then build.
+        // hide every other text under this button (this fixes the doubled label), then build it
         PortraitButtonLayout.HideOtherLabels(swapButton.transform, label);
         swapVisual = HudRoundButton.Build(swapButton.gameObject, label, 1.5f);
         swapVisual.Gloss.transform.SetSiblingIndex(swapVisual.Icon.transform.GetSiblingIndex() + 1);
-        swapVisual.Icon.color = Color.white;   // portraits keep their own colours
+        swapVisual.Icon.color = Color.white; // portraits keep their own colors
 
-        // Little swap-arrows badge on the top-right of the circle.
+        // little swap arrows badge on the top right of the circle
         Image badge = HudVisualUtility.AddImage(swapButton.gameObject, "SwapBadge", UiTheme.Ink);
         badge.sprite = HudVisualUtility.CircleSprite();
         badge.type = Image.Type.Simple;
@@ -394,9 +394,9 @@ public class PadSwapSystem : MonoBehaviour
             Vector3.one * target,
             Time.unscaledDeltaTime * 14f);
 
-        // The arrows turn on each tap and keep turning while a swap is queued.
+        // the arrows turn on each tap and keep turning while a swap is waiting
         if (swapBadgeArrows != null && (pending || Time.unscaledTime < badgeSpinUntil))
-            swapBadgeArrows.Rotate(0f, 0f, 540f * Time.unscaledDeltaTime);   // the arrows point counter-clockwise
+            swapBadgeArrows.Rotate(0f, 0f, 540f * Time.unscaledDeltaTime); // the arrows point counter-clockwise
 
         if (swapVisual != null)
         {

@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Full-screen loading card for every scene change (map <-> stages, retries): the destination
-// chapter's landscape, its element medallion, the stage name, a progress bar and a strategy
-// tip. The scene loads in the background; the card survives the switch and fades out once the
-// new scene has drawn its first frame. Runs on unscaled time (stages pause on their result).
+// the full screen loading card for every scene change (map <-> stages, retries): the chapter's
+// landscape, its element badge, the stage name, a progress bar and a strategy tip. the scene loads
+// in the background, the card stays during the switch and fades out once the new scene has drawn
+// its first frame. uses unscaled time (stages pause on their result screen)
 public class LoadingScreen : MonoBehaviour
 {
     public const string HubScene = "GameHub";
@@ -27,7 +27,7 @@ public class LoadingScreen : MonoBehaviour
     private TMP_Text percentLabel;
     private float shownProgress;
 
-    // Loads a scene behind the loading card. Ignored while another load is running.
+    // loads a scene behind the loading card. ignored while another load is running
     public static bool Load(string sceneName)
     {
         if (active != null)
@@ -56,7 +56,7 @@ public class LoadingScreen : MonoBehaviour
         return Load(HubScene);
     }
 
-    // "stage-12_Electric" -> 12; anything else -> 0 (the map).
+    // "stage-12_Electric" -> 12, anything else -> 0 (the map)
     static int StageFromScene(string sceneName)
     {
         if (!sceneName.StartsWith("stage-"))
@@ -90,7 +90,7 @@ public class LoadingScreen : MonoBehaviour
         group.alpha = 0f;
         group.blocksRaycasts = true;
 
-        // Landscape, darkened toward the bottom so text stays readable.
+        // landscape, darker toward the bottom so the text is easy to read
         Image backdrop = Ui.Image(transform, "Backdrop", UiTheme.Background, null);
         Ui.Stretch(backdrop.rectTransform);
         backdrop.raycastTarget = true;
@@ -102,7 +102,7 @@ public class LoadingScreen : MonoBehaviour
 
         RectTransform safe = Ui.SafeArea(transform);
 
-        // Element medallion with a spinning rim.
+        // element badge with a spinning edge
         medallion = Ui.Rect(safe, "Medallion", new Vector2(0.5f, 0.5f), new Vector2(0f, 300f), new Vector2(300f, 300f));
         Image glow = Ui.Image(medallion, "Glow", new Color(info.accent.r, info.accent.g, info.accent.b, 0.35f), HudVisualUtility.GlowSprite());
         Ui.Fill(glow.rectTransform, -0.35f);
@@ -119,7 +119,7 @@ public class LoadingScreen : MonoBehaviour
         Image ring = Ui.Image(medallion, "Ring", info.accent, HudVisualUtility.RingSprite());
         Ui.Fill(ring.rectTransform, -0.06f);
         medallionRing = ring.rectTransform;
-        // Two bright sparks riding the ring make the spin readable.
+        // two bright sparks on the ring so you can see it spinning
         for (int index = 0; index < 2; index++)
         {
             Image spark = Ui.Image(medallionRing, "Spark" + index, Color.white, HudVisualUtility.CircleSprite());
@@ -142,7 +142,7 @@ public class LoadingScreen : MonoBehaviour
             ElementVisuals.GetName(info.element) + "</color>", 30f, UiTheme.MutedText);
         Ui.Place(chapterLabel.rectTransform, new Vector2(0f, -62f), new Vector2(980f, 52f));
 
-        // Progress bar.
+        // progress bar
         RectTransform track = Ui.Rect(safe, "ProgressTrack", new Vector2(0.5f, 0.5f), new Vector2(0f, -190f), new Vector2(680f, 34f));
         Image trackImage = Ui.Image(track, "Track", new Color32(16, 20, 15, 235), HudVisualUtility.RoundedSprite());
         trackImage.type = Image.Type.Sliced;
@@ -158,7 +158,7 @@ public class LoadingScreen : MonoBehaviour
         percentLabel = Ui.Text(safe, "Percent", "LOADING  0%", 28f, UiTheme.MutedText);
         Ui.Place(percentLabel.rectTransform, new Vector2(0f, -248f), new Vector2(600f, 44f));
 
-        // Tip card.
+        // tip card
         RectTransform tipCard = Ui.Rect(safe, "TipCard", new Vector2(0.5f, 0f), new Vector2(0f, 230f), new Vector2(940f, 230f));
         Image tipImage = UiTheme.StylePanel(tipCard.gameObject, new Color32(28, 34, 27, 238), info.accent, 3f);
         tipImage.raycastTarget = false;
@@ -200,12 +200,12 @@ public class LoadingScreen : MonoBehaviour
         }
         SetProgress(1f);
 
-        // A paused stage (result card) must not carry its pause into the next scene.
+        // a paused stage (result card) must not take its pause into the next scene
         Time.timeScale = 1f;
         operation.allowSceneActivation = true;
         while (!operation.isDone)
             yield return null;
-        yield return null;   // let the new scene draw its first frame under the card
+        yield return null; // let the new scene draw its first frame under the card
 
         elapsed = 0f;
         group.blocksRaycasts = false;
@@ -248,7 +248,7 @@ public class LoadingScreen : MonoBehaviour
             active = null;
     }
 
-    // Small layout helpers shared with the pause menu.
+    // small layout helpers, the pause menu uses them too
     public static class Ui
     {
         public static RectTransform Rect(Transform parent, string name, Vector2 anchor, Vector2 position, Vector2 size)
@@ -303,7 +303,7 @@ public class LoadingScreen : MonoBehaviour
             rect.offsetMax = Vector2.zero;
         }
 
-        // Fills the parent with an inset given as a fraction of its size (negative = bigger).
+        // fills the parent with a gap given as a fraction of its size (negative = bigger)
         public static void Fill(RectTransform rect, float inset)
         {
             rect.anchorMin = new Vector2(inset, inset);
@@ -312,7 +312,7 @@ public class LoadingScreen : MonoBehaviour
             rect.offsetMax = Vector2.zero;
         }
 
-        // A child that covers the screen's safe area (no notches or home bars).
+        // a child that covers the screen's safe area (no notches or home bars)
         public static RectTransform SafeArea(Transform parent)
         {
             GameObject safeObject = new GameObject("SafeArea", typeof(RectTransform));

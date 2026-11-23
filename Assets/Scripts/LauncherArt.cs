@@ -1,18 +1,16 @@
 using UnityEngine;
 
-// The painted slingshot for chapters 3-5 (stages 9-20). LaunchPadFeedback creates it on the
-// LaunchPad from that chapter's art in Resources/Art/Electric, /Water or /Fire (falling back to
-// the shared Launcher.png). Stages 1-8 keep their own launch pad and vine.
-//
-// The Beast rests at the LaunchPad's position (where it always returns after a shot), so the art
-// is placed with its rune platform under the Beast's feet; the pad's own transform, the launch
-// point, aiming and trajectory maths are untouched. Two energy bands run from the post crystals to
-// the Beast and stretch as it is pulled back; the crystals and the platform rune flare on launch.
+// the painted slingshot for chapters 3-5 (stages 9-20). LaunchPadFeedback makes it on the LaunchPad
+// from that chapter's art in Resources/Art/Electric, /Water or /Fire (or the shared Launcher.png).
+// stages 1-8 keep their own launch pad and vine.
+// the Beast rests at the LaunchPad's position (where it always comes back after a shot), so the art
+// is placed with its rune platform under the Beast's feet. the pad's own transform, the launch point,
+// aiming and the path math don't change. two energy bands go from the post crystals to the Beast and
+// stretch as it's pulled back, and the crystals and the rune flash when you launch
 public class LauncherArt : MonoBehaviour
 {
-    // One painted launcher: its art folder under Resources/Art, where the post crystals and the
-    // platform rune are (fractions from the bottom-left corner of that folder's Launcher.png),
-    // and its energy colours.
+    // one painted launcher: its art folder in Resources/Art, where the post crystals and the rune are
+    // (fractions from the bottom left of that folder's Launcher.png), and its colors
     private sealed class Style
     {
         public string folder;
@@ -24,7 +22,7 @@ public class LauncherArt : MonoBehaviour
         public Color crystalGlow;
     }
 
-    // Stages 1-8: the teal crystal slingshot (1024 x 736).
+    // stages 1-8: the teal crystal slingshot (1024 x 736)
     private static readonly Style Shared = new Style
     {
         folder = "",
@@ -36,7 +34,7 @@ public class LauncherArt : MonoBehaviour
         crystalGlow = new Color(0.36f, 1f, 0.9f, 1f)
     };
 
-    // Chapter 3 (stages 9-12): copper tesla-coil posts with lightning crystals (1024 x 708).
+    // chapter 3 (stages 9-12): copper tesla coil posts with lightning crystals (1024 x 708)
     private static readonly Style Electric = new Style
     {
         folder = "Electric/",
@@ -48,7 +46,7 @@ public class LauncherArt : MonoBehaviour
         crystalGlow = new Color(1f, 0.88f, 0.3f, 1f)
     };
 
-    // Chapter 4 (stages 13-16): coral and driftwood posts with pearls (1024 x 682).
+    // chapter 4 (stages 13-16): coral and driftwood posts with pearls (1024 x 682)
     private static readonly Style Water = new Style
     {
         folder = "Water/",
@@ -60,7 +58,7 @@ public class LauncherArt : MonoBehaviour
         crystalGlow = new Color(0.35f, 0.9f, 1f, 1f)
     };
 
-    // Chapter 5 (stages 17-20): obsidian posts with fire crystals (1024 x 743).
+    // chapter 5 (stages 17-20): dark lava rock posts with fire crystals (1024 x 743)
     private static readonly Style Fire = new Style
     {
         folder = "Fire/",
@@ -74,7 +72,7 @@ public class LauncherArt : MonoBehaviour
 
     private const float DefaultWorldWidth = 3.8f;
     private const float MinimumWidthFraction = 0.65f;
-    // How far the post crystals may reach over the bottom of the barrier wall.
+    // how far the post crystals can go over the bottom of the barrier wall
     private const float BarrierOverlapAllowance = 0.2f;
     private const float RetractSeconds = 0.18f;
 
@@ -100,8 +98,8 @@ public class LauncherArt : MonoBehaviour
 
     public static LauncherArt TryCreate(GameObject pad, Material lineMaterial)
     {
-        // The chapter's own launcher when its art is in the project, otherwise the shared one.
-        // Chapters 1-2 (null folder) keep the scene's own launch pad and vine.
+        // use the chapter's own launcher if we have its art, otherwise the shared one.
+        // chapters 1-2 (null folder) keep the scene's own launch pad and vine
         string folder = GameArt.StageArtFolder();
         if (folder == null)
             return null;
@@ -130,7 +128,7 @@ public class LauncherArt : MonoBehaviour
         SpriteRenderer padRenderer = GetComponent<SpriteRenderer>();
         Material spriteMaterial = padRenderer != null ? padRenderer.sharedMaterial : null;
         if (padRenderer != null)
-            padRenderer.enabled = false;   // the old stump art; its Animator keeps running unseen
+            padRenderer.enabled = false; // the old stump art, its Animator keeps running but you can't see it
 
         GameObject rootObject = new GameObject("LauncherArt");
         rootObject.transform.SetParent(transform, false);
@@ -172,8 +170,8 @@ public class LauncherArt : MonoBehaviour
         return new Vector3((anchor.x - 0.5f) * size.x, (anchor.y - 0.5f) * size.y, 0f);
     }
 
-    // The rune platform goes under the resting Beast's feet; the launcher shrinks if its crystals
-    // would otherwise reach too far over the barrier wall above it.
+    // the rune platform goes under the resting Beast's feet. the launcher gets smaller if its crystals
+    // would reach too far over the barrier wall above it
     void Layout()
     {
         if (beast == null)
@@ -223,7 +221,7 @@ public class LauncherArt : MonoBehaviour
             local.x / Mathf.Max(0.0001f, restLossyScale.x),
             local.y / Mathf.Max(0.0001f, restLossyScale.y), 0f);
 
-        // Sit behind the Beast: art, then glows, then the bands right under it.
+        // drawn behind the Beast: art, then glows, then the bands right under it
         int beastOrder = beastRenderer != null ? beastRenderer.sortingOrder : art.sortingOrder + 5;
         int layer = beastRenderer != null ? beastRenderer.sortingLayerID : art.sortingLayerID;
         SetSorting(art, layer, beastOrder - 4);
@@ -315,7 +313,7 @@ public class LauncherArt : MonoBehaviour
         }
         else if (sinceLaunch < RetractSeconds)
         {
-            // Snap: the bands whip back to the centre and fade.
+            // snap: the bands whip back to the middle and fade
             float t = sinceLaunch / RetractSeconds;
             tip = Vector3.Lerp(lastTip, rest, t * t);
             strength = 1f - t;

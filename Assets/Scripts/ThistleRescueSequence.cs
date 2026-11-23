@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// Short, skippable rescue moment shown the first time a chapter boss is beaten: the cage
-// breaks, the chapter's Beast is freed, and the next chapter is teased. Thistle (stage 4)
-// was first; Mossback (8), Voltis (12) and Ripple (16) use the same scene with their own
-// cage colours. Runs on unscaled time because the stage pauses on completion.
-// It does not change progression: each Beast's recruit rule (clear its stage, then pay
-// in the Shop) stays in GameProgress / BeastRoster.
+// a short rescue scene (you can skip it) shown the first time you beat a chapter boss: the cage
+// breaks, the chapter's Beast is freed, and the next chapter gets teased. Thistle (stage 4) was
+// first, Mossback (8), Voltis (12) and Ripple (16) use the same scene with their own cage colors.
+// uses unscaled time because the stage pauses when it ends.
+// it doesn't change progress: the rule to recruit each Beast (clear its stage, then pay in the
+// shop) is in GameProgress / BeastRoster
 public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
 {
     public const string SeenKey = "BumperBeast.ThistleRescueSeen";
@@ -95,7 +95,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
         return sequence;
     }
 
-    // Cage, glow and wording for each rescued Beast (Thistle keeps her original look).
+    // cage, glow and text for each rescued Beast (Thistle keeps her original look)
     void ConfigureFor(BeastId rescued)
     {
         beast = rescued;
@@ -132,9 +132,9 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
 
         dimmer = CreateImage(transform, "Dimmer", new Color(0.05f, 0.04f, 0.06f, 0f), null);
         Stretch(dimmer.rectTransform);
-        dimmer.raycastTarget = true;   // blocks the paused stage and catches taps
+        dimmer.raycastTarget = true; // blocks the paused stage and catches taps
 
-        // Everything else lives inside the safe area.
+        // everything else goes inside the safe area
         GameObject safeObject = new GameObject("SafeArea", typeof(RectTransform));
         stage = safeObject.GetComponent<RectTransform>();
         stage.SetParent(transform, false);
@@ -157,7 +157,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
         thistle = thistleImage.rectTransform;
         Place(thistle, new Vector2(0f, 180f), new Vector2(360f, 360f));
 
-        // Thorn cage: dark bramble bars with little spikes, drawn in front of Thistle.
+        // thorn cage: dark bramble bars with little spikes, drawn in front of Thistle
         bars = new RectTransform[BarCount];
         barVelocities = new Vector2[BarCount];
         barSpins = new float[BarCount];
@@ -229,7 +229,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
         continueButton.gameObject.SetActive(false);
     }
 
-    // The chapter that opens next (the one after the boss this Beast was freed from).
+    // the chapter that opens next (the one after the boss this Beast was freed from)
     void BuildTeaser()
     {
         int rescueStage = BeastRoster.GetUnlockStage(beast);
@@ -286,7 +286,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
     {
         dimmer.color = new Color(0.05f, 0.04f, 0.06f, Mathf.Lerp(0f, 0.86f, Mathf.Clamp01(time / 0.35f)));
 
-        // Cage rattles harder until it breaks.
+        // the cage shakes harder until it breaks
         bool broken = time >= CageBreakTime;
         for (int index = 0; index < bars.Length; index++)
         {
@@ -313,7 +313,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
             }
         }
 
-        // Sparkle burst at the moment of release.
+        // sparkle burst when the Beast is freed
         for (int index = 0; index < sparkles.Length; index++)
         {
             Image sparkle = sparkles[index].GetComponent<Image>();
@@ -329,7 +329,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
             sparkles[index].sizeDelta = new Vector2(size, size);
         }
 
-        // Thistle: dim and small while caged, then pops free and bobs happily.
+        // Thistle: dim and small while in the cage, then pops out and bobs happily
         float reveal = Mathf.Clamp01((time - CageBreakTime) / 0.4f);
         float pop = reveal < 1f ? 1f + Mathf.Sin(reveal * Mathf.PI) * 0.22f : 1f;
         float baseScale = Mathf.Lerp(0.82f, 1f, reveal) * pop;
@@ -371,7 +371,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
             continueButton.gameObject.SetActive(true);
     }
 
-    // Tapping during the animation jumps to the end state; the buttons finish it.
+    // tapping during the animation jumps to the end, the buttons finish it
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!finishing && elapsed < EndTime)
@@ -396,7 +396,7 @@ public class ThistleRescueSequence : MonoBehaviour, IPointerClickHandler
             continueButton.interactable = false;
     }
 
-    // ---------- small UI helpers ----------
+    // --- small UI helpers ---
 
     static Image CreateImage(Transform parent, string name, Color color, Sprite sprite)
     {

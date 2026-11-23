@@ -1,8 +1,8 @@
 using UnityEngine;
 
-// Small element icon above an enemy so the player can read the matchup at a glance.
-// When the Beast currently on the pad deals double damage to this enemy, the badge pulses
-// with a gold ring. Added automatically by Enemy; no setup needed.
+// small element icon above an enemy so the player can see the matchup quickly.
+// when the Beast on the pad does double damage to this enemy, the badge pulses with a gold ring.
+// Enemy adds this by itself, no setup needed
 [DisallowMultipleComponent]
 public sealed class EnemyElementBadge : MonoBehaviour
 {
@@ -55,7 +55,7 @@ public sealed class EnemyElementBadge : MonoBehaviour
         {
             ringRenderer.sortingLayerID = enemyRenderer.sortingLayerID;
             iconRenderer.sortingLayerID = enemyRenderer.sortingLayerID;
-            // Above the enemy's corruption tint and front motes (EnemyCorruption uses +1).
+            // above the enemy's corruption tint and front particles (EnemyCorruption uses +1)
             ringRenderer.sortingOrder = enemyRenderer.sortingOrder + 3;
             iconRenderer.sortingOrder = enemyRenderer.sortingOrder + 4;
         }
@@ -67,7 +67,7 @@ public sealed class EnemyElementBadge : MonoBehaviour
         PlaceAboveSprite();
     }
 
-    // Keeps a constant world size whatever the enemy's scale (bosses are 1.5x).
+    // keeps the same size in the world whatever the enemy's scale is (bosses are 1.5x)
     private void PlaceAboveSprite()
     {
         Vector3 lossy = transform.lossyScale;

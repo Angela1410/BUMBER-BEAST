@@ -2,9 +2,9 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-// Import settings for the painted stage art in Assets/Resources/Art, which GameArt loads at
-// runtime (barrier states, launcher, Terrathorn and its boulder). Applied on every import so
-// the files always come in as clean, compressed, un-mipmapped sprites.
+// import settings for the painted art in Assets/Resources/Art that GameArt loads in the game
+// (barrier states, launcher, Terrathorn and its boulder). runs on every import so the files
+// always come in as clean, compressed sprites with no mipmaps
 public class GameArtImporter : AssetPostprocessor
 {
     public const string Folder = "Assets/Resources/Art/";
@@ -13,7 +13,7 @@ public class GameArtImporter : AssetPostprocessor
     {
         if (assetPath == BumperBeastBuild.IconPath)
         {
-            // The app icon: kept lossless, the build scales it to every icon size.
+            // the app icon stays lossless, the build makes all the icon sizes from it
             TextureImporter icon = (TextureImporter)assetImporter;
             icon.textureType = TextureImporterType.Default;
             icon.npotScale = TextureImporterNPOTScale.None;
@@ -39,8 +39,8 @@ public class GameArtImporter : AssetPostprocessor
         importer.maxTextureSize = 2048;
     }
 
-    // Terrathorn's 1024 x 836 canvas covers the same 1.63 x 1.33 units as the sprite it replaces,
-    // so the boss keeps its size and collider. The rest are laid out by code (any value works).
+    // Terrathorn's 1024 x 836 picture covers the same 1.63 x 1.33 units as the old sprite,
+    // so the boss keeps its size and collider. the rest are placed by code (any value works)
     private static float PixelsPerUnit(string name)
     {
         return name == "Boss_Terrathorn" ? 1024f / 1.63f : 100f;

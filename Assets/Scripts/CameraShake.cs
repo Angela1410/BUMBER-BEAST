@@ -13,7 +13,7 @@ public class CameraShake : MonoBehaviour
 
     public static void Shake(bool major)
     {
-        // Settings > SCREEN SHAKE off.
+        // Settings > SCREEN SHAKE is off
         if (!GameSettings.ScreenShake)
             return;
 

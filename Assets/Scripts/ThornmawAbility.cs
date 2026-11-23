@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 
+// Thornmaw, the chapter 1 boss (stage 4). every few seconds it drops a bramble on the field.
+// brambles are bumpers, so the Beast bounces off them, and only maxBrambles stay at once
 [RequireComponent(typeof(Enemy))]
 public class ThornmawAbility : MonoBehaviour
 {
@@ -64,6 +66,7 @@ public class ThornmawAbility : MonoBehaviour
             hitFeedback.SetBasePose(transform.localScale, transform.localRotation);
     }
 
+    // drops a new bramble every dropInterval seconds
     IEnumerator BrambleRoutine()
     {
         if (bramblePrefab == null)
@@ -145,6 +148,7 @@ public class ThornmawAbility : MonoBehaviour
             sr.color = Color.white;
     }
 
+    // keeps track of the brambles and removes the oldest one when there are too many
     void TrackBramble(GameObject bramble)
     {
         activeBrambles.Enqueue(bramble);

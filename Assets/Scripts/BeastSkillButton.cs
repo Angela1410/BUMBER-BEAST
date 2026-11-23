@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-// Big round ability button in the bottom-right corner. It takes the active Beast's element
-// colour and glyph, names the ability on a ribbon, shows the cooldown as a sweep with a
-// countdown, and glows when the ability can be used (while the Beast is flying).
+// the big round skill button in the bottom right. it uses the current Beast's element color and
+// symbol, shows the skill's name on a ribbon, shows the recharge as a sweep with a countdown,
+// and glows when you can use it (while the Beast is flying)
 public class BeastSkillButton : MonoBehaviour
 {
     public BeastController beast;
@@ -71,7 +71,7 @@ public class BeastSkillButton : MonoBehaviour
         if (beast == null || button == null)
             return;
 
-        // Always tappable: a tap at the wrong moment explains itself instead of doing nothing.
+        // always tappable, so tapping at the wrong time explains why instead of doing nothing
         if (!button.interactable)
             button.interactable = true;
 
@@ -89,7 +89,7 @@ public class BeastSkillButton : MonoBehaviour
             hintUntil = Time.unscaledTime + HintSeconds;
     }
 
-    // Re-applies the corner layout until it succeeds, and again whenever the screen size changes.
+    // keeps trying to place it in the corner until it works, and again when the screen size changes
     private void RefreshLayout(bool force)
     {
         if (rectTransform == null)
@@ -127,16 +127,16 @@ public class BeastSkillButton : MonoBehaviour
         if (rectTransform == null)
             return;
 
-        // Exactly ONE label: reuse the original if it lives inside this button, otherwise create one.
+        // only ONE label: reuse the old one if it's inside this button, otherwise make one
         TMP_Text label = null;
         if (cooldownText != null && cooldownText.transform.IsChildOf(transform))
             label = cooldownText;
         else if (cooldownText != null)
-            cooldownText.gameObject.SetActive(false);   // a stray copy outside the button
+            cooldownText.gameObject.SetActive(false); // a stray copy outside the button
         if (legacyCooldownText != null)
             legacyCooldownText.gameObject.SetActive(false);
 
-        // Hide every other text under this button (this is the doubled-label fix), then build.
+        // hide every other text under this button (this fixes the doubled label), then build it
         PortraitButtonLayout.HideOtherLabels(transform, label);
         visual = HudRoundButton.Build(gameObject, label, 1.36f);
 
@@ -163,7 +163,7 @@ public class BeastSkillButton : MonoBehaviour
         bool showHint = !usable && !showActive && Time.unscaledTime < hintUntil;
         int cooldownSeconds = cooling ? Mathf.CeilToInt(beast.CooldownRemaining) : 0;
 
-        // Ribbon: 0 = ability name, 1 = ACTIVE, 2 = "launch first" hint, 3 = "recharging" hint.
+        // ribbon: 0 = skill name, 1 = ACTIVE, 2 = "launch first" hint, 3 = "recharging" hint
         int ribbonState = showActive ? 1 : showHint ? (cooling ? 3 : 2) : 0;
         bool dim = !usable && !showActive;
 
@@ -216,7 +216,7 @@ public class BeastSkillButton : MonoBehaviour
         iconColor.a = dim ? 0.55f : 1f;
         visual.Icon.color = iconColor;
 
-        // Glow: steady when active, breathing when it can be used right now.
+        // glow: steady while active, pulsing when you can use it right now
         float pulse = 0.5f + 0.5f * Mathf.Sin(Time.unscaledTime * 5f);
         Color glow = visual.Glow.color;
         glow.a = showActive ? 0.95f : usable ? Mathf.Lerp(0.35f, 0.85f, pulse) : 0f;

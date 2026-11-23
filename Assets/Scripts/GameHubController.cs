@@ -4,11 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// The world map and shop, built in code over the hub scene. Older scene buttons are hidden
-// (their names stay, so nothing else breaks). A bottom tab bar switches between:
-//  MAP       chapter banner, the chapter's four-stage path, boss and rescue tiles, PLAY
-//  UPGRADES  launch power and skill cooldown, plus the element chart
-//  BEASTS    the squad of three (tap a slot to make it lead) and every Beast's card
+// the world map and shop, built with code on top of the hub scene. the old scene buttons are hidden
+// (their names stay so nothing else breaks). the tab bar at the bottom switches between:
+// MAP: chapter banner, the chapter's four stages, boss and rescue tiles, and PLAY
+// UPGRADES: launch power and skill cooldown, plus the element chart
+// BEASTS: your squad of three (tap a slot to make it the leader) and every Beast's card
 public class GameHubController : MonoBehaviour
 {
     public const string SeenChapterKey = "BumperBeast.SeenChapter";
@@ -95,8 +95,8 @@ public class GameHubController : MonoBehaviour
     private const int StagesPerChapter = ChapterData.StagesPerChapter;
     private const float ContentWidth = 1080f;
     private const float ContentHeight = 1840f;
-    // Tall phones (20:9 and up) spread the layout out vertically by up to this much, so the
-    // header reaches the top and the tab bar the bottom instead of floating mid-screen.
+    // on tall phones (20:9 and up) the layout spreads out up to this much, so the header reaches the
+    // top and the tab bar the bottom instead of floating in the middle
     private const float MaxLayoutStretch = 1.32f;
     private const float NodeSize = 150f;
     private const float SelectedNodeSize = 178f;
@@ -127,7 +127,7 @@ public class GameHubController : MonoBehaviour
     private RectTransform upgradeGroup;
     private RectTransform beastGroup;
     private float layoutStretch = 1f;
-    // Laid-out elements and their design height (y), re-spread on tall screens.
+    // the placed elements and their design height (y), spread out again on tall screens
     private readonly List<RectTransform> stretchRects = new List<RectTransform>();
     private readonly List<float> stretchBaseY = new List<float>();
     private Image screenBackdrop;
@@ -138,12 +138,12 @@ public class GameHubController : MonoBehaviour
     private int lastArtChapter = -1;
     private static Sprite fadeSprite;
 
-    // Header
+    // header
     private TMP_Text headerTitle;
     private TMP_Text progressLabel;
     private TMP_Text coinLabel;
 
-    // Map
+    // map
     private Outline bannerOutline;
     private Image bannerArt;
     private TMP_Text bannerChip;
@@ -172,7 +172,7 @@ public class GameHubController : MonoBehaviour
     private Button playButton;
     private Image playGlow;
 
-    // Shop
+    // shop
     private UpgradeCard launchCard;
     private UpgradeCard cooldownCard;
     private readonly SquadSlot[] squadSlots = new SquadSlot[GameProgress.MaxSquadSize];
@@ -200,8 +200,8 @@ public class GameHubController : MonoBehaviour
 
         RefreshPresentation();
         ShowNewChapterIntroIfNeeded();
-        // Title art sits above everything (including a chapter intro) until PLAY is tapped.
-        // The daily gift waits for the title to be dismissed (or shows now when it was already seen).
+        // the title art stays on top of everything (even a chapter intro) until PLAY is tapped.
+        // the daily gift waits until the title is closed (or shows now if it was already seen)
         if (TitleScreen.ShowIfNeeded())
             TitleScreen.Dismissed += OfferDailyGift;
         else
@@ -241,7 +241,7 @@ public class GameHubController : MonoBehaviour
         AnimateHub();
     }
 
-    // Gentle life: the PLAY glow breathes, the selected stage pulses, waiting badges bob.
+    // small animations: the PLAY glow breathes, the selected stage pulses, waiting badges bob
     private void AnimateHub()
     {
         float time = Time.unscaledTime;
@@ -267,9 +267,7 @@ public class GameHubController : MonoBehaviour
             beasts.badge.rectTransform.localScale = Vector3.one * (1f + Mathf.Abs(Mathf.Sin(time * 4f)) * 0.18f);
     }
 
-    // =====================================================================
-    // PUBLIC ACTIONS
-    // =====================================================================
+    // --- PUBLIC ACTIONS ---
 
     public void LoadStage(int stageNumber)
     {
@@ -332,7 +330,7 @@ public class GameHubController : MonoBehaviour
         RefreshPresentation();
     }
 
-    // A Beast card: recruit a rescued Beast, or add / remove an owned Beast from the squad.
+    // a Beast card: recruit a rescued Beast, or add / remove a Beast you own from the squad
     public void BuyOrSelectBeast(BeastId beast)
     {
         if (GameProgress.Instance == null)
@@ -414,9 +412,7 @@ public class GameHubController : MonoBehaviour
         return "stage-" + stageNumber + "_Fire";
     }
 
-    // =====================================================================
-    // BUILD
-    // =====================================================================
+    // --- BUILD ---
 
     private void HideLegacySceneUi()
     {
@@ -435,8 +431,8 @@ public class GameHubController : MonoBehaviour
 
     private void BuildPresentation()
     {
-        // Full-screen themed backdrop (extends under notches), then a safe-area root,
-        // then a fixed 1080x1840 content root that scales down on short screens.
+        // full screen background (goes under notches), then a safe area root,
+        // then a fixed 1080x1840 content root that shrinks on short screens
         GameObject backdropObject = new GameObject("HubBackdrop", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         RectTransform backdropRect = backdropObject.GetComponent<RectTransform>();
         backdropRect.SetParent(hubCanvas.transform, false);
@@ -475,8 +471,8 @@ public class GameHubController : MonoBehaviour
         ApplySafeArea();
     }
 
-    // Everything laid out on the 1080 x 1840 design grid moves with the vertical stretch, except
-    // the notice (placed per view in RefreshNotice) and the stage path, which keeps its shape.
+    // everything placed on the 1080 x 1840 design grid moves with the stretch, except the notice
+    // (placed for each view in RefreshNotice) and the stage path, which keeps its shape
     private void RegisterStretchRects()
     {
         stretchRects.Clear();
@@ -508,7 +504,7 @@ public class GameHubController : MonoBehaviour
         RefreshNotice();
     }
 
-    // The profile card's avatar uses the same portraits as the Beasts screen.
+    // the profile card's picture uses the same portraits as the Beasts screen
     public Sprite GetBeastPortrait(BeastId beast)
     {
         return BeastPortrait(beast);
@@ -538,7 +534,7 @@ public class GameHubController : MonoBehaviour
         coinLabel.color = UiTheme.Gold;
         SetRect(coinLabel.rectTransform, new Vector2(34f, 0f), new Vector2(226f, 84f));
 
-        // Settings (music, sound, screen shake, player profile).
+        // settings (music, sound, screen shake, player profile)
         Button settings = CreateRoundIconButton(contentRoot, "SettingsButton", UiIcon.Gear, new Vector2(118f, 840f), 96f, OpenSettingsMenu);
         Image face = settings.transform.Find("Face").GetComponent<Image>();
         face.color = new Color32(52, 66, 50, 255);
@@ -546,7 +542,7 @@ public class GameHubController : MonoBehaviour
 
     private void BuildChapterView()
     {
-        // ---- Chapter banner: art, chapter chip, element medallion, title and tagline.
+        // ---- chapter banner: art, chapter chip, element badge, title and tagline
         RectTransform banner = CreatePanel(chapterGroup, "ChapterBanner", new Vector2(0f, 470f), new Vector2(960f, 560f), UiTheme.PanelDark);
         bannerOutline = HudVisualUtility.AddOutline(banner.gameObject, UiTheme.Gold, new Vector2(5f, -5f));
         Image maskImage = CreateImage(banner, "Mask", Color.white, HudVisualUtility.RoundedSprite());
@@ -605,7 +601,7 @@ public class GameHubController : MonoBehaviour
             chapterDots[index] = dot;
         }
 
-        // ---- The chapter's stage path (its own group, so it keeps its shape on tall screens).
+        // ---- the chapter's stage path (its own group, so it keeps its shape on tall screens)
         pathGroup = CreateGroup(chapterGroup, "StagePath");
         for (int slot = 0; slot < StagesPerChapter - 1; slot++)
         {
@@ -629,7 +625,7 @@ public class GameHubController : MonoBehaviour
         stageAdvice.color = GoodGreen;
         SetRect(stageAdvice.rectTransform, new Vector2(0f, -250f), new Vector2(940f, 76f));
 
-        // ---- Boss and rescue tiles.
+        // ---- boss and rescue tiles
         RectTransform bossTile = CreatePanel(chapterGroup, "BossTile", new Vector2(-243f, -408f), new Vector2(466f, 196f), UiTheme.PanelDark);
         CreateTileHeader(bossTile, "BOSS", BossRed);
         bossPortrait = CreatePortrait(bossTile, "BossPortrait", new Vector2(-148f, -12f), 132f, out _);
@@ -649,7 +645,7 @@ public class GameHubController : MonoBehaviour
         rescueStatus.color = UiTheme.MutedText;
         SetRect(rescueStatus.rectTransform, new Vector2(70f, -46f), new Vector2(290f, 74f));
 
-        // ---- PLAY.
+        // ---- PLAY
         playGlow = CreateImage(chapterGroup, "PlayGlow", new Color(1f, 0.8f, 0.35f, 0f), HudVisualUtility.GlowSprite());
         SetRect(playGlow.rectTransform, new Vector2(0f, -612f), new Vector2(820f, 300f));
         playButton = CreateTextButton(chapterGroup, "PlayButton", "PLAY", new Vector2(0f, -612f), new Vector2(660f, 140f),
@@ -682,7 +678,7 @@ public class GameHubController : MonoBehaviour
         node.glow.transform.SetAsFirstSibling();
         node.face = CreateImage(node.rect, "Face", UiTheme.Teal, HudVisualUtility.CircleSprite());
         Fill(node.face.rectTransform, 0.08f);
-        // A small shine near the rim, clear of the stage number.
+        // a small shine near the edge, away from the stage number
         node.gloss = CreateImage(node.rect, "Gloss", new Color(1f, 1f, 1f, 0.14f), HudVisualUtility.CircleSprite());
         node.gloss.rectTransform.anchorMin = new Vector2(0.3f, 0.7f);
         node.gloss.rectTransform.anchorMax = new Vector2(0.7f, 0.88f);
@@ -715,7 +711,7 @@ public class GameHubController : MonoBehaviour
         crownShadow.effectColor = new Color32(43, 26, 14, 220);
         crownShadow.effectDistance = new Vector2(2f, -3f);
 
-        // Best stars for the stage, on the node's lower rim (shown once it is cleared).
+        // best stars for the stage, on the bottom of the stone (shown once it's cleared)
         node.stars = new Image[GameProgress.MaxStarsPerStage];
         for (int index = 0; index < node.stars.Length; index++)
         {
@@ -871,7 +867,7 @@ public class GameHubController : MonoBehaviour
         SetRect(card.name.rectTransform, new Vector2(-38f, 32f), new Vector2(460f, 58f));
         card.detail = CreateLabel(rect, "Detail", string.Empty, 24f, TextAlignmentOptions.TopLeft);
         card.detail.color = UiTheme.MutedText;
-        // Ends before the status pill (x 205) and wraps onto a second line instead of running under it.
+        // stops before the status pill (x 205) and wraps to a second line instead of going under it
         SetRect(card.detail.rectTransform, new Vector2(-62f, -34f), new Vector2(500f, 66f));
 
         card.pill = CreateImage(rect, "Status", UiTheme.Teal, HudVisualUtility.RoundedSprite());
@@ -933,7 +929,7 @@ public class GameHubController : MonoBehaviour
         }
     }
 
-    // Fire > Grass > Earth > Electric > Water > (Fire).
+    // Fire > Grass > Earth > Electric > Water > (Fire)
     private static void BuildElementChart(RectTransform parent, Vector2 center)
     {
         RectTransform panel = CreatePanel(parent, "ElementChart", center, new Vector2(960f, 292f), UiTheme.PanelDark);
@@ -962,9 +958,7 @@ public class GameHubController : MonoBehaviour
         }
     }
 
-    // =====================================================================
-    // REFRESH
-    // =====================================================================
+    // --- REFRESH ---
 
     private void RefreshPresentation()
     {
@@ -1054,7 +1048,7 @@ public class GameHubController : MonoBehaviour
                 : boss ? (Color)UiTheme.Danger : (Color)UiTheme.Teal;
             node.number.text = unlocked ? stage.ToString(CultureInfo.InvariantCulture) : string.Empty;
             node.lockIcon.enabled = !unlocked;
-            // The shine would sit over the padlock's shackle; locked stones stay matte.
+            // the shine would sit on the padlock, so locked stones stay matte
             node.gloss.enabled = unlocked;
             int earned = cleared ? progress.GetStars(stage) : 0;
             for (int index = 0; index < node.stars.Length; index++)
@@ -1113,7 +1107,7 @@ public class GameHubController : MonoBehaviour
             : "PLAY STAGE " + selectedStage);
     }
 
-    // A disabled arrow fades out entirely (its face and glyph are not the tinted graphic).
+    // a disabled arrow fades out completely (its face and symbol aren't the tinted graphic)
     private static void SetArrowState(Button arrow, bool enabled)
     {
         arrow.interactable = enabled;
@@ -1126,7 +1120,7 @@ public class GameHubController : MonoBehaviour
     {
         bool defeated = highestCleared >= bossStage;
         Sprite portrait = GetArray(bossPortraits, selectedChapter);
-        // Painted Terrathorn art replaces the tinted stand-in portrait assigned for chapter 2.
+        // the painted Terrathorn art replaces the tinted stand-in picture for chapter 2
         Sprite paintedTerrathorn = selectedChapter == 1 ? GameArt.Find("Boss_Terrathorn") : null;
         if (paintedTerrathorn != null)
             portrait = paintedTerrathorn;
@@ -1202,7 +1196,7 @@ public class GameHubController : MonoBehaviour
             card.dots[index].color = index < level ? (Color)UiTheme.Green : (Color)UiTheme.Locked;
 
         bool affordable = coins >= price;
-        // Unaffordable upgrades stay tappable so the shop can explain why the purchase failed.
+        // upgrades you can't afford stay tappable so the shop can tell you why you can't buy them
         card.buy.interactable = canUpgrade;
         card.buy.GetComponent<Image>().color = !canUpgrade ? (Color)UiTheme.Green
             : affordable ? (Color)UiTheme.Orange : (Color)UiTheme.Panel;
@@ -1292,7 +1286,7 @@ public class GameHubController : MonoBehaviour
         {
             noticeLabel.text = text;
             noticeLabel.color = hasNotice ? (Color)UiTheme.Gold : (Color)UiTheme.MutedText;
-            // On the map the notice sits in the gap between PLAY and the tab bar.
+            // on the map the notice sits in the gap between PLAY and the tab bar
             bool map = currentView == HubView.Chapters;
             SetRect(noticePanel, new Vector2(0f, (map ? -726f : -560f) * layoutStretch), new Vector2(960f, map ? 78f : 100f));
         }
@@ -1310,7 +1304,7 @@ public class GameHubController : MonoBehaviour
             tab.label.color = active ? (Color)UiTheme.Cream : (Color)UiTheme.MutedText;
         }
 
-        // A rescued Beast waiting to be recruited.
+        // a rescued Beast waiting to be recruited
         bool beastWaiting = false;
         GameProgress progress = GameProgress.Instance;
         foreach (BeastId beast in BeastRoster.AllBeasts)
@@ -1344,7 +1338,7 @@ public class GameHubController : MonoBehaviour
         if (screenBackdrop == null)
             return;
 
-        // The whole screen takes on the selected chapter's environment, dimmed so cards stay readable.
+        // the whole screen uses the selected chapter's background, darkened so the cards are easy to read
         screenBackdrop.sprite = ChapterArt(selectedChapter, 192, 340);
         float dim = currentView == HubView.Chapters ? 0.42f : 0.26f;
         screenBackdrop.color = new Color(dim, dim, dim, 1f);
@@ -1366,7 +1360,7 @@ public class GameHubController : MonoBehaviour
         AspectFill(screenBackdrop.rectTransform, screenBackdrop.sprite, canvasRect.rect.size);
     }
 
-    // Painted portrait if assigned; otherwise the Beast's generated placeholder.
+    // painted portrait if we have one, otherwise the Beast's generated placeholder
     private Sprite BeastPortrait(BeastId beast)
     {
         Sprite assigned = GetArray(beastPortraits, (int)beast);
@@ -1387,9 +1381,7 @@ public class GameHubController : MonoBehaviour
         }
     }
 
-    // =====================================================================
-    // NEW CHAPTER INTRO
-    // =====================================================================
+    // --- NEW CHAPTER INTRO ---
 
     private void ShowNewChapterIntroIfNeeded()
     {
@@ -1418,7 +1410,7 @@ public class GameHubController : MonoBehaviour
         dim.color = new Color(0.03f, 0.03f, 0.03f, 0.82f);
         dim.raycastTarget = true;
 
-        // Same safe-area + scaled-content structure as the hub itself.
+        // same safe area + scaled content setup as the hub itself
         GameObject safeObject = new GameObject("SafeArea", typeof(RectTransform));
         RectTransform safeFrame = safeObject.GetComponent<RectTransform>();
         safeFrame.SetParent(overlayRect, false);
@@ -1485,9 +1477,7 @@ public class GameHubController : MonoBehaviour
         }
     }
 
-    // =====================================================================
-    // NAVIGATION
-    // =====================================================================
+    // --- NAVIGATION ---
 
     private void SelectStageSlot(int slot)
     {
@@ -1566,9 +1556,7 @@ public class GameHubController : MonoBehaviour
         RefreshNotice();
     }
 
-    // =====================================================================
-    // CHAPTER DATA
-    // =====================================================================
+    // --- CHAPTER DATA ---
 
     private int GetChapterCount()
     {
@@ -1585,9 +1573,7 @@ public class GameHubController : MonoBehaviour
         return sprites != null && index >= 0 && index < sprites.Length ? sprites[index] : null;
     }
 
-    // =====================================================================
-    // LAYOUT HELPERS
-    // =====================================================================
+    // --- LAYOUT HELPERS ---
 
     private void ApplySafeArea()
     {
@@ -1607,7 +1593,7 @@ public class GameHubController : MonoBehaviour
         if (contentRoot == null || canvasRect == null)
             return;
 
-        // Fit the fixed portrait layout inside the safe area on any aspect ratio.
+        // fit the portrait layout inside the safe area on any screen shape
         Vector2 safeSize = new Vector2(
             canvasRect.rect.width * (safeRoot.anchorMax.x - safeRoot.anchorMin.x),
             canvasRect.rect.height * (safeRoot.anchorMax.y - safeRoot.anchorMin.y));
@@ -1639,7 +1625,7 @@ public class GameHubController : MonoBehaviour
             : new Vector2(frameSize.x, frameSize.x / spriteAspect);
     }
 
-    // Transparent at the top, opaque at the bottom (tint it with Image.color).
+    // see-through at the top, solid at the bottom (tint it with Image.color)
     private static Sprite FadeSprite()
     {
         if (fadeSprite != null)
@@ -1740,7 +1726,7 @@ public class GameHubController : MonoBehaviour
         TMP_Text label = labelObject.AddComponent<TextMeshProUGUI>();
         label.text = text;
         UiTheme.StyleLabel(label, fontSize, alignment);
-        // Readable floor: auto-size never shrinks text below ~70% (and never under 20).
+        // readable minimum: auto-size never shrinks text below ~70% (and never under 20)
         label.fontSizeMin = Mathf.Min(fontSize, Mathf.Max(20f, fontSize * 0.7f));
         label.textWrappingMode = TextWrappingModes.Normal;
         label.richText = true;
@@ -1786,7 +1772,7 @@ public class GameHubController : MonoBehaviour
         return button;
     }
 
-    // Tint + press feedback for buttons whose look is built by hand (cards, nodes, tabs).
+    // tint + press effect for buttons we build by hand (cards, stage stones, tabs)
     private static void ConfigureButton(Button button, Graphic target)
     {
         button.targetGraphic = target;
@@ -1829,7 +1815,7 @@ public class GameHubController : MonoBehaviour
         rect.offsetMax = new Vector2(-pixels, -pixels);
     }
 
-    // Fills the parent with an inset given as a fraction of its size (negative = bigger).
+    // fills the parent with a gap given as a fraction of its size (negative = bigger)
     private static void Fill(RectTransform rect, float inset)
     {
         rect.anchorMin = new Vector2(inset, inset);

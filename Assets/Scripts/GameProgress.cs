@@ -18,6 +18,7 @@ public class GameProgress : MonoBehaviour
     public int LaunchPowerPrice => 50 + LaunchPowerLevel * 25;
     public int SkillCooldownPrice => 75 + SkillCooldownLevel * 35;
 
+    // the names (keys) we save each value under in PlayerPrefs
     const string CoinsKey = "BumperBeast.Coins";
     const string StageKey = "BumperBeast.HighestUnlockedStage";
     const string ClearedStageKey = "BumperBeast.HighestClearedStage";
@@ -32,7 +33,7 @@ public class GameProgress : MonoBehaviour
 
     public enum SquadChange { Added, Removed, Full, NotOwned, LastMember }
 
-    // Up to three owned Beasts taken into every stage; the first one starts on the pad.
+    // up to three Beasts you own go into every stage, the first one starts on the pad
     private readonly System.Collections.Generic.List<BeastId> squad = new System.Collections.Generic.List<BeastId>(MaxSquadSize);
     public System.Collections.Generic.IReadOnlyList<BeastId> Squad => squad;
 
@@ -56,6 +57,7 @@ public class GameProgress : MonoBehaviour
         Screen.autorotateToLandscapeRight = false;
     }
 
+    // called when you win a stage: it unlocks the next stage and pays the coins, but only the first time
     public void CompleteStage(int stageNumber, int reward)
     {
         HighestClearedStage = Mathf.Max(HighestClearedStage, stageNumber);
@@ -72,7 +74,7 @@ public class GameProgress : MonoBehaviour
         Save();
     }
 
-    // True once a stage's first-clear coin reward has been paid out.
+    // true once a stage's first clear coins have been paid
     public bool IsStageRewarded(int stageNumber)
     {
         if (stageNumber < 1 || stageNumber > 31)
@@ -81,7 +83,7 @@ public class GameProgress : MonoBehaviour
         return (PlayerPrefs.GetInt(RewardedStagesKey, 0) & (1 << (stageNumber - 1))) != 0;
     }
 
-    // Bonus coins (new stars, combos, the daily gift).
+    // bonus coins (new stars, combos, the daily gift)
     public void AddCoins(int amount)
     {
         if (amount <= 0)
@@ -90,8 +92,8 @@ public class GameProgress : MonoBehaviour
         Save();
     }
 
-    // ------------------------------------------------------------------ star ratings
-    // Best stars per stage (0-3), saved as one digit per stage: "3210...".
+    // --- stars ---
+    // best stars for each stage (0-3), saved as one digit per stage like "3210..."
     const string StarsKey = "BumperBeast.Stars";
     public const int MaxStarsPerStage = 3;
 
@@ -105,7 +107,7 @@ public class GameProgress : MonoBehaviour
         return value >= 0 && value <= MaxStarsPerStage ? value : 0;
     }
 
-    // Keeps the best result; returns how many stars are NEW (0 when it did not beat the record).
+    // keeps the best result and returns how many stars are NEW (0 if you didn't beat your record)
     public int RecordStars(int stageNumber, int stars)
     {
         stars = Mathf.Clamp(stars, 0, MaxStarsPerStage);
@@ -203,15 +205,15 @@ public class GameProgress : MonoBehaviour
 
         int unlocked = PlayerPrefs.GetInt(UnlockedBeastsKey, 1) | (1 << (int)beast);
         PlayerPrefs.SetInt(UnlockedBeastsKey, unlocked);
-        // A freshly recruited Beast joins the squad if there is room.
+        // a newly recruited Beast joins the squad if there's room
         if (!squad.Contains(beast) && squad.Count < MaxSquadSize)
             squad.Add(beast);
         Save();
         return true;
     }
 
-    // Makes the Beast the squad's lead (it starts on the pad). It joins the squad if needed,
-    // taking the last slot when the squad is full.
+    // makes the Beast the squad's leader (it starts on the pad). it joins the squad if needed,
+    // taking the last slot if the squad is full
     public void SelectBeast(BeastId beast)
     {
         if (!IsBeastUnlocked(beast))
@@ -320,6 +322,7 @@ public class GameProgress : MonoBehaviour
         Save();
     }
 
+    // reads everything back from PlayerPrefs (saved on the phone) when the game starts
     void Load()
     {
         Coins = PlayerPrefs.GetInt(CoinsKey, 0);
@@ -341,8 +344,8 @@ public class GameProgress : MonoBehaviour
         LoadSquad();
     }
 
-    // Saved as "0,1,2". Older saves have no squad: it starts as the old automatic one
-    // (the equipped Beast, then owned Beasts in roster order).
+    // saved like "0,1,2". older saves have no squad, so it starts like the old automatic one
+    // (the equipped Beast, then the other owned Beasts in order)
     void LoadSquad()
     {
         squad.Clear();
@@ -371,7 +374,7 @@ public class GameProgress : MonoBehaviour
             }
         }
 
-        // The equipped Beast always leads.
+        // the equipped Beast always leads
         if (!squad.Contains(SelectedBeast))
         {
             if (squad.Count >= MaxSquadSize)
@@ -385,6 +388,7 @@ public class GameProgress : MonoBehaviour
         }
     }
 
+    // writes coins, stages, upgrades and Beasts to PlayerPrefs so they're still there after closing the game
     void Save()
     {
         PlayerPrefs.SetInt(CoinsKey, Coins);

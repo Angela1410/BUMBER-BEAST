@@ -10,9 +10,9 @@ public enum BackdropTheme
     Fire
 }
 
-// Generates painterly layered-terrain textures in code, so chapters without
-// authored background art still get a distinct environment. Earth variants
-// 0-3 are the four Earth stages (Dustway, Rubble, Fault Line, Quarry).
+// makes painted-looking layered ground textures with code, so chapters without background art
+// still get their own look. Earth versions 0-3 are the four Earth stages (Dustway, Rubble,
+// Fault Line, Quarry)
 public static class ProceduralBackdrop
 {
     private static readonly Dictionary<string, Sprite> Cache = new Dictionary<string, Sprite>();
@@ -66,7 +66,7 @@ public static class ProceduralBackdrop
             for (int x = 0; x < width; x++)
             {
                 float u = (x + 0.5f) / width;
-                // Gentle, low-amplitude warp so layers read as tilted strata, not blobs.
+                // a small, soft wobble so the layers look like tilted rock layers, not blobs
                 float warp = (Fbm(u * 2.2f + seed, v * 1.6f * aspect * 0.5f + seed * 0.37f) - 0.5f) * 0.07f;
 
                 float bandPosition = (v + warp + u * 0.035f) * bandsOnScreen;
@@ -75,27 +75,27 @@ public static class ProceduralBackdrop
                 Color bandA = palette.bands[Mod(bandIndex, bandCount)];
                 Color bandB = palette.bands[Mod(bandIndex + 1, bandCount)];
                 Color color = Color.Lerp(bandA, bandB, SmoothStep(0.72f, 1f, bandFraction));
-                // Thin dark seam between layers, plus fine horizontal striation inside each layer.
+                // thin dark line between layers, plus fine horizontal lines inside each layer
                 color *= 1f - 0.1f * SmoothStep(0.93f, 1f, bandFraction);
                 float striation = Fbm(u * 3f + seed * 1.3f, (v + warp) * bandsOnScreen * 5f + 0.37f) - 0.5f;
                 color *= 1f + striation * 0.16f;
 
-                // Worn dusty trail where enemies march.
+                // worn dusty path where the enemies walk
                 float pathDistance = Mathf.Abs(u - pathCenter);
                 float pathMask = SmoothStep(0.2f, 0.11f, pathDistance);
                 float pathRim = SmoothStep(0.21f, 0.17f, pathDistance) - pathMask;
                 color = Color.Lerp(color, palette.path, pathMask * 0.6f);
                 color *= 1f - Mathf.Clamp01(pathRim) * 0.1f;
 
-                // Canyon walls: darker toward the screen edges.
+                // canyon walls: darker toward the edges of the screen
                 float edge = SmoothStep(0.22f, 0f, Mathf.Min(u, 1f - u));
                 color *= 1f - edge * (0.3f + Fbm(u * 18f + seed, v * 2.5f + 0.5f) * 0.18f);
 
-                // Grain and soft top light.
+                // grain and soft light from the top
                 float grain = (Mathf.PerlinNoise(u * 97.3f + seed, v * 173.1f + 0.21f) - 0.5f) * 0.06f;
                 color += new Color(grain, grain, grain, 0f);
                 color *= Mathf.Lerp(0.84f, 1f + palette.topLight, v);
-                // Vignette.
+                // darker corners
                 float vignette = SmoothStep(0.95f, 0.35f, Vector2.Distance(new Vector2(u, v), new Vector2(0.5f, 0.55f)) * 1.25f);
                 color *= Mathf.Lerp(0.74f, 1f, vignette);
 
@@ -117,7 +117,7 @@ public static class ProceduralBackdrop
         return texture;
     }
 
-    // Jagged, branching fissures drawn as polylines (noise ridges create a visible grid).
+    // jagged, branching cracks drawn as lines (noise ridges made a visible grid)
     private static void DrawCracks(Color[] pixels, int width, int height, Palette palette, float seed)
     {
         if (palette.crackAmount <= 0f && palette.glowAmount <= 0f)
@@ -229,7 +229,7 @@ public static class ProceduralBackdrop
             float radius = (rock ? 5f + (float)random.NextDouble() * 4f : 1.4f + (float)random.NextDouble() * 2.6f) * scale;
             float squash = 0.55f + (float)random.NextDouble() * 0.25f;
             float shade = 0.85f + (float)random.NextDouble() * 0.3f;
-            // Pebbles take on the ground's color so they sit in the scene instead of floating on it.
+            // pebbles take the ground's color so they look like part of the scene instead of floating on it
             int centerIndex = Mathf.Clamp((int)cy, 0, height - 1) * width + Mathf.Clamp((int)cx, 0, width - 1);
             Color baseColor = Color.Lerp(pixels[centerIndex], palette.pebble, 0.45f) * shade;
             baseColor.a = 1f;
@@ -248,7 +248,7 @@ public static class ProceduralBackdrop
                     float distance = Mathf.Sqrt(dx * dx + dy * dy);
                     int pixelIndex = y * width + x;
 
-                    // Contact shadow below each pebble.
+                    // shadow under each pebble
                     float shadowDy = (y + 0.5f - (cy - radius * 0.35f)) / (radius * squash);
                     float shadowDistance = Mathf.Sqrt(dx * dx + shadowDy * shadowDy);
                     if (shadowDistance < 1.15f && distance >= 1f)
@@ -257,7 +257,7 @@ public static class ProceduralBackdrop
                     if (distance >= 1f)
                         continue;
 
-                    // Highlight toward the top-left, dark ink rim.
+                    // light on the top left, dark outline
                     float light = Mathf.Clamp01(0.55f - dx * 0.35f + dy * 0.45f);
                     Color pebble = baseColor * Mathf.Lerp(0.8f, 1.25f, light);
                     float rim = SmoothStep(0.78f, 1f, distance);
@@ -288,7 +288,7 @@ public static class ProceduralBackdrop
                             pebble = new Color32(150, 120, 104, 255),
                             topLight = 0.08f
                         };
-                    case 2: // Fault Line: dusk umber, amber fissures
+                    case 2: // Fault Line: dark brown evening, amber cracks
                         return new Palette
                         {
                             bands = new Color32[] { new Color32(124, 88, 64, 255), new Color32(106, 74, 56, 255), new Color32(140, 100, 72, 255), new Color32(94, 66, 50, 255), new Color32(118, 82, 60, 255) },
@@ -300,7 +300,7 @@ public static class ProceduralBackdrop
                             pebble = new Color32(132, 112, 98, 255),
                             topLight = 0.02f
                         };
-                    case 3: // Terrathorn's Quarry: dark granite with ember seams
+                    case 3: // Terrathorn's Quarry: dark granite with glowing cracks
                         return new Palette
                         {
                             bands = new Color32[] { new Color32(102, 84, 72, 255), new Color32(86, 72, 62, 255), new Color32(116, 96, 80, 255), new Color32(76, 62, 54, 255), new Color32(96, 80, 68, 255) },
@@ -312,7 +312,7 @@ public static class ProceduralBackdrop
                             pebble = new Color32(120, 112, 106, 255),
                             topLight = 0f
                         };
-                    default: // Dustway Trail: warm ochre daylight
+                    default: // Dustway Trail: warm yellow-brown daylight
                         return new Palette
                         {
                             bands = new Color32[] { new Color32(196, 150, 96, 255), new Color32(176, 128, 80, 255), new Color32(208, 168, 112, 255), new Color32(160, 112, 70, 255), new Color32(188, 140, 88, 255) },
@@ -324,7 +324,7 @@ public static class ProceduralBackdrop
                         };
                 }
             case BackdropTheme.Electric:
-                // Storm-slate highlands with charged, glowing fissures.
+                // stormy gray highlands with glowing charged cracks
                 return ForStage(new Palette
                 {
                     bands = new Color32[] { new Color32(82, 80, 118, 255), new Color32(70, 68, 104, 255), new Color32(96, 92, 132, 255), new Color32(62, 60, 94, 255) },
@@ -373,8 +373,8 @@ public static class ProceduralBackdrop
         }
     }
 
-    // The four stages of a generated chapter: daylight, bright, dusk, and the darker boss arena
-    // where the glowing seams are strongest.
+    // the four stages of a generated chapter: daylight, bright, evening, and the darker boss arena
+    // where the glowing cracks are strongest
     private static Palette ForStage(Palette palette, int variant)
     {
         int stage = Mathf.Abs(variant) % 4;

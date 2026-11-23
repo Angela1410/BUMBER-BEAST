@@ -1,13 +1,14 @@
 using UnityEngine;
 
-// Turns a boss into a fight with stages:
-//  arrival   "THORNMAW APPEARS!" with the element that beats it
-//  60% left  ARMORED  - it blocks the next three hits (bounce into it to break the armour)
-//  30% left  ENRAGED  - it charges the barrier 70% faster, pulsing red
-// Added by Enemy.SetBoss; works alongside each boss's own ability script.
+// turns a boss fight into stages:
+// when it arrives: "THORNMAW APPEARS!" plus the element that beats it
+// at 60% health: ARMORED, it blocks the next three hits (bounce into it to break the armor)
+// at 30% health: ENRAGED, it charges the barrier 70% faster and pulses red
+// Enemy.SetBoss adds this, and it works together with each boss's own ability script
 [DisallowMultipleComponent]
 public class BossPhases : MonoBehaviour
 {
+    // armor turns on at 60% health and rage at 30%
     private const float ArmorAt = 0.6f;
     private const float EnrageAt = 0.3f;
     private const int ArmorHits = 3;
@@ -52,8 +53,10 @@ public class BossPhases : MonoBehaviour
                 AlarmRed, 2.4f, 0.62f);
         }
 
+        // how much health the boss has left, from 0 to 1
         float health = boss.CurrentHealth / (float)boss.MaxHealthTotal;
 
+        // ARMORED: at 60% health it blocks the next 3 hits
         if (!armored && health <= ArmorAt)
         {
             armored = true;
@@ -64,6 +67,7 @@ public class BossPhases : MonoBehaviour
             CameraShake.Shake(true);
         }
 
+        // ENRAGED: at 30% health it moves 70% faster toward the barrier
         if (!enraged && health <= EnrageAt)
         {
             enraged = true;
@@ -74,7 +78,7 @@ public class BossPhases : MonoBehaviour
             CameraShake.Shake(true);
         }
 
-        // An enraged boss keeps flashing red rings so the danger is obvious.
+        // an enraged boss keeps flashing red rings so you can see the danger
         if (enraged && Time.time >= nextPulse)
         {
             nextPulse = Time.time + PulseInterval;

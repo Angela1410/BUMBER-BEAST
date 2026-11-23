@@ -1,8 +1,8 @@
 using UnityEngine;
 
-// Player preferences shared by the title screen, the hub and the pause menu: music and sound
-// volumes, screen shake, aim sensitivity, drag-anywhere aiming and the profile name. Saved in
-// PlayerPrefs (on this device only).
+// player settings used by the title screen, the map and the pause menu: music and sound volume,
+// screen shake, difficulty, aim sensitivity, aim assist, drag anywhere aiming and the profile name.
+// saved in PlayerPrefs (only on this phone)
 public static class GameSettings
 {
     public const string DefaultPlayerName = "BEAST KEEPER";
@@ -27,15 +27,15 @@ public static class GameSettings
     private static bool aimAssist = true;
     private static GameDifficulty difficulty = GameDifficulty.Medium;
 
-    // Aim sensitivity as a slider position (0..1): how quickly the aim follows the finger. Low =
-    // steady (shaky fingers are smoothed out), high = instant. 0.5 is the normal feel.
+    // aim sensitivity as a slider position (0..1): how fast the aim follows the finger.
+    // low = steady (shaky fingers get smoothed out), high = instant. 0.5 is the normal feel
     public static float AimSensitivitySlider
     {
         get { Load(); return sensitivitySlider; }
         set { Load(); SetFloat(SensitivityKey, ref sensitivitySlider, value); }
     }
 
-    // How fast the aim catches up with the finger, per second.
+    // how fast the aim catches up to the finger, per second
     public static float AimResponse
     {
         get { return Mathf.Lerp(6f, 40f, AimSensitivitySlider); }
@@ -56,7 +56,7 @@ public static class GameSettings
         }
     }
 
-    // A flying Beast curves gently toward a nearby enemy in front of it.
+    // a flying Beast curves a little toward an enemy in front of it
     public static bool AimAssist
     {
         get { Load(); return aimAssist; }
@@ -72,7 +72,7 @@ public static class GameSettings
         }
     }
 
-    // Start aiming by touching anywhere on the field, not only on the Beast.
+    // start aiming by touching anywhere on the field, not only on the Beast
     public static bool DragAnywhere
     {
         get { Load(); return dragAnywhere; }
@@ -88,7 +88,7 @@ public static class GameSettings
         }
     }
 
-    // Raised after any value changes (the audio mixer listens for volume changes).
+    // sent when any setting changes (the audio listens for volume changes)
     public static event System.Action Changed;
 
     public static float MusicVolume
@@ -134,7 +134,7 @@ public static class GameSettings
         }
     }
 
-    // Trimmed, upper-case, at most MaxNameLength characters; empty becomes the default name.
+    // trimmed, upper case, at most MaxNameLength letters. empty becomes the default name
     public static string CleanName(string value)
     {
         string cleaned = string.IsNullOrEmpty(value) ? string.Empty : value.Trim();
@@ -169,8 +169,8 @@ public static class GameSettings
         NotifyChanged();
     }
 
-    // Slider drags change volumes many times a second; they are written to disk once the
-    // settings card closes (PlayerPrefs.Save), not on every step.
+    // dragging a slider changes the volume many times a second, so we only write to disk
+    // when the settings card closes (PlayerPrefs.Save), not on every step
     public static void Save()
     {
         PlayerPrefs.Save();

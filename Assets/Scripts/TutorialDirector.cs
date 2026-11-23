@@ -1,14 +1,13 @@
 using System.Collections;
 using UnityEngine;
 
-// Guided first steps, played once (Settings > REPLAY TUTORIAL plays them again):
-//  Stage 1  READY on the plan card -> drag back and launch (the field freezes until the first
-//           shot) -> bounce to hit -> element advantage -> the skill button (in slow motion) ->
-//           guard the barrier -> wave clear.
-//  Stage 2  bumper colours -> the POWER BUMPER (one is made sure to exist) and what each Beast's
-//           power does.
-//  Later    the first time the squad has two or more Beasts: the SWAP button.
-// Each lesson waits for the player to actually do the thing, with time-outs so it never gets stuck.
+// the guided first steps, played once (Settings > REPLAY TUTORIAL plays them again):
+// stage 1: READY on the plan card -> drag back and launch (the field freezes until the first shot)
+// -> bounce to hit -> element advantage -> the skill button (in slow motion) -> guard the barrier
+// -> wave clear.
+// stage 2: bumper colors -> the POWER BUMPER (we make sure there's one) and what each Beast's power does.
+// later: the first time the squad has two or more Beasts, the SWAP button.
+// each lesson waits for the player to really do it, with time limits so it never gets stuck
 public class TutorialDirector : MonoBehaviour
 {
     public const string Stage1Key = "BumperBeast.Tutorial.Stage1";
@@ -16,7 +15,7 @@ public class TutorialDirector : MonoBehaviour
     public const string SwapKey = "BumperBeast.Tutorial.Swap";
 
     private const float FrozenScale = 0f;
-    // Bubbles sit at the top, under the wave bar, so the field stays clear.
+    // bubbles sit at the top under the wave bar, so the field stays clear
     private const float BubbleTop = 0.865f;
     private const float SlowScale = 0.25f;
 
@@ -79,13 +78,13 @@ public class TutorialDirector : MonoBehaviour
         RestoreTime();
     }
 
-    // The stage ended mid-lesson (won or lost): the result card takes over, the coach leaves.
+    // the stage ended in the middle of a lesson (won or lost): the result card takes over and the coach leaves
     void Update()
     {
         if (stage != null && stage.IsFinished)
         {
             StopAllCoroutines();
-            changedScale = false;   // the stage owns the clock now (frozen behind the card)
+            changedScale = false; // the stage controls the clock now (frozen behind the card)
             GameTime.ResetBase();
             if (coach != null)
                 Destroy(coach.gameObject);
@@ -114,7 +113,7 @@ public class TutorialDirector : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // ------------------------------------------------------------------ stage 1
+    // --- stage 1 ---
 
     IEnumerator Stage1()
     {
@@ -130,7 +129,7 @@ public class TutorialDirector : MonoBehaviour
             yield return null;
         coach.HideAll();
 
-        // Give the first enemy a moment on the field, then freeze it for the aiming lesson.
+        // give the first enemy a moment on the field, then freeze it for the aiming lesson
         float until = Time.unscaledTime + 8f;
         while (!PowerBurst.HasTargets() && Time.unscaledTime < until && !launched)
             yield return null;
@@ -169,7 +168,7 @@ public class TutorialDirector : MonoBehaviour
         }
         coach.HideAll();
 
-        // The skill: wait until it can be used mid-flight, then slow time and point at the button.
+        // the skill: wait until it can be used mid-flight, then slow time and point at the button
         beast = BeastController.Active;
         until = Time.unscaledTime + 35f;
         while (beast != null && !beast.CanUseSkill && Time.unscaledTime < until && !waveCleared)
@@ -207,7 +206,7 @@ public class TutorialDirector : MonoBehaviour
         coach.HideAll();
     }
 
-    // ------------------------------------------------------------------ stage 2
+    // --- stage 2 ---
 
     IEnumerator Stage2()
     {
@@ -229,7 +228,7 @@ public class TutorialDirector : MonoBehaviour
         float retarget = 0f;
         while (!powerBumperHit && Time.unscaledTime < until && stage != null)
         {
-            // Bumpers break and respawn: keep pointing at whichever Power Bumper exists.
+            // bumpers break and come back, so keep pointing at whichever Power Bumper exists
             if (Time.unscaledTime >= retarget)
             {
                 retarget = Time.unscaledTime + 1f;
@@ -267,7 +266,7 @@ public class TutorialDirector : MonoBehaviour
         return null;
     }
 
-    // The lesson needs a Power Bumper: turn the bumper nearest the middle of the field into one.
+    // the lesson needs a Power Bumper: turn the bumper closest to the middle into one
     static Bumper EnsurePowerBumper()
     {
         Bumper existing = FindPowerBumper();
@@ -293,7 +292,7 @@ public class TutorialDirector : MonoBehaviour
         return best;
     }
 
-    // ------------------------------------------------------------------ swap tip
+    // --- swap tip ---
 
     IEnumerator SwapTip()
     {
@@ -313,7 +312,7 @@ public class TutorialDirector : MonoBehaviour
         coach.HideAll();
     }
 
-    // ------------------------------------------------------------------ helpers
+    // --- helpers ---
 
     IEnumerator WaitForPlanCard(System.Action<WaveManager> found)
     {
@@ -349,8 +348,8 @@ public class TutorialDirector : MonoBehaviour
         return best;
     }
 
-    // Freezes or slows the game for a lesson by changing the stage speed (GameTime). Hit-stops and the
-    // pause menu return to that speed, so ending the lesson always brings the game back to normal.
+    // freezes or slows the game for a lesson by changing the stage speed (GameTime). hit-stops and the
+    // pause menu go back to that speed, so ending the lesson always brings the game back to normal
     void SetTime(float scale)
     {
         if (stage != null && stage.IsFinished)
@@ -367,8 +366,8 @@ public class TutorialDirector : MonoBehaviour
             return;
         changedScale = false;
         GameTime.ResetBase();
-        // The result card and the pause menu own the clock while they are up; otherwise back to normal
-        // now (a hit-stop in progress also ends on the normal speed).
+        // the result card and the pause menu control the clock while they're up, otherwise go back to normal
+        // now (a hit-stop that's running also ends on the normal speed)
         if ((stage == null || !stage.IsFinished) && !GamePaused())
             Time.timeScale = 1f;
     }

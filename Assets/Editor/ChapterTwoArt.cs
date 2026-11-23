@@ -7,24 +7,24 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Wires the painted Stone Hollow art into the Earth stages:
-//  - stage5Bg..stage8Bg onto each scene's EarthEnvironment;
-//  - the Ch2_Enemies sheet (3 columns x 2 rows: normal / damaged) into three prefab
-//    variants of Enemy_1, which the matching waves then spawn.
-// Run from the menu after Unity has imported the PNGs. Missing or not-yet-imported
-// files are reported and skipped; anything already correct is left untouched.
+// puts the painted Stone Hollow art into the Earth stages:
+// - stage5Bg..stage8Bg go on each scene's EarthEnvironment
+// - the Ch2_Enemies sheet (3 columns x 2 rows: normal / damaged) becomes three prefab
+// variants of Enemy_1, and the matching waves spawn them
+// run it from the menu after Unity imports the PNGs. missing files get reported and skipped,
+// and anything that's already right is left alone
 public static class ChapterTwoArt
 {
     private const string BackgroundFolder = "Assets/Sprites/Chapter2/Backgrounds/";
     private const string EnemySheetPath = "Assets/Sprites/Chapter2/Ch2_Enemies_Sheet.png";
     private const string BaseEnemyPrefabPath = "Assets/Prefab/Enemy_1.prefab";
 
-    // Earth barrier and launch pad: the sprites are pre-fitted to the Chapter 1 canvases
-    // (same world size under the prefabs' scales), so only clips, controllers and sprites change.
+    // Earth barrier and launch pad: the sprites already fit the chapter 1 canvases (same size with
+    // the prefab scales), so we only swap the clips, controllers and sprites
     private const string BarrierHitSheetPath = "Assets/Sprites/Chapter2/Earth_Barrier_Hit.png";
     private const string BarrierDestroyedSheetPath = "Assets/Sprites/Chapter2/Earth_Barrier_Destroyed.png";
-    // Pad frames (painted sheet): 00 rest, 01-03 rope pulled down further each frame with the
-    // pillar tops bending in, 04 release (rope whips up), 05 settle.
+    // pad frames from the painted sheet: 00 rest, 01-03 the rope pulled down more each frame (pillar
+    // tops bend in), 04 release (rope whips up), 05 settle
     private static readonly string[] PadFramePaths =
     {
         "Assets/Sprites/Chapter2/Earth_LaunchPad.png",
@@ -42,8 +42,8 @@ public static class ChapterTwoArt
     private const string PadOverridePath = GeneratedFolder + "/Earth_LaunchPad.overrideController";
     private const string BarrierObjectName = "Square";
     private const string PadObjectName = "LaunchPad";
-    // The Earth hit frames are subtler than the log's big starburst, so the hit plays at a
-    // slower beat: key times stretched by this factor, and the barrier returns to idle to match.
+    // the Earth hit frames are calmer than the log's big burst, so the hit plays slower:
+    // key times get stretched by this number, and the barrier goes back to idle to match
     private const float BarrierHitTimeScale = 1.6f;
     private const float BarrierHitReturnDelay = 0.6f;
 
@@ -73,7 +73,7 @@ public static class ChapterTwoArt
         public string PrefabPath => "Assets/Prefab/Enemy_" + name + ".prefab";
     }
 
-    // Slice order is row-major: top row normal, bottom row damaged.
+    // slices go row by row: top row normal, bottom row damaged
     private static readonly EnemyVariant[] Variants =
     {
         new EnemyVariant("DustScout", 0, 3, "Dust Scouts"),
@@ -119,7 +119,7 @@ public static class ChapterTwoArt
 
             bool dirty = false;
 
-            // Background.
+            // background
             string spritePath = BackgroundFolder + "stage" + (stageIndex + 5) + "Bg.png";
             Sprite background = AssetDatabase.LoadAssetAtPath<Sprite>(spritePath);
             if (background == null)
@@ -143,7 +143,7 @@ public static class ChapterTwoArt
                 }
             }
 
-            // Waves.
+            // waves
             if (variantPrefabs.Count > 0)
             {
                 WaveManager waveManager = FindInScene<WaveManager>(scene);
@@ -165,8 +165,8 @@ public static class ChapterTwoArt
                         if (!wavesChanged)
                             Undo.RecordObject(waveManager, "Wire Chapter 2 Enemies");
                         wave.enemyPrefabs = new[] { prefab };
-                        // A wave sprite override would replace the painted art at spawn (and then
-                        // flip to the painted damaged frame at half health), so painted variants never use one.
+                        // a wave sprite override would replace the painted art when it spawns (and switch to the painted
+                        // damaged frame at half health), so painted variants never use one
                         wave.enemySprite = null;
                         wavesChanged = true;
                         wavesWired++;
@@ -179,7 +179,7 @@ public static class ChapterTwoArt
                 }
             }
 
-            // Barrier and launch pad art.
+            // barrier and launch pad art
             if (barrierOverride != null &&
                 ApplyProp(scene, BarrierObjectName, barrierOverride, barrierIdleSprite, "Wire Earth Barrier", problems, scenePath))
             {
@@ -218,9 +218,8 @@ public static class ChapterTwoArt
             Debug.LogWarning(summary + "\n" + string.Join("\n", problems));
     }
 
-    // Creates or updates Enemy_DustScout / Enemy_Burrower / Enemy_Rollstone as prefab
-    // variants of Enemy_1 (so stats, abilities and colliders stay inherited) and returns
-    // the Enemy component of each one that is ready.
+    // makes or updates Enemy_DustScout / Enemy_Burrower / Enemy_Rollstone as prefab variants of Enemy_1
+    // (so they keep the same stats, abilities and colliders) and returns the Enemy of each one that's ready
     private static Dictionary<string, Enemy> BuildEnemyVariants(List<string> problems)
     {
         Dictionary<string, Enemy> result = new Dictionary<string, Enemy>();
@@ -295,7 +294,7 @@ public static class ChapterTwoArt
         }
     }
 
-    // Returns true when the prefab was changed and saved.
+    // returns true if the prefab was changed and saved
     private static bool ApplySprites(string prefabPath, Sprite normal, Sprite damaged)
     {
         GameObject contents = PrefabUtility.LoadPrefabContents(prefabPath);
@@ -336,10 +335,10 @@ public static class ChapterTwoArt
         }
     }
 
-    // ---------------------------------------------------------------- barrier / pad
+    // --- barrier / pad ---
 
-    // Earth barrier: the Chapter 1 Square controller with its three clips replaced by
-    // copies whose sprite keys point at the Earth sheets (same cell order, same timing).
+    // Earth barrier: the chapter 1 Square controller, but its three clips are swapped for copies that
+    // use the Earth sheets (same cell order, same timing)
     private static AnimatorOverrideController BuildBarrierOverride(List<string> problems, out Sprite idleSprite)
     {
         idleSprite = null;
@@ -364,7 +363,7 @@ public static class ChapterTwoArt
             return null;
         }
 
-        // Chapter 1 clip sprites are "Analysis output 2_<i>" (idle + hit) and "Analysis output 1_<i>" (destroyed).
+        // chapter 1 clip sprites are named "Analysis output 2_<i>" (idle + hit) and "Analysis output 1_<i>" (destroyed)
         Sprite Map(Sprite original)
         {
             if (original == null)
@@ -386,8 +385,8 @@ public static class ChapterTwoArt
             clipName => clipName.Contains("Hit") ? BarrierHitTimeScale : 1f);
     }
 
-    // Earth launch pad: the Chapter 1 pad clips (idle / pulling back / launching) keep their
-    // timing, with each key mapped onto the five Earth frames by its position in the clip.
+    // Earth launch pad: the chapter 1 pad clips (idle / pulling back / launching) keep their timing,
+    // and each key is matched to one of the five Earth frames by where it is in the clip
     private static AnimatorOverrideController BuildPadOverride(List<string> problems, out Sprite padSprite)
     {
         padSprite = null;
@@ -438,7 +437,7 @@ public static class ChapterTwoArt
                 return frames[Mathf.Clamp(Mathf.RoundToInt(position * 3f), 0, 3)];
             if (clipName.Contains("Launching"))
             {
-                // Release: rope whips up, settles, back to rest.
+                // release: the rope whips up, settles, then goes back to rest
                 if (position < 0.5f) return frames[4];
                 if (keyIndex < keyCount - 1) return frames[5];
                 return frames[0];
@@ -457,10 +456,10 @@ public static class ChapterTwoArt
         return result;
     }
 
-    // Clones every clip of the base controller with its sprite keys remapped, and returns an
-    // override controller that swaps them in. Assets are created once and updated in place.
-    // map(clipName, keyIndex, keyCount, originalSprite) -> Earth sprite, or null to leave the key unchanged.
-    // timeScale(clipName) -> factor applied to every key time (1 = keep the Chapter 1 timing).
+    // copies every clip of the base controller with its sprites swapped, and returns an override
+    // controller that uses them. the assets are made once and then updated.
+    // map(clipName, keyIndex, keyCount, originalSprite) gives the Earth sprite, or null to leave the key alone.
+    // timeScale(clipName) multiplies every key time (1 = same timing as chapter 1)
     private static AnimatorOverrideController BuildOverride(string controllerPath, string overridePath, string clipPrefix,
         System.Func<string, int, int, Sprite, Sprite> map, List<string> problems,
         System.Func<string, float> timeScale = null)
@@ -490,7 +489,7 @@ public static class ChapterTwoArt
             }
             else
             {
-                // Refresh from the original so timing/loop changes in Chapter 1 carry over.
+                // copy from the original again so timing/loop changes in chapter 1 carry over
                 EditorUtility.CopySerialized(original, clip);
                 clip.name = clipPrefix + original.name;
             }
@@ -539,7 +538,7 @@ public static class ChapterTwoArt
         return overrideController;
     }
 
-    // Points the named scene object's Animator at the override and its renderer at the resting sprite.
+    // points the scene object's Animator at the override and its renderer at the resting sprite
     private static bool ApplyProp(Scene scene, string objectName, RuntimeAnimatorController controller, Sprite restingSprite,
         string undoLabel, List<string> problems, string scenePath)
     {
@@ -590,7 +589,7 @@ public static class ChapterTwoArt
             Debug.Log("Bumper Beast: " + sceneName + " / " + objectName + " -> resting sprite now " + restingSprite.name + ".");
         }
 
-        // Earth barrier: hold the hit pose as long as the slower Earth hit clip runs.
+        // Earth barrier: hold the hit pose as long as the slower Earth hit clip plays
         BarrierVisuals barrierVisuals = target.GetComponent<BarrierVisuals>();
         if (barrierVisuals != null && !Mathf.Approximately(barrierVisuals.hitReturnDelay, BarrierHitReturnDelay))
         {

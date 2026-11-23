@@ -24,8 +24,8 @@ public enum UiIcon
     Close
 }
 
-// Small icon set for the map, shop and menus (the HUD font has no symbols). Generated once in
-// code and cached. Every icon except the coin is a white mask: tint it with Image.color.
+// small set of icons for the map, shop and menus (the HUD font has no symbols). made once with code
+// and saved. every icon except the coin is a white shape: tint it with Image.color
 public static class UiIcons
 {
     private const int Size = 128;
@@ -67,7 +67,7 @@ public static class UiIcons
         return ToSprite("UI Icon " + icon, pixels);
     }
 
-    // Gold coin with a darker rim and an embossed star.
+    // gold coin with a darker edge and a raised star
     private static Sprite BuildCoin()
     {
         Color rim = new Color32(186, 118, 22, 255);
@@ -183,7 +183,7 @@ public static class UiIcons
                 return Segment(u, v, -0.52f, -0.52f, 0.52f, 0.52f, 0.15f) || Segment(u, v, -0.52f, 0.52f, 0.52f, -0.52f, 0.15f);
             case UiIcon.Hand:
             {
-                // A hand pointing up: index finger, palm with curled-finger knuckles, thumb, cuff.
+                // a hand pointing up: index finger, palm with curled finger knuckles, thumb, cuff
                 bool finger = RoundedBox(u + 0.05f, v - 0.38f, 0.14f, 0.44f, 0.14f);
                 bool palm = RoundedBox(u - 0.08f, v + 0.36f, 0.38f, 0.38f, 0.2f);
                 bool knuckles = Circle(u - 0.24f, v - 0.02f, 0.15f) || Circle(u - 0.4f, v + 0.08f, 0.13f);
@@ -196,7 +196,7 @@ public static class UiIcons
         }
     }
 
-    // ---------------------------------------------------------------- shape tests (y up)
+    // --- shape tests (y goes up) ---
 
     private static bool Circle(float u, float v, float radius)
     {
@@ -233,7 +233,7 @@ public static class UiIcons
         return Polygon(u, v, outer > 0.7f ? IconStar : CoinStar);
     }
 
-    // Five-pointed star, first point straight up.
+    // five pointed star, first point straight up
     private static float[] StarPoints(float outer, float inner)
     {
         float[] xy = new float[20];

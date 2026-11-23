@@ -1,19 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// Shows the hand-made title screen (Assets/Resources/UI/TitleScreen.png) once per
-// app session, on top of the hub, until the player taps PLAY. The art is never
-// stretched: it is scaled to the screen width and anchored to the safe-area
-// bottom, and any remaining space is filled with the art's own sky and ground
-// colours. There is nothing left to load when PLAY is pressed (the hub is
-// already built underneath), so no progress bar is shown. The painted player
-// and gear buttons under PLAY open the PLAYER PROFILE and SETTINGS cards.
+// shows our hand-made title screen (Assets/Resources/UI/TitleScreen.png) once each time the app
+// opens, on top of the map, until the player taps PLAY. the art is never stretched: it's scaled to
+// the screen width and stuck to the bottom of the safe area, and any space left is filled with the
+// art's own sky and ground colors. there's nothing to load when PLAY is pressed (the map is
+// already built underneath), so there's no progress bar. the painted player and gear buttons
+// under PLAY open the PLAYER PROFILE and SETTINGS cards
 public class TitleScreen : MonoBehaviour
 {
     private const string ArtResourcePath = "UI/TitleScreen";
     private const float ArtAspect = 1080f / 1920f;
-    // Button areas in the source art, measured from the bottom-left in normalised units: the
-    // touch area (a little larger, easier to hit) and the painted button itself (darkens on press).
+    // button areas in the art, measured from the bottom left as 0-1: the touch area (a bit bigger so
+    // it's easier to hit) and the painted button itself (gets darker when pressed)
     private static readonly Rect PlayArea = new Rect(0.30f, 0.12f, 0.42f, 0.125f);
     private static readonly Rect PlayPainted = new Rect(0.317f, 0.133f, 0.39f, 0.104f);
     private static readonly Rect AccountArea = new Rect(0.30f, 0.02f, 0.2f, 0.11f);
@@ -25,7 +24,7 @@ public class TitleScreen : MonoBehaviour
 
     private static bool shownThisSession;
 
-    // Raised when PLAY is tapped (the hub then offers the daily gift).
+    // sent when PLAY is tapped (then the map offers the daily gift)
     public static event System.Action Dismissed;
 
     private CanvasGroup group;
@@ -62,7 +61,7 @@ public class TitleScreen : MonoBehaviour
         if (sprite != null)
             return sprite;
 
-        // The texture is still imported as a plain texture: wrap it without any resampling.
+        // the texture is imported as a plain texture: wrap it without resampling
         Texture2D texture = Resources.Load<Texture2D>(ArtResourcePath);
         if (texture == null)
             return null;
@@ -76,7 +75,7 @@ public class TitleScreen : MonoBehaviour
 
         Image sky = CreateImage(transform, "Sky", SkyColor);
         Stretch(sky.rectTransform);
-        sky.raycastTarget = true;   // blocks the hub beneath while the title is up
+        sky.raycastTarget = true; // blocks the map underneath while the title is showing
 
         bottomFill = CreateImage(transform, "GroundFill", GroundColor).rectTransform;
         topFill = CreateImage(transform, "SkyFill", SkyColor).rectTransform;
@@ -86,7 +85,7 @@ public class TitleScreen : MonoBehaviour
         artImage.preserveAspect = true;
         artRect = artImage.rectTransform;
 
-        // Invisible buttons over the painted PLAY, PLAYER and SETTINGS buttons.
+        // invisible buttons over the painted PLAY, PLAYER and SETTINGS buttons
         AddPaintedButton("PlayButton", PlayArea, PlayPainted, Dismiss);
         AddPaintedButton("AccountButton", AccountArea, AccountPainted, OpenProfile);
         AddPaintedButton("SettingsButton", SettingsArea, SettingsPainted, OpenSettings);
@@ -94,8 +93,8 @@ public class TitleScreen : MonoBehaviour
         Layout();
     }
 
-    // A touch area over a button painted into the title art. While pressed, a dark overlay the
-    // shape of the painted button shows that it was hit (the art itself never changes).
+    // a touch area over a button painted in the title art. while you press it, a dark overlay in the
+    // shape of the painted button shows it was hit (the art itself never changes)
     void AddPaintedButton(string name, Rect touchArea, Rect painted, UnityEngine.Events.UnityAction onClick)
     {
         GameObject buttonObject = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(Button));
@@ -109,7 +108,7 @@ public class TitleScreen : MonoBehaviour
         Image press = CreateImage(rect, "Press", new Color(0f, 0f, 0f, 0.32f));
         press.sprite = HudVisualUtility.RoundedSprite();
         press.type = Image.Type.Sliced;
-        // The painted rectangle, expressed inside the touch area.
+        // the painted rectangle, measured inside the touch area
         Rect local = new Rect((painted.x - touchArea.x) / touchArea.width, (painted.y - touchArea.y) / touchArea.height,
             painted.width / touchArea.width, painted.height / touchArea.height);
         SetAnchors(press.rectTransform, local);
@@ -149,7 +148,7 @@ public class TitleScreen : MonoBehaviour
             GameMenus.OpenProfile(HubPortraits());
     }
 
-    // The hub's Beast portraits (painted ones where assigned), for the profile avatar.
+    // the map's Beast portraits (painted ones where we have them), for the profile picture
     static System.Func<BeastId, Sprite> HubPortraits()
     {
         GameHubController hub = FindAnyObjectByType<GameHubController>();
@@ -182,12 +181,12 @@ public class TitleScreen : MonoBehaviour
         if (lastWidth <= 0 || lastHeight <= 0)
             return;
 
-        // Canvas units equal screen pixels (no scaler scaling), so lay out in pixels.
+        // canvas units are the same as screen pixels (no scaler), so we lay it out in pixels
         float safeBottom = Mathf.Max(0f, lastSafeArea.yMin);
         float safeTop = Mathf.Max(0f, lastHeight - lastSafeArea.yMax);
         float availableHeight = lastHeight - safeBottom - safeTop;
 
-        // Fit the full width; if that would overflow the safe height (wide screens), fit the height instead.
+        // fit the full width, but if that's too tall for the safe area (wide screens), fit the height instead
         float artWidth = lastWidth;
         float artHeight = artWidth / ArtAspect;
         if (artHeight > availableHeight)
@@ -201,7 +200,7 @@ public class TitleScreen : MonoBehaviour
         artRect.sizeDelta = new Vector2(artWidth, artHeight);
         artRect.anchoredPosition = new Vector2(0f, safeBottom);
 
-        // Ground colour below the art (safe-area inset), sky colour above it.
+        // ground color below the art (safe area gap), sky color above it
         bottomFill.anchorMin = Vector2.zero;
         bottomFill.anchorMax = new Vector2(1f, 0f);
         bottomFill.pivot = new Vector2(0.5f, 0f);

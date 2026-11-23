@@ -75,7 +75,7 @@ public class BumperManager : MonoBehaviour
             Transform selectedPoint = emptyPoints[Random.Range(0, emptyPoints.Count)];
             GameObject spawned = Instantiate(bumperPrefab, selectedPoint.position, Quaternion.identity);
 
-            // The prefab is always one colour; roll the replacement's colour here.
+            // the prefab is always one color, so we pick the new bumper's color here
             if (respawnTypes != null && respawnTypes.Length > 0)
             {
                 Bumper bumper = spawned.GetComponent<Bumper>();

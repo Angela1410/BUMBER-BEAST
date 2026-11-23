@@ -48,8 +48,8 @@ public class EnemyWave
     public bool IsTimed => spawnDuration > 0f && spawnTable != null && spawnTable.Length > 0;
 }
 
-// One kind of enemy a timed wave can spawn. The element should match the art
-// (rocky creatures are Earth, thorny critters are Grass) so matchups read at a glance.
+// one kind of enemy a timed wave can spawn. the element should match the art
+// (rocky creatures are Earth, thorny critters are Grass) so you can read the matchups quickly
 [System.Serializable]
 public class EnemySpawnEntry
 {
@@ -103,14 +103,14 @@ public class WaveManager : MonoBehaviour
         "the player can swap Beasts and line up the first shot.")]
     public bool planBeforeEachWave = true;
 
-    // Which StageWaveLayouts version wrote this scene's waves (0 = hand-made). The editor reads it to
-    // bring stages 1-8 up to date by itself, once per layout version, so no menu step is needed.
+    // which StageWaveLayouts version wrote this scene's waves (0 = made by hand). the editor reads it
+    // to update stages 1-8 by itself, once per layout version, so no menu step is needed
     [HideInInspector] public int timedLayoutVersion;
 
     private const int MaxPlanRows = 4;
     private const float PlanCardDelay = 0.6f;
-    // The one Grass enemy: the shared critter prefab (Enemy_1, named only by a number). Boss-wave
-    // minions and timed waves both show this name, so the card never lists it under two names.
+    // the only Grass enemy: the shared critter prefab (Enemy_1, it only has a number as a name). boss wave
+    // minions and timed waves both show this name, so the card never lists it under two names
     private const string SharedCritterName = "Thorn Pup";
 
     private int currentWaveIndex = -1;
@@ -145,10 +145,10 @@ public class WaveManager : MonoBehaviour
         public string name;
         public ElementType element;
         public bool boss;
-        public int count;       // 0 = random filler of a timed wave
-        public float share;     // filler weight share, 0..1
-        public int kinds;       // enemy kinds folded into this row (rows merged by element)
-        public string trait;    // "TOUGH" / "FAST" for kinds with their own stats, else null
+        public int count; // 0 = random filler of a timed wave
+        public float share; // how much of the filler this is, 0..1
+        public int kinds; // enemy kinds merged into this row (rows merged by element)
+        public string trait; // "TOUGH" / "FAST" for kinds with their own stats, else null
     }
 
     private struct ScheduledSpawn
@@ -165,8 +165,8 @@ public class WaveManager : MonoBehaviour
     private float timedWaveRemaining;
     private float timedWaveDuration;
 
-    // Compact wave status chip shown at the top while a wave runs (the big banner only
-    // shows for a moment at the start).
+    // small wave status chip shown at the top while a wave runs (the big banner only shows
+    // for a moment at the start)
     private RectTransform waveChipRect;
     private CanvasGroup waveChipGroup;
     private Image waveChipImage;
@@ -219,18 +219,18 @@ public class WaveManager : MonoBehaviour
     public int CurrentWaveNumber => currentWaveIndex + 1;
     public int WaveCount => waves != null ? waves.Length : 0;
 
-    // The running stage's wave manager (one per stage scene).
+    // the wave manager of the stage that's running (one per stage scene)
     public static WaveManager Current { get; private set; }
 
-    // No wave is running yet (before the first plan card, while it waits for READY, and between
-    // waves): launching waits until the player taps READY.
+    // no wave is running yet (before the first plan card, while it waits for READY, and between
+    // waves): you can't launch until the player taps READY
     public bool IsAwaitingReady => planBeforeEachWave && waveCanvasRect != null && !waveInProgress &&
         !allWavesComplete && !waveSpawnFailed;
     public bool IsWaveInProgress => waveInProgress;
     public RectTransform ReadyButtonRect => planVisible ? planButtonRect : null;
 
-    // Wave flow for the tutorial and the stage HUD: plan card shown (wave index), wave started
-    // (wave index, boss wave), wave cleared (wave index, last wave).
+    // wave events for the tutorial and the stage HUD: plan card shown (wave number), wave started
+    // (wave number, boss wave), wave cleared (wave number, last wave)
     public static event System.Action<int> PlanShown;
     public static event System.Action<int, bool> WaveStarted;
     public static event System.Action<int, bool> WaveCleared;
@@ -248,7 +248,7 @@ public class WaveManager : MonoBehaviour
             Current = null;
     }
 
-    // Someone tried to launch before READY: the button bounces to point the way.
+    // someone tried to launch before READY: the button bounces to show where to tap
     public void NudgeReady()
     {
         if (!IsAwaitingReady)
@@ -393,8 +393,8 @@ public class WaveManager : MonoBehaviour
 
             waveInProgress = false;
 
-            // Wave cleared: the Beast flies home to the pad, ready for the next plan card. The last
-            // wave goes straight to the stage result instead.
+            // wave cleared: the Beast flies back to the pad, ready for the next plan card.
+            // the last wave goes straight to the stage result instead
             bool lastWave = index == waves.Length - 1;
             if (!lastWave)
             {
@@ -406,7 +406,7 @@ public class WaveManager : MonoBehaviour
             if (WaveCleared != null)
                 WaveCleared(index, lastWave);
 
-            // With planning on, the plan card (and its READY button) replaces the countdown.
+            // with planning on, the plan card (and its READY button) replaces the countdown
             if (index < waves.Length - 1 && !planBeforeEachWave)
             {
                 nextWaveTimer = delayBetweenWaves;
@@ -517,7 +517,7 @@ public class WaveManager : MonoBehaviour
                 {
                     enemy.SetBoss(wave.bossName, wave.bossHealthBonus, wave.speedMultiplier);
                     enemy.transform.localScale = Vector3.one * 1.5f;
-                    // Voltrex / Maelith / Pyrax (chapters 3-5); other bosses bring their own ability.
+                    // Voltrex / Maelith / Pyrax (chapters 3-5), the other bosses bring their own ability
                     ChapterBossAbility.AttachIfChapterBoss(enemy, this, wave);
                 }
                 else
@@ -554,9 +554,9 @@ public class WaveManager : MonoBehaviour
         }
     }
 
-    // Keeps spawning random enemies from the wave's table until its time runs out.
-    // Fixed-count entries (e.g. "exactly 4 Earth scouts") are spread over the time and
-    // always all spawn, even if the on-field cap delays them past the end.
+    // keeps spawning random enemies from the wave's table until its time runs out.
+    // fixed count entries (like "exactly 4 Earth scouts") are spread over the time and
+    // always all spawn, even if the limit on the field delays them past the end
     IEnumerator SpawnTimedWave(EnemyWave wave)
     {
         waveSpawnFailed = false;
@@ -631,7 +631,7 @@ public class WaveManager : MonoBehaviour
             EnemySpawnEntry chosen = wave.spawnTable[entryIndex];
             if (!TryFindTimedSpawnPosition(out Vector3 position))
             {
-                nextSpawn = elapsed + 0.25f;   // the spawn area is crowded; try again shortly
+                nextSpawn = elapsed + 0.25f; // the spawn area is crowded, try again soon
                 continue;
             }
 
@@ -714,8 +714,8 @@ public class WaveManager : MonoBehaviour
         return false;
     }
 
-    // An enemy that joins the running wave mid-route (Pyrax's Ember Call). The wave waits for it
-    // like any other enemy.
+    // an enemy that joins the running wave in the middle of the path (Pyrax's Ember Call).
+    // the wave waits for it like any other enemy
     public Enemy SpawnReinforcement(Enemy prefab, ElementType element, Sprite sprite, float scale,
         Vector3 position, int routeIndex)
     {
@@ -747,11 +747,11 @@ public class WaveManager : MonoBehaviour
             SpriteRenderer renderer = enemy.GetComponent<SpriteRenderer>();
             if (renderer != null)
                 renderer.sprite = spriteOverride;
-            // A cracked "damaged" sprite belongs to the prefab's own art, not the override.
+            // a cracked "damaged" sprite belongs to the prefab's own art, not the override
             EnemyDamagedSprite damaged = enemy.GetComponent<EnemyDamagedSprite>();
             if (damaged != null)
                 damaged.damagedSprite = null;
-            // Override art is painted in its element's colours; an element tint would only muddy it.
+            // override art is already painted in its element's colors, an element tint would just make it muddy
             enemy.elementTintStrength = 0f;
             enemy.SetElementForEditor(enemy.element);
         }
@@ -816,7 +816,7 @@ public class WaveManager : MonoBehaviour
         return availableElements[Random.Range(0, availableElements.Length)];
     }
 
-    // Rolls each spawn's element up front, so the plan card shows exactly what will come.
+    // picks each spawn's element first, so the plan card shows exactly what will come
     void PlanWaveElements(EnemyWave wave)
     {
         plannedElements.Clear();
@@ -840,8 +840,8 @@ public class WaveManager : MonoBehaviour
             (wave.isBoss && amount == 1);
     }
 
-    // "Enemy_DustScout" -> "Dust Scout"; a single-type wave with an authored name
-    // ("Thicket Stragglers") uses that name instead.
+    // "Enemy_DustScout" -> "Dust Scout". a wave with only one type and its own name
+    // ("Thicket Stragglers") uses that name instead
     static string GetEnemyDisplayName(EnemyWave wave, Enemy prefab)
     {
         if (!string.IsNullOrWhiteSpace(wave.enemyDisplayName))
@@ -936,8 +936,8 @@ public class WaveManager : MonoBehaviour
         return null;
     }
 
-    // More enemy kinds than rows: show one row per element instead ("Dust Scout & Burrower +1"),
-    // so an element (e.g. a couple of Electric scouts) is never folded under another one.
+    // more enemy kinds than rows: show one row per element instead ("Dust Scout & Burrower +1"),
+    // so an element (like a couple of Electric scouts) never gets hidden under another one
     void MergePlanGroupsByElement()
     {
         if (planGroups.Count <= MaxPlanRows)
@@ -965,7 +965,7 @@ public class WaveManager : MonoBehaviour
                 if (target.kinds < 2)
                     target.name += " & " + group.name;
                 if (target.trait != group.trait)
-                    target.trait = null;   // a mix of tough and quick kinds: no single trait to show
+                    target.trait = null; // a mix of tough and fast kinds: no single trait to show
             }
             target.kinds++;
             target.count += group.count;
@@ -1019,7 +1019,7 @@ public class WaveManager : MonoBehaviour
             group.count++;
         }
 
-        // Bosses first (they decide the wave); everything else keeps its spawn order.
+        // bosses first (they decide the wave), everything else keeps its spawn order
         int insertAt = 0;
         for (int i = 0; i < planGroups.Count; i++)
         {
@@ -1073,7 +1073,7 @@ public class WaveManager : MonoBehaviour
         planConfirmed = true;
     }
 
-    // Refreshes the rows when the player swaps Beasts, so the "ON PAD" pill always reflects the pad.
+    // refreshes the rows when the player swaps Beasts, so the "ON PAD" pill always shows who's on the pad
     void UpdatePlanCard()
     {
         LayoutPlanCard(false);
@@ -1097,7 +1097,7 @@ public class WaveManager : MonoBehaviour
             PlanGroup group = planGroups[row];
             int count = group.count;
             float share = group.share;
-            // Fold anything past the last row into it, so nothing is hidden.
+            // put anything past the last row into it, so nothing is hidden
             if (row == MaxPlanRows - 1 && planGroups.Count > MaxPlanRows)
             {
                 for (int extra = MaxPlanRows; extra < planGroups.Count; extra++)
@@ -1178,7 +1178,7 @@ public class WaveManager : MonoBehaviour
         cardImage.sprite = HudVisualUtility.RoundedSprite();
         cardImage.type = Image.Type.Sliced;
         cardImage.color = new Color32(34, 42, 31, 246);
-        cardImage.raycastTarget = true;   // taps on the card never start a launch
+        cardImage.raycastTarget = true; // taps on the card never start a launch
         planCardOutline = HudVisualUtility.AddOutline(planCard, UiTheme.PanelBorder, new Vector2(5f, -5f));
         Shadow cardShadow = UiTheme.GetOrAddEffect<Shadow>(planCard);
         cardShadow.effectColor = new Color(0f, 0f, 0f, 0.45f);
@@ -1265,8 +1265,8 @@ public class WaveManager : MonoBehaviour
         rect.pivot = new Vector2(0.5f, 1f);
     }
 
-    // Same 1080x1920 reference scaling as the wave banner. Text never auto-sizes below
-    // about 24 reference px, so it stays readable on a phone.
+    // same 1080x1920 reference scaling as the wave banner. text never auto-sizes below about
+    // 24 reference px, so it stays readable on a phone
     void LayoutPlanCard(bool force)
     {
         if (planCardRect == null || waveCanvasRect == null)
@@ -1479,7 +1479,7 @@ public class WaveManager : MonoBehaviour
         waveChipBarFill.anchorMax = Vector2.one;
         waveChipBarFill.offsetMin = Vector2.zero;
         waveChipBarFill.offsetMax = Vector2.zero;
-        chip.transform.SetAsFirstSibling();   // under buttons and cards
+        chip.transform.SetAsFirstSibling(); // under buttons and cards
     }
 
     private void LayoutWaveChip(float scale)
@@ -1513,8 +1513,8 @@ public class WaveManager : MonoBehaviour
         track.anchoredPosition = new Vector2(0f, 12f * scale);
     }
 
-    // Persistent wave status: time left while a timed wave is still spawning,
-    // then the number of enemies left to clear.
+    // wave status that stays up: time left while a timed wave is still spawning,
+    // then the number of enemies left to clear
     private void UpdateWaveChip()
     {
         if (waveChipGroup == null)
@@ -1604,7 +1604,7 @@ public class WaveManager : MonoBehaviour
             {
                 title = "WAVE " + CurrentWaveNumber + " / " + waves.Length;
                 string waveName = waves[currentWaveIndex] != null ? waves[currentWaveIndex].waveName : null;
-                // Show authored wave names ("Rollstones") but not the generic defaults.
+                // show wave names we wrote ("Rollstones") but not the default ones
                 bool namedWave = !string.IsNullOrWhiteSpace(waveName) &&
                     waveName != "Wave" && !waveName.EndsWith(" Wave");
                 detail = (namedWave ? waveName + "  ·  " : string.Empty) +

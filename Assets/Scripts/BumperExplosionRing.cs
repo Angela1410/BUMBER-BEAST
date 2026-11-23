@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// Short burst drawn when a red bumper explodes: a filled flash that expands to the
-// explosion radius while fading out. Self-contained; destroys itself when done.
+// the quick burst when a red bumper explodes: a flash that grows to the explosion size while it
+// fades out. it deletes itself when it's done
 public sealed class BumperExplosionRing : MonoBehaviour
 {
     private const float Duration = 0.28f;
@@ -50,14 +50,14 @@ public sealed class BumperExplosionRing : MonoBehaviour
         float eased = 1f - (1f - t) * (1f - t);
         float spriteSize = flash.sprite != null ? Mathf.Max(0.001f, flash.sprite.bounds.size.x) : 1f;
 
-        // Flash: bright core that shrinks slightly and fades fast.
+        // flash: bright center that shrinks a bit and fades fast
         float flashDiameter = radius * 1.1f * (1f - 0.3f * eased);
         flash.transform.localScale = Vector3.one * (flashDiameter / spriteSize);
         Color flashColor = Color.Lerp(color, Color.white, 0.6f);
         flashColor.a = 0.85f * (1f - t);
         flash.color = flashColor;
 
-        // Ring: expands out to the full radius while thinning to nothing.
+        // ring: grows out to the full size while it gets thinner and disappears
         float ringDiameter = Mathf.Lerp(radius * 0.4f, radius * 2f, eased);
         ring.transform.localScale = Vector3.one * (ringDiameter / spriteSize);
         Color ringColor = color;

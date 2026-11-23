@@ -4,15 +4,15 @@ using UnityEngine.UI;
 
 public enum UiButtonRole
 {
-    Primary,    // main call to action (orange)
-    Secondary,  // navigation / supporting action (teal)
-    Neutral,    // cards and quiet actions (dark panel)
-    Success     // cleared / owned (green)
+    Primary, // main action (orange)
+    Secondary, // navigation / supporting action (teal)
+    Neutral, // cards and quiet actions (dark panel)
+    Success // cleared / owned (green)
 }
 
-// One place for the colors, typography and button states used by the hub,
-// shop, chapter selector and stage-result screens, so every screen matches
-// the existing in-stage HUD (cream bold text, dark brown outlines).
+// one place for the colors, text styles and button states used by the map, shop, chapter
+// select and stage result screens, so every screen matches the HUD in the stage
+// (cream bold text, dark brown outlines)
 public static class UiTheme
 {
     public static readonly Color32 Background = new Color32(24, 40, 27, 255);
@@ -40,8 +40,8 @@ public static class UiTheme
         }
     }
 
-    // Styles a button and guarantees it has exactly one TMP label.
-    // Existing onClick listeners are untouched.
+    // styles a button and makes sure it has exactly one TMP label.
+    // existing onClick listeners don't change
     public static TMP_Text StyleButton(Button button, UiButtonRole role, bool circular = false, float fontSize = 30f)
     {
         if (button == null)
@@ -77,8 +77,8 @@ public static class UiTheme
         return label;
     }
 
-    // Returns the button's single TMP label, converting a legacy Text label if needed
-    // and hiding every other label so nothing is drawn twice.
+    // returns the button's one TMP label, converts an old Text label if needed,
+    // and hides every other label so nothing is drawn twice
     public static TMP_Text GetOrCreateLabel(Button button, float fontSize = 30f)
     {
         if (button == null)
@@ -87,10 +87,10 @@ public static class UiTheme
         Transform labelTransform = button.transform.Find("ThemeLabel");
         TMP_Text label = labelTransform != null ? labelTransform.GetComponent<TMP_Text>() : null;
         if (label != null)
-            return label;   // already themed; don't re-hide extra card content
+            return label; // already styled, don't hide extra card content again
 
         {
-            // Reuse an existing TMP child label (stage-result buttons already use TMP).
+            // reuse a TMP label that's already there (the stage result buttons already use TMP)
             foreach (TMP_Text candidate in button.GetComponentsInChildren<TMP_Text>(true))
             {
                 if (candidate.transform.parent == button.transform)
@@ -170,8 +170,8 @@ public static class UiTheme
         return image;
     }
 
-    // Outline and Shadow both derive from Shadow, so GetComponent<Shadow>()
-    // can return the Outline. Look for the exact type instead.
+    // Outline and Shadow both come from Shadow, so GetComponent<Shadow>() can return the Outline.
+    // so we look for the exact type instead
     public static T GetOrAddEffect<T>(GameObject target) where T : Shadow
     {
         foreach (Shadow effect in target.GetComponents<Shadow>())
@@ -183,7 +183,7 @@ public static class UiTheme
         return target.AddComponent<T>();
     }
 
-    // Plain text on purpose: the HUD font has no coin/bullet glyph.
+    // plain text on purpose: the HUD font has no coin or bullet symbol
     public static string Coin(int amount)
     {
         return "<color=#FFCC42>" + amount + " COINS</color>";

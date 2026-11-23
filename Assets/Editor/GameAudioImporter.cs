@@ -1,11 +1,10 @@
 using UnityEditor;
 using UnityEngine;
 
-// Import settings for the game's sounds in Assets/Resources/Audio (played by GameAudio):
-//  Music_*.wav  compressed in memory (Vorbis), loaded in the background, so a scene change
-//               never stalls on decoding a whole loop.
-//  Sfx_*.wav    decompressed on load, so effects start with no delay.
-// Any replacement file dropped in under the same name gets the same settings.
+// import settings for our sounds in Assets/Resources/Audio (GameAudio plays them):
+// Music_*.wav is compressed (Vorbis) and loads in the background, so changing scenes never freezes
+// Sfx_*.wav is unpacked when it loads, so effects play with no delay
+// if you drop in a new file with the same name it gets the same settings
 public class GameAudioImporter : AssetPostprocessor
 {
     private const string AudioFolder = "Assets/Resources/Audio/";

@@ -2,10 +2,10 @@
 using UnityEditor;
 using UnityEngine;
 
-// Full-screen art is imported as a single sprite with no mipmaps. Title/UI art
-// stays uncompressed so text in it is crisp; painted stage backgrounds use
-// high-quality compression (they fill the screen on mobile, so memory matters).
-// Runs automatically whenever Unity imports a texture in these folders.
+// full screen art is imported as one sprite with no mipmaps. title/UI art stays uncompressed
+// so the text in it stays sharp. painted stage backgrounds use high quality compression
+// (they fill the whole phone screen, so memory matters). runs by itself whenever Unity
+// imports a texture in these folders
 public sealed class TitleArtPostprocessor : AssetPostprocessor
 {
     private const string UiArtFolder = "Assets/Resources/UI/";

@@ -19,10 +19,10 @@ public class StageManager : MonoBehaviour
     public TMPro.TMP_Text winTitleText;
     public TMPro.TMP_Text loseTitleText;
 
-    // Written by the editor's ChapterBuilder for stages it builds from the template (0 = hand-made).
+    // ChapterBuilder writes this for stages it builds from the template (0 = made by hand)
     [HideInInspector] public int stageBuildVersion;
 
-    // Destroyed clip (0.5 s) plus a short beat on the rubble before the lose card appears.
+    // the break animation (0.5 s) plus a short pause on the rubble before the lose card shows
     private const float BarrierBreakRevealSeconds = 1.1f;
     private const float ResultCardHeight = 700f;
     private const float WinCardHeight = 880f;
@@ -34,7 +34,7 @@ public class StageManager : MonoBehaviour
 
     private bool stageFinished = false;
 
-    // Won, lost or failed to set up: the result card is (about to be) showing.
+    // won, lost or failed to set up: the result card is showing (or about to)
     public bool IsFinished => stageFinished;
     private bool stageTimePaused;
     private int barrierHealth;
@@ -94,7 +94,7 @@ public class StageManager : MonoBehaviour
             barrierVisuals = barrierObject.GetComponent<BarrierVisuals>();
         }
 
-        // Settings > DIFFICULTY: a sturdier (EASY) or weaker (HARD, HELL) barrier.
+        // Settings > DIFFICULTY: a stronger barrier on EASY, a weaker one on HARD and HELL
         barrierMaxHealth = Mathf.Max(2, barrierMaxHealth + Difficulty.BarrierBonus);
         barrierHealth = barrierMaxHealth;
 
@@ -116,7 +116,7 @@ public class StageManager : MonoBehaviour
         UpdateBarrierText();
         CreateBarrierHud();
 
-        // Cosmetic only: a styling problem must never stop the stage from running.
+        // only for looks: a styling problem must never stop the stage from running
         try
         {
             StyleResultPanels();
@@ -136,20 +136,22 @@ public class StageManager : MonoBehaviour
             barrierVisuals.ShowHealth(barrierHealth, barrierMaxHealth);
     }
 
+    // runs every frame and checks if we won or lost the stage
     void Update()
     {
         UpdateBarrierHud();
         if (stageFinished)
             return;
 
-        // Keep the clock on the stage speed (normal, or a tutorial lesson's slow motion), so an
-        // interrupted effect can never leave the game running slow.
+        // keep the clock on the stage speed (normal, or a tutorial lesson's slow motion), so an effect
+        // that got cut off can never leave the game running slow
         if ((pauseMenu == null || !pauseMenu.IsPaused) && !HitStop.IsActive && !LoadingScreen.IsLoading &&
             !Mathf.Approximately(Time.timeScale, GameTime.BaseScale))
             Time.timeScale = GameTime.BaseScale;
 
         if (waveManager != null)
         {
+            // LOSE: an enemy reached the barrier and it broke
             if (EnemyReachedBarrier())
             {
                 StageFailed();
@@ -162,6 +164,7 @@ public class StageManager : MonoBehaviour
                 return;
             }
 
+            // WIN: every wave is done and there's no boss left
             if (waveManager.IsComplete && !HasActiveBoss())
             {
                 StageComplete();
@@ -171,6 +174,7 @@ public class StageManager : MonoBehaviour
             return;
         }
 
+        // (only when there's no wave manager) WIN when no enemies are left
         if (Enemy.ActiveEnemies.Count == 0)
         {
             StageComplete();
@@ -196,12 +200,13 @@ public class StageManager : MonoBehaviour
         return false;
     }
 
+    // checks every enemy: did it reach the barrier? returns true if the barrier broke
     bool EnemyReachedBarrier()
     {
         System.Collections.Generic.List<Enemy> enemies = Enemy.ActiveEnemies;
         bool barrierDestroyed = false;
 
-        // Destroy() inside the loop is deferred to end of frame, so the list is stable here.
+        // Destroy() only happens at the end of the frame, so the list doesn't change while we loop
         for (int index = 0; index < enemies.Count; index++)
         {
             Enemy enemy = enemies[index];
@@ -213,10 +218,12 @@ public class StageManager : MonoBehaviour
                 ? enemyCollider.bounds.min.y
                 : enemy.transform.position.y;
 
+            // the bottom of the enemy touched the barrier line
             if (enemyBottom <= barrierY + barrierContactOffset)
             {
                 enemy.MarkBarrierReached();
                 Vector3 impact = enemy.transform.position;
+                // each enemy takes 1 barrier health (a boss takes all of it)
                 barrierHealth -= enemy.destroysBarrierOnReach ? barrierHealth : 1;
                 UpdateBarrierText();
                 barrierFlashUntil = Time.unscaledTime + 0.15f;
@@ -432,6 +439,7 @@ public class StageManager : MonoBehaviour
         barrierLayoutApplied = true;
     }
 
+    // called when you win: pays the coins, works out the stars and shows the win card
     void StageComplete()
     {
         stageFinished = true;
@@ -440,10 +448,11 @@ public class StageManager : MonoBehaviour
             pauseMenu.SetAvailable(false);
 
         bool firstClear = GameProgress.Instance != null && !GameProgress.Instance.IsStageRewarded(stageNumber);
+        // save the win: unlock the next stage and pay the first clear reward
         if (GameProgress.Instance != null)
             GameProgress.Instance.CompleteStage(stageNumber, Difficulty.ScaleReward(stageReward));
 
-        // Stars (barrier left) and bonus coins: every NEW star pays, and so do combos, on replays too.
+        // stars (how much barrier is left) and bonus coins: every NEW star pays, and combos pay too, even on replays
         resultStars = StageStats.StarsFor(barrierHealth, barrierMaxHealth);
         resultNewStars = GameProgress.Instance != null ? GameProgress.Instance.RecordStars(stageNumber, resultStars) : 0;
         int starCoins = Difficulty.ScaleReward(resultNewStars * StarCoinReward);
@@ -486,7 +495,7 @@ public class StageManager : MonoBehaviour
                     GameSettings.PlayerName + "!</color></size>";
         }
 
-        // First win over a chapter boss: free that chapter's Beast before the result card.
+        // first win against a chapter boss: free that chapter's Beast before the result card
         if (bossStage && chapter.hasRescue && ThistleRescueSequence.ShouldPlayFor(chapter.rescue))
         {
             ThistleRescueSequence.PlayFor(chapter.rescue, FindBeastArt(chapter.rescue), ShowWinPanel);
@@ -506,8 +515,8 @@ public class StageManager : MonoBehaviour
 
         winPanel.SetActive(true);
 
-        // TMP labels only initialise once their panel is active, so text styling
-        // happens here rather than in Awake (styling inactive TMP text throws).
+        // TMP labels only start once their panel is active, so we style the text here instead of
+        // in Awake (styling inactive TMP text throws an error)
         if (!winTextStyled)
         {
             winTextStyled = true;
@@ -535,8 +544,8 @@ public class StageManager : MonoBehaviour
             ResultStars.Show(card, new Vector2(0f, card.sizeDelta.y * 0.5f - 215f), resultStars, resultNewStars);
     }
 
-    // The taller win card, top to bottom: title, star row, the scene's message ("Great job!"),
-    // the reward lines, then the buttons.
+    // the taller win card, top to bottom: title, stars, the scene's message ("Great job!"),
+    // the reward lines, then the buttons
     void LayoutWinCard(RectTransform card)
     {
         card.sizeDelta = new Vector2(card.sizeDelta.x, Mathf.Max(card.sizeDelta.y, WinCardHeight));
@@ -554,7 +563,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    // The rescued Beast's art: its painted sprite, or its placeholder while it has none.
+    // the rescued Beast's art: its painted sprite, or its placeholder if it has none yet
     Sprite FindBeastArt(BeastId beast)
     {
         LaunchController launcher = launchController != null
@@ -573,8 +582,8 @@ public class StageManager : MonoBehaviour
         return portrait != null ? portrait : PlaceholderArt.BeastIdle(beast);
     }
 
-    // Restyles the scene's default-looking win/lose panels to match the HUD.
-    // Only visuals change: button listeners, names and texts are kept.
+    // restyles the scene's plain looking win/lose panels to match the HUD.
+    // only the looks change: button listeners, names and texts stay the same
     void StyleResultPanels()
     {
         RectTransform winCard = winPanel != null ? winPanel.GetComponent<RectTransform>() : null;
@@ -596,7 +605,7 @@ public class StageManager : MonoBehaviour
 
             if (fullScreen)
             {
-                // The lose panel is a full-screen overlay: dim it and add a card behind its content.
+                // the lose panel covers the whole screen: darken it and add a card behind its content
                 if (loseBackground != null)
                 {
                     loseBackground.sprite = null;
@@ -619,8 +628,8 @@ public class StageManager : MonoBehaviour
                 for (int index = loseRect.childCount - 1; index >= 0; index--)
                 {
                     Transform child = loseRect.GetChild(index);
-                    // The card is centered where the panel is, so center-anchored
-                    // children keep their exact layout with a local reparent.
+                    // the card is centered where the panel is, so children anchored to the center keep
+                    // their exact layout when we move them into it
                     if (child != loseCard)
                         child.SetParent(loseCard, false);
                 }
@@ -640,8 +649,8 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    // A full-screen dimmer placed directly behind the card (as a sibling, so it
-    // never darkens the card itself). Shown/hidden together with the card.
+    // a full screen darkener right behind the card (as a sibling, so it never darkens the card itself).
+    // shown and hidden together with the card
     static GameObject AddResultDimmer(RectTransform card)
     {
         Transform parent = card.parent;
@@ -662,7 +671,7 @@ public class StageManager : MonoBehaviour
         rect.offsetMax = new Vector2(200f, 200f);
         Image image = dimmer.GetComponent<Image>();
         image.color = new Color(0.04f, 0.03f, 0.03f, 0.72f);
-        image.raycastTarget = true;   // blocks the HUD while the result is shown
+        image.raycastTarget = true; // blocks the HUD while the result is showing
         dimmer.SetActive(card.gameObject.activeSelf);
         return dimmer;
     }
@@ -722,7 +731,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    // A quiet "WORLD MAP" button under the result card's main buttons.
+    // a quiet "WORLD MAP" button under the result card's main buttons
     void AddMapButton(RectTransform card)
     {
         if (card == null || card.Find("MapButton") != null)
@@ -759,6 +768,7 @@ public class StageManager : MonoBehaviour
         return label;
     }
 
+    // called when you lose: shows the lose card with a tip
     void StageFailed()
     {
         stageFinished = true;
@@ -774,8 +784,8 @@ public class StageManager : MonoBehaviour
             if (loseMessageText != null)
                 loseMessageText.text = "The enemies broke through your barrier.\n<color=#B4EC8C>TIP: " + LoseTip() + "</color>";
 
-            // Let the barrier's break animation play (it runs on unscaled time) before the
-            // lose card covers the screen.
+            // let the barrier's break animation play (it uses unscaled time) before
+            // the lose card covers the screen
             if (barrierVisuals != null && barrierHealth <= 0)
                 StartCoroutine(ShowLosePanelAfterBreak());
             else
@@ -794,7 +804,7 @@ public class StageManager : MonoBehaviour
         "Pull back farther for a stronger, straighter shot."
     };
 
-    // A different hint after each loss: the stage's matchup advice, then general tips in turn.
+    // a different hint after each loss: the stage's matchup advice first, then general tips in turn
     string LoseTip()
     {
         int attempt = lossesThisSession++;
@@ -847,12 +857,12 @@ public class StageManager : MonoBehaviour
             Time.timeScale = 1f;
     }
 
-    // Searches this stage's own scene. (While a stage is still loading, the "active" scene can be
-    // the one being left, so searching that one missed objects such as stage 2's BarrierHealthText.)
+    // searches this stage's own scene. (while a stage is still loading, the "active" scene can be
+    // the old one, so searching that one missed things like stage 2's BarrierHealthText)
     private GameObject FindSceneObjectByName(string objectName)
     {
-        // Every loaded object (inactive ones too), kept to this stage's scene. This works during
-        // Awake, when the scene may not count as loaded yet for GetRootGameObjects.
+        // every loaded object (inactive ones too), but only from this stage's scene. this works in
+        // Awake, when the scene might not count as loaded yet for GetRootGameObjects
         Scene ownScene = gameObject.scene;
         foreach (Transform candidate in FindObjectsByType<Transform>(FindObjectsInactive.Include))
         {
@@ -889,7 +899,7 @@ public class StageManager : MonoBehaviour
             Debug.LogError("The GameHub scene is not in the Build Settings, so the map cannot open.", this);
     }
 
-    // After a chapter's boss (and after the last stage) the map opens to show what unlocked.
+    // after a chapter's boss (and after the last stage) the map opens to show what got unlocked
     public void NextStage()
     {
         if (ChapterData.IsBossStage(stageNumber) && Application.CanStreamedLevelBeLoaded(LoadingScreen.HubScene))

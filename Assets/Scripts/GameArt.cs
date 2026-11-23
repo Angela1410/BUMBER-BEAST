@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Shared, cached look-ups for the painted stage art in Assets/Resources/Art (the barrier, the
-// launcher, Terrathorn) and the glow materials used by the corruption, barrier and launcher
-// effects. Everything is created once and reused, so per-frame code never allocates.
+// shared lookups for the painted stage art in Assets/Resources/Art (barrier, launcher, Terrathorn)
+// and the glow materials for the corruption, barrier and launcher effects. everything is made once
+// and reused, so code that runs every frame doesn't make new stuff
 public static class GameArt
 {
     private const string ArtFolder = "Art/";
@@ -16,8 +16,8 @@ public static class GameArt
     private static Material additiveGlow;
     private static Material silhouetteGlow;
 
-    // Painted art by file name; null (without a warning) when the file is not in the project,
-    // so callers keep their previous look.
+    // painted art by file name. gives null (no warning) if the file isn't in the project,
+    // so the caller keeps its old look
     public static Sprite Find(string name)
     {
         if (string.IsNullOrEmpty(name))
@@ -30,11 +30,10 @@ public static class GameArt
         return sprite;
     }
 
-    // Art set of the running stage: chapters 3-5 (stages 9-20) have their own barrier and launcher
-    // in Resources/Art/Electric, /Water and /Fire ("" = the shared crystal set when a stage has no
-    // StageManager). Chapters 1 and 2 return null: they keep the barrier and launcher drawn for
-    // them (the mossy log and vine stumps, the Earth wall and stone posts), so no painted layer
-    // is added there.
+    // which art set the current stage uses: chapters 3-5 (stages 9-20) have their own barrier and
+    // launcher in Resources/Art/Electric, /Water and /Fire ("" = the shared crystal set if the stage
+    // has no StageManager). chapters 1 and 2 return null: they keep their own drawn barrier and
+    // launcher (the mossy log and vine stumps, the Earth wall and stone posts), so no painted layer is added
     public static string StageArtFolder()
     {
         StageManager stage = Object.FindAnyObjectByType<StageManager>();
@@ -51,14 +50,14 @@ public static class GameArt
         }
     }
 
-    // True when the glow shader compiled for this device. Without it the effects fall back to
-    // the plain sprite material (no silhouette outlines).
+    // true if the glow shader works on this device. without it the effects use the normal
+    // sprite material (no outline glow)
     public static bool HasGlowShader
     {
         get { return GlowShader() != null; }
     }
 
-    // Soft glow that blends normally (keeps its colour on light backgrounds).
+    // soft glow that blends normally (keeps its color on light backgrounds)
     public static Material AlphaGlow(Material fallback)
     {
         if (alphaGlow == null)
@@ -66,7 +65,7 @@ public static class GameArt
         return alphaGlow != null ? alphaGlow : fallback;
     }
 
-    // Brightening glow for energy (crystals, sparks, motes).
+    // brightening glow for energy (crystals, sparks, particles)
     public static Material AdditiveGlow(Material fallback)
     {
         if (additiveGlow == null)
@@ -74,7 +73,7 @@ public static class GameArt
         return additiveGlow != null ? additiveGlow : fallback;
     }
 
-    // Draws only a sprite's shape in the renderer colour; null when the shader is unavailable.
+    // draws only the sprite's shape in the renderer color, null if the shader can't be used
     public static Material SilhouetteGlow()
     {
         if (silhouetteGlow == null)
@@ -118,7 +117,7 @@ public static class GameArt
         return material;
     }
 
-    // A renderer on its own child object, for effect layers.
+    // a sprite on its own child object, for effect layers
     public static SpriteRenderer AddLayer(Transform parent, string name, Sprite sprite, Material material,
         SpriteRenderer sortLike, int orderOffset)
     {

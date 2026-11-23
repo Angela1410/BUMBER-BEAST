@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// The POWER BUMPER (red bumper) unleashes the power of whichever Beast hits it, aimed at the
-// enemies on the field so it never misses:
-//   Choma    FIREBALL VOLLEY  homing fireballs into the three nearest enemies, each a wide blast
-//   Thistle  WILD ROOTS       every enemy is rooted in place (and nicked)
-//   Mossback EARTHQUAKE       every enemy is knocked back up the lane
-//   Voltis   THUNDER CHAIN    lightning jumps through up to six enemies
-//   Ripple   TIDAL WAVE       a wave rolls across the whole field
-// Element advantage adds +1 damage, as with normal hits. The bumper only fires while there is an
-// enemy to hit (Bumper checks HasTargets first).
+// the POWER BUMPER (red bumper) uses the power of whichever Beast hits it, aimed at the enemies
+// on the field so it never misses:
+// Choma: FIREBALL VOLLEY, homing fireballs into the three closest enemies, each one a big blast
+// Thistle: WILD ROOTS, every enemy gets stuck in place (and takes a small hit)
+// Mossback: EARTHQUAKE, every enemy gets knocked back up the path
+// Voltis: THUNDER CHAIN, lightning jumps through up to six enemies
+// Ripple: TIDAL WAVE, a wave rolls across the whole field
+// element advantage adds +1 damage, same as normal hits. the bumper only fires when there's
+// an enemy to hit (Bumper checks HasTargets first)
 public class PowerBurst : MonoBehaviour
 {
     private const int SortingOrder = 40;
@@ -81,7 +81,7 @@ public class PowerBurst : MonoBehaviour
         enemy.TakeDamage(damage + (super ? 1 : 0), super);
     }
 
-    // Live targets, nearest to "from" first.
+    // enemies that are alive, closest to "from" first
     static List<Enemy> Targets(Vector3 from)
     {
         List<Enemy> found = new List<Enemy>();
@@ -101,7 +101,7 @@ public class PowerBurst : MonoBehaviour
             Destroy(gameObject);
     }
 
-    // ------------------------------------------------------------------ Choma
+    // --- Choma ---
 
     IEnumerator FireballVolley(Vector3 origin)
     {
@@ -154,7 +154,7 @@ public class PowerBurst : MonoBehaviour
         running--;
     }
 
-    // ------------------------------------------------------------------ Thistle
+    // --- Thistle ---
 
     IEnumerator WildRoots(Vector3 origin)
     {
@@ -174,7 +174,7 @@ public class PowerBurst : MonoBehaviour
         Finish();
     }
 
-    // ------------------------------------------------------------------ Mossback
+    // --- Mossback ---
 
     IEnumerator Earthquake(Vector3 origin)
     {
@@ -191,7 +191,7 @@ public class PowerBurst : MonoBehaviour
         Finish();
     }
 
-    // ------------------------------------------------------------------ Voltis
+    // --- Voltis ---
 
     IEnumerator ThunderChain(Vector3 origin)
     {
@@ -241,7 +241,7 @@ public class PowerBurst : MonoBehaviour
         Finish();
     }
 
-    // ------------------------------------------------------------------ Ripple
+    // --- Ripple ---
 
     IEnumerator TidalWave(Vector3 origin)
     {
@@ -278,7 +278,7 @@ public class PowerBurst : MonoBehaviour
         Finish();
     }
 
-    // ------------------------------------------------------------------ visuals
+    // --- visuals ---
 
     SpriteRenderer CreateSprite(string name, Sprite sprite, Color color, float size, int order)
     {

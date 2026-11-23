@@ -4,9 +4,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Ui = LoadingScreen.Ui;
 
-// In-stage pause: a round button in the top-left corner opens a card with the stage, the
-// element chart (who beats whom) and RESUME / RESTART / MAP. Lives on its own overlay canvas
-// so it never fights the stage HUD; hidden once the stage is won or lost.
+// pause in a stage: a round button in the top left corner opens a card with the stage, the element
+// chart (who beats who) and RESUME / RESTART / MAP. it's on its own overlay canvas so it never
+// gets in the way of the stage HUD, and it's hidden once the stage is won or lost
 public class PauseMenu : MonoBehaviour
 {
     private const float ButtonSize = 112f;
@@ -84,7 +84,7 @@ public class PauseMenu : MonoBehaviour
             barRect.sizeDelta = new Vector2(ButtonSize * 0.14f, ButtonSize * 0.42f);
             barRect.anchoredPosition = new Vector2(side * ButtonSize * 0.12f, 0f);
             barRect.localScale = Vector3.one;
-            // The rounded sprite's corner radius is larger than a thin bar; shrink it to fit.
+            // the rounded sprite's corners are bigger than a thin bar, so shrink them to fit
             bar.pixelsPerUnitMultiplier = 4f;
         }
 
@@ -109,7 +109,7 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    // Called by StageManager when the stage ends: no pausing over the result card.
+    // StageManager calls this when the stage ends: no pausing over the result card
     public void SetAvailable(bool value)
     {
         available = value;
@@ -134,7 +134,7 @@ public class PauseMenu : MonoBehaviour
         if (!IsPaused)
             return;
         CloseOverlay();
-        // Back to the stage speed (normal, or a tutorial lesson's slow motion), never a leftover value.
+        // back to the stage speed (normal, or a tutorial lesson's slow motion), never some old value
         Time.timeScale = GameTime.BaseScale;
     }
 
@@ -182,7 +182,7 @@ public class PauseMenu : MonoBehaviour
 
         TMP_Text title = Ui.Text(card, "Title", "PAUSED", 76f, UiTheme.Gold);
         Ui.Place(title.rectTransform, new Vector2(0f, 470f), new Vector2(800f, 100f));
-        // Sound and screen-shake settings (no profile here: its reset would end the run).
+        // sound and screen shake settings (no profile here, because its reset would end the run)
         Button settings = GameMenus.RoundButton(card, "Settings", UiIcon.Gear, new Vector2(358f, 478f), 100f, new Color32(52, 66, 50, 255));
         settings.onClick.AddListener(() => GameMenus.OpenSettings(false));
         TMP_Text stageLine = Ui.Text(card, "Stage",
@@ -203,7 +203,7 @@ public class PauseMenu : MonoBehaviour
         MakeButton(card, "Map", "WORLD MAP", new Vector2(0f, -422f), new Vector2(600f, 112f), UiButtonRole.Neutral, ReturnToMap, 38f);
     }
 
-    // Fire > Grass > Earth > Electric > Water > (Fire): each icon beats the one after it.
+    // Fire > Grass > Earth > Electric > Water > (Fire): each icon beats the next one
     void BuildElementChart(RectTransform card, Vector2 center)
     {
         RectTransform panel = Ui.Rect(card, "ElementChart", new Vector2(0.5f, 0.5f), center, new Vector2(800f, 210f));
@@ -248,7 +248,7 @@ public class PauseMenu : MonoBehaviour
 
     void OnDestroy()
     {
-        // Leaving the stage while paused must not freeze the next scene.
+        // leaving the stage while paused must not freeze the next scene
         if (IsPaused)
             Time.timeScale = 1f;
     }

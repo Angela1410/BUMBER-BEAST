@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Bosses of chapters 3-5, added by WaveManager when one spawns (Thornmaw and Terrathorn have
-// their own components). Their looks are PLACEHOLDER sprites: Assets/Resources/Placeholders/
-// Boss_Voltrex.png, Boss_Maelith.png and Boss_Pyrax.png. Each move is telegraphed (the boss
-// glows and a ring closes in) so the player can react.
-//   Voltrex (Electric)  Overcharge: nearby enemies move much faster for a few seconds.
-//   Maelith (Water)     Tide Shield: a bubble blocks the next two hits.
-//   Pyrax   (Fire)      Ember Call: summons a pair of the wave's minions next to it.
+// the bosses of chapters 3-5. WaveManager adds this when one spawns (Thornmaw and Terrathorn have
+// their own scripts). they use PLACEHOLDER sprites: Assets/Resources/Placeholders/Boss_Voltrex.png,
+// Boss_Maelith.png and Boss_Pyrax.png. every move is warned first (the boss glows and a ring
+// closes in) so the player has time to react:
+// Voltrex (Electric) Overcharge: enemies near it move a lot faster for a few seconds
+// Maelith (Water) Tide Shield: a bubble blocks the next two hits
+// Pyrax (Fire) Ember Call: calls two of the wave's minions next to it
 [RequireComponent(typeof(Enemy))]
 public class ChapterBossAbility : MonoBehaviour
 {
@@ -108,7 +108,7 @@ public class ChapterBossAbility : MonoBehaviour
     {
         yield return null;
 
-        // The shared body's "damaged" sprite would swap the boss back to minion art on every hit.
+        // the shared body's "damaged" sprite would change the boss back to minion art on every hit
         EnemyDamagedSprite damaged = GetComponent<EnemyDamagedSprite>();
         if (damaged != null)
         {
@@ -138,7 +138,7 @@ public class ChapterBossAbility : MonoBehaviour
 
     void Update()
     {
-        // Nothing else may put the minion art back on the boss.
+        // nothing else is allowed to put the minion art back on the boss
         if (lookApplied && bossArt != null && sr != null && sr.sprite != bossArt)
             sr.sprite = bossArt;
 
@@ -146,7 +146,7 @@ public class ChapterBossAbility : MonoBehaviour
         UpdateAuras();
     }
 
-    // ---------------------------------------------------------------- Voltrex
+    // --- Voltrex ---
 
     IEnumerator OverchargeRoutine()
     {
@@ -208,7 +208,7 @@ public class ChapterBossAbility : MonoBehaviour
                 continue;
             }
 
-            // About one world unit across whatever the enemy's own scale is.
+            // about one world unit wide, whatever the enemy's own scale is
             Vector3 lossy = aura.transform.lossyScale;
             float pulse = 1f + Mathf.Sin(Time.time * 18f) * 0.08f;
             aura.renderer.transform.localScale = new Vector3(
@@ -220,7 +220,7 @@ public class ChapterBossAbility : MonoBehaviour
         }
     }
 
-    // ---------------------------------------------------------------- Maelith
+    // --- Maelith ---
 
     IEnumerator TideShieldRoutine()
     {
@@ -261,7 +261,7 @@ public class ChapterBossAbility : MonoBehaviour
         if (!shielded)
             return;
 
-        // The bubble wraps the boss sprite, slightly wobbling.
+        // the bubble wraps around the boss sprite and wobbles a bit
         float size = sr != null && sr.sprite != null
             ? Mathf.Max(sr.sprite.bounds.size.x, sr.sprite.bounds.size.y) * 1.2f
             : 1.2f;
@@ -272,7 +272,7 @@ public class ChapterBossAbility : MonoBehaviour
         shieldBubble.color = color;
     }
 
-    // ---------------------------------------------------------------- Pyrax
+    // --- Pyrax ---
 
     IEnumerator EmberCallRoutine()
     {
@@ -305,9 +305,9 @@ public class ChapterBossAbility : MonoBehaviour
         }
     }
 
-    // ---------------------------------------------------------------- shared effects
+    // --- effects all bosses use ---
 
-    // The boss glows in its colour while a ring closes in on it.
+    // the boss glows in its color while a ring closes in on it
     IEnumerator Telegraph(Color color, float seconds)
     {
         GameObject ring = CreateEffect("BossTelegraph", HudVisualUtility.RingSprite(), color, 41);

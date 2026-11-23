@@ -6,13 +6,13 @@ public static class PortraitButtonLayout
 {
     private const float AbilitySize = 210f;
     private const float SwapSize = 156f;
-    private const float ButtonGap = 66f;   // room for the swap button's name ribbon
+    private const float ButtonGap = 66f; // room for the swap button's name ribbon
     private const float RightInset = 80f;
     private const float BottomInset = 150f;
 
-    // Places a HUD button in the bottom-right corner.
-    // stackIndex 0 = ability button (bottom), 1 = swap button (directly above it).
-    // Returns false if the canvas has no size yet, so the caller can try again next frame.
+    // puts a HUD button in the bottom right corner.
+    // stackIndex 0 = skill button (bottom), 1 = swap button (right above it).
+    // returns false if the canvas has no size yet, so the caller can try again next frame
     public static bool Apply(RectTransform buttonRect, int stackIndex)
     {
         if (buttonRect == null || !(buttonRect.parent is RectTransform canvasRect))
@@ -58,7 +58,7 @@ public static class PortraitButtonLayout
         }
         else
         {
-            // Same center line as the ability button, sitting above it with a gap.
+            // same center line as the skill button, sitting above it with a gap
             float centerOffset = (AbilitySize - SwapSize) * 0.5f * referenceScale;
             x = -rightInset - centerOffset;
             y = bottomInset + AbilitySize * referenceScale + gap;
@@ -77,7 +77,7 @@ public static class PortraitButtonLayout
         return true;
     }
 
-    // 1 on the 1080x1920 reference canvas; used to scale fonts with the layout.
+    // 1 on the 1080x1920 reference canvas, used to scale fonts with the layout
     public static float ReferenceScale(RectTransform buttonRect)
     {
         if (buttonRect == null || !(buttonRect.parent is RectTransform canvasRect))
@@ -88,8 +88,8 @@ public static class PortraitButtonLayout
         return Mathf.Min(width / 1080f, height / 1920f);
     }
 
-    // Hides every other text under a button so only the label we keep is drawn.
-    // This is what removes the doubled "FLAME BURST / SWAP BEAST" text.
+    // hides every other text under a button so only the label we keep is drawn.
+    // this is what removes the doubled "FLAME BURST / SWAP BEAST" text
     public static void HideOtherLabels(Transform root, TMP_Text keep)
     {
         if (root == null)
@@ -100,7 +100,7 @@ public static class PortraitButtonLayout
             if (text == keep)
                 continue;
 
-            // Never hide a parent of the label we are keeping.
+            // never hide a parent of the label we're keeping
             if (keep != null && keep.transform.IsChildOf(text.transform))
                 continue;
 

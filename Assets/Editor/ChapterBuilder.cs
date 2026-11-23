@@ -6,26 +6,24 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// Builds stages 9-20 (chapters 3-5: Electric, Water, Fire) from the finished stage-5 layout, so
-// every chapter plays like the tuned ones (route, bumpers, barrier, launch pad, HUD). The old
-// prototype scenes are overwritten file-for-file; each keeps its own .meta (GUID), so the Build
-// Settings stay valid. Each copy is then themed for its chapter: generated backdrop and motes,
-// tinted barrier / launch pad / rock decorations, rope colour, stage number and coin reward.
-// Waves are written next by StageWaveLayouts (until then the copy keeps stage 5's waves).
-// Runs automatically (once per BuildVersion) from StageWaveLayouts' editor hook; stage scenes
-// open in the editor are skipped and reported. Stages 1-8 are never touched.
-// Each built stage also gets its painted background (Assets/Sprites/Chapter3-5/Backgrounds) once
-// per PaintedBackdropVersion, without rebuilding the scene; the chapter's own barrier and launcher
-// art are picked at runtime by BarrierArt / LauncherArt.
+// builds stages 9-20 (chapters 3-5: Electric, Water, Fire) by copying the finished stage 5,
+// so every chapter plays like the ones we already tuned (route, bumpers, barrier, launch pad, HUD).
+// the old test scenes get overwritten but keep their .meta files (GUIDs), so Build Settings still work.
+// then each copy gets its chapter look: background, tinted barrier / launch pad / rocks,
+// rope color, stage number and coin reward. StageWaveLayouts writes the waves after this.
+// it runs by itself from StageWaveLayouts (once per BuildVersion). scenes that are open get skipped,
+// and stages 1-8 are never touched. each built stage also gets its painted background
+// (Assets/Sprites/Chapter3-5/Backgrounds) once per PaintedBackdropVersion. the barrier and
+// launcher art for each chapter is picked when the game runs (BarrierArt / LauncherArt)
 public static class ChapterBuilder
 {
     public const int BuildVersion = 1;
     public const int FirstBuiltStage = 9;
-    // Bumped when the painted backgrounds of stages 9-20 should be assigned again.
+    // change this number when the painted backgrounds of stages 9-20 should be set again
     public const int PaintedBackdropVersion = 1;
     private const string TemplateScene = "Assets/Scenes/stage-5_Earth.unity";
-    // Stage-5 rock decorations copied into every built stage; they belong to the Earth canyon, so
-    // they are switched off where a chapter's own painted background is shown (no colliders).
+    // the rock decorations copied from stage 5 belong to the Earth canyon, so we hide them when a chapter
+    // shows its own painted background (they have no colliders so it's safe)
     private const string EarthDecorPrefix = "BumperBeast1_";
 
     private static readonly Regex BuildPattern = new Regex(@"^\s*stageBuildVersion:\s*(\d+)", RegexOptions.Multiline);
@@ -43,7 +41,7 @@ public static class ChapterBuilder
         public int moteCount;
     }
 
-    // Stages 1-8 are always ready for waves; 9-20 once they have been built from the template.
+    // stages 1-8 are always ready for waves, 9-20 only after they're built from the template
     public static bool IsReady(int stage, string sceneText)
     {
         return stage < FirstBuiltStage || ReadInt(BuildPattern, sceneText, 0) >= BuildVersion;
@@ -129,7 +127,7 @@ public static class ChapterBuilder
         {
             environment.theme = look.theme;
             environment.variant = (stage - 1) % ChapterData.StagesPerChapter;
-            environment.background = null;   // generated landscape until painted art exists
+            environment.background = null; // uses the generated landscape until there's painted art
             environment.tint = Color.white;
             environment.dustColor = look.moteColor;
             environment.dustCount = look.moteCount;
@@ -138,7 +136,7 @@ public static class ChapterBuilder
             MarkChanged(environment.gameObject);
         }
 
-        // Barrier, launch pad and the rock decorations take the chapter's colour (placeholder look).
+        // barrier, launch pad and rocks get the chapter's color (placeholder look)
         foreach (GameObject root in scene.GetRootGameObjects())
         {
             foreach (SpriteRenderer renderer in root.GetComponentsInChildren<SpriteRenderer>(true))
@@ -163,7 +161,7 @@ public static class ChapterBuilder
             MarkChanged(pad);
         }
 
-        // The stage's painted background, when it is in the project (otherwise the generated one).
+        // use the stage's painted background if we have it, otherwise the generated one
         Sprite painted = LoadPaintedBackdrop(stage, problems);
         if (painted != null)
             ApplyPaintedBackdrop(scene, painted, problems, false);
@@ -175,7 +173,7 @@ public static class ChapterBuilder
         }
         else
         {
-            // StageWaveLayouts writes this stage's own waves next.
+            // StageWaveLayouts writes this stage's waves next
             waveManager.timedLayoutVersion = 0;
             MarkChanged(waveManager);
         }
@@ -183,16 +181,16 @@ public static class ChapterBuilder
         EditorSceneManager.MarkSceneDirty(scene);
     }
 
-    // Painted background of a built stage: Assets/Sprites/Chapter<N>/Backgrounds/stage<S>Bg.png,
-    // next to the chapter-2 ones (stage5Bg-stage8Bg).
+    // painted background of a built stage: Assets/Sprites/Chapter<N>/Backgrounds/stage<S>Bg.png
+    // (same place as the chapter 2 ones, stage5Bg-stage8Bg)
     public static string PaintedBackdropPath(int stage)
     {
         return "Assets/Sprites/Chapter" + (ChapterData.ChapterOfStage(stage) + 1) + "/Backgrounds/stage" + stage + "Bg.png";
     }
 
-    // Gives every built stage (9-20) its painted background once per PaintedBackdropVersion.
-    // A stage open in the editor is updated in place; it is saved unless it has unsaved edits.
-    // Returns the scenes that changed.
+    // gives every built stage (9-20) its painted background, once per PaintedBackdropVersion.
+    // if a stage is open in the editor we update it there and save it, unless it has unsaved edits.
+    // returns the scenes that changed
     public static List<string> ApplyPaintedBackdrops(List<string> problems)
     {
         List<string> applied = new List<string>();
@@ -200,7 +198,7 @@ public static class ChapterBuilder
         {
             string path = "Assets/Scenes/" + GameHubController.GetStageSceneName(stage) + ".unity";
             if (!File.Exists(path))
-                continue;   // BuildOutdatedStages reports missing scenes
+                continue; // BuildOutdatedStages already reports missing scenes
 
             string text = File.ReadAllText(path);
             if (!IsReady(stage, text) || ReadInt(BackdropPattern, text, 0) >= PaintedBackdropVersion)
@@ -245,7 +243,7 @@ public static class ChapterBuilder
     {
         string path = PaintedBackdropPath(stage);
         if (!File.Exists(path))
-            return null;   // no painted art for this stage yet: it keeps the generated backdrop
+            return null; // no painted art for this stage yet, so it keeps the generated background
 
         Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
         if (sprite == null)
@@ -327,8 +325,8 @@ public static class ChapterBuilder
         }
     }
 
-    // Saves a change made from code; prefab instances (barrier, pad, Beast) need it recorded as
-    // an override or Unity drops it on save.
+    // saves a change made from code. prefab instances (barrier, pad, Beast) need it saved as an
+    // override, or Unity throws the change away when saving
     private static void MarkChanged(Object target)
     {
         EditorUtility.SetDirty(target);

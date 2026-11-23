@@ -2,9 +2,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Big centred callout for stage moments ("WAVE CLEAR!", "POWER BUMPER!"): pops in, holds, fades.
-// One per scene, on its own overlay canvas under the pause menu; unscaled time, so it also plays
-// while the game is slowed down.
+// big centered callout for stage moments ("WAVE CLEAR!", "POWER BUMPER!"): pops in, stays, fades.
+// one per scene, on its own overlay canvas under the pause menu. uses unscaled time, so it also
+// plays while the game is slowed down
 public class StageToast : MonoBehaviour
 {
     private static StageToast instance;
@@ -21,7 +21,7 @@ public class StageToast : MonoBehaviour
         Show(text, null, color, seconds, 0.6f);
     }
 
-    // heightFraction: where the callout sits, 0 = bottom of the screen, 1 = top.
+    // heightFraction: where the callout goes, 0 = bottom of the screen, 1 = top
     public static void Show(string text, string subtitle, Color color, float seconds, float heightFraction)
     {
         if (instance == null)
@@ -76,7 +76,7 @@ public class StageToast : MonoBehaviour
     {
         labelRect.gameObject.SetActive(true);
         labelRect.anchorMin = labelRect.anchorMax = new Vector2(0.5f, Mathf.Clamp01(heightFraction));
-        // Never wider than the screen: long callouts shrink to fit narrow phones.
+        // never wider than the screen: long callouts shrink to fit narrow phones
         RectTransform canvasRect = transform as RectTransform;
         float width = canvasRect != null ? Mathf.Clamp(canvasRect.rect.width - 40f, 480f, 880f) : 880f;
         labelRect.sizeDelta = new Vector2(width, labelRect.sizeDelta.y);
@@ -86,7 +86,7 @@ public class StageToast : MonoBehaviour
         label.color = color;
         subLabel.text = subtitle ?? string.Empty;
         subLabel.color = UiTheme.Cream;
-        // TMP outlines need an active object, so the style is applied after activation.
+        // TMP outlines need an active object, so we apply the style after turning it on
         HudVisualUtility.ApplyTextStyle(label);
         label.color = color;
         HudVisualUtility.ApplyTextStyle(subLabel);
@@ -111,7 +111,7 @@ public class StageToast : MonoBehaviour
             return;
         }
 
-        // Pop in with a small overshoot, hold, then float up and fade out.
+        // pop in a bit too big, stay, then float up and fade out
         float pop = t < 0.22f ? Mathf.SmoothStep(0.4f, 1.18f, t / 0.22f)
             : t < 0.34f ? Mathf.Lerp(1.18f, 1f, (t - 0.22f) / 0.12f) : 1f;
         float fadeStart = duration - 0.35f;

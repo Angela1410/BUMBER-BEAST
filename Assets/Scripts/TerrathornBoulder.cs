@@ -1,8 +1,7 @@
 using UnityEngine;
 
-// Temporary Rockfall obstacle spawned by TerrathornAbility. Drops in with a
-// squash, cracks when a Beast hits it, and crumbles after enough hits or when
-// its lifetime runs out.
+// the Rockfall obstacle made by TerrathornAbility. it drops in with a squash, cracks when a Beast
+// hits it, and breaks after enough hits or when its time runs out
 public class TerrathornBoulder : MonoBehaviour
 {
     private int hitsRemaining = 2;
@@ -27,7 +26,7 @@ public class TerrathornBoulder : MonoBehaviour
         if (crumbling)
             return;
 
-        // Land with a short squash-and-settle.
+        // lands with a short squash and settle
         float landing = Mathf.Clamp01((Time.time - spawnedAt) / 0.22f);
         float squash = 1f - Mathf.Sin(landing * Mathf.PI) * 0.25f;
         float punch = Time.time < hitPunchUntil ? 0.9f : 1f;
@@ -36,7 +35,7 @@ public class TerrathornBoulder : MonoBehaviour
             baseScale * squash * punch,
             1f);
 
-        // Blink during the last second so its disappearance is never a surprise.
+        // blinks during its last second so it never disappears by surprise
         if (spriteRenderer != null)
         {
             float remaining = expiresAt - Time.time;
@@ -71,7 +70,7 @@ public class TerrathornBoulder : MonoBehaviour
         if (boulderCollider != null)
             boulderCollider.enabled = false;
 
-        // A few rock chips burst outward.
+        // a few rock chips burst out
         Sprite chip = HudVisualUtility.CircleSprite();
         for (int index = 0; index < 6; index++)
         {

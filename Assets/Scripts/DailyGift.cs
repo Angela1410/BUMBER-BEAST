@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-// A coin gift once per calendar day (device time). Coming back on consecutive days climbs a
-// 7-day ladder of bigger gifts; missing a day starts again at day 1, and day 7 loops to day 1.
+// a coin gift once per day (uses the phone's date). coming back every day climbs a 7-day ladder
+// of bigger gifts. miss a day and it starts again at day 1, and after day 7 it goes back to day 1
 public static class DailyGift
 {
     public static readonly int[] Rewards = { 20, 25, 30, 40, 50, 60, 100 };
@@ -20,7 +20,7 @@ public static class DailyGift
 
     public static bool IsReady => PlayerPrefs.GetInt(LastKey, 0) != Today;
 
-    // The ladder step (1-7) the next claim gives, or today's step once claimed.
+    // which day of the ladder (1-7) the next claim gives, or today's day if already claimed
     public static int CurrentDay
     {
         get
@@ -40,7 +40,7 @@ public static class DailyGift
         return Rewards[Mathf.Clamp(day, 1, Rewards.Length) - 1];
     }
 
-    // Pays today's gift; returns the coins (0 when it was already claimed today).
+    // pays today's gift and returns the coins (0 if it was already claimed today)
     public static int Claim()
     {
         if (!IsReady)

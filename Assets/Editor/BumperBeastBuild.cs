@@ -6,48 +6,42 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-// Builds the shareable versions of the game into Builds/, ready to upload (itch.io...):
-//  - Windows: Builds/Windows/<product>.exe -> Builds/<product>-Windows-v<version>.zip
-//  - Web (plays in Chrome and other browsers): Builds/Web/index.html -> Builds/<product>-Web-v<version>.zip
-//    with index.html at the zip root, as itch.io expects for HTML5 games.
-//  - Android app: Builds/<product>-Android-v<version>.apk (64-bit, installable by sideloading).
-//  - iPhone/iPad: Builds/iOS-Xcode -> Builds/<product>-iOS-Xcode-v<version>.zip, an Xcode project.
-//    Windows cannot make the app itself: open the project on a Mac with Xcode, pick a signing
-//    team, then run it on a device or upload it to TestFlight/App Store. Needs the iOS Build
-//    Support module. iPhone players on itch.io use the Web build in Safari instead.
-// Before building it applies every pending project step (StageWaveLayouts.ApplyPendingChanges), the
-// app icon and the platform's window settings: the game is portrait, so desktop and web both use a
-// 540 x 960 view instead of the default landscape full screen / 960 x 600 canvas.
-//
-// Ways to run it:
-//  - the Bumper Beast menu: Build Windows (Downloadable), Build Web (Play in Chrome), Build Android App (APK);
-//  - an open editor builds by itself when Builds/build-windows.request, build-web.request or
-//    build-android.request exists (switching platform first if needed; the request is deleted when
-//    the build starts);
-//  - command line (editor closed): Unity.exe -batchmode -projectPath <project> -buildTarget Android
-//    -executeMethod BumperBeastBuild.BuildAndroidFromCommandLine (BuildWebFromCommandLine with
-//    -buildTarget WebGL; BuildFromCommandLine for Windows).
+// this script builds the versions of the game we share (they go in the Builds folder):
+// - Windows: Builds/Windows/<game>.exe, zipped as Builds/<game>-Windows-v<version>.zip
+// - Web (plays in Chrome, Safari, etc.): Builds/Web/index.html, zipped with index.html at the top like itch.io wants
+// - Android: Builds/<game>-Android-v<version>.apk (64-bit, you install it straight on the phone)
+// - iPhone/iPad: an Xcode project zipped in Builds/. you need a Mac with Xcode to turn it into an app,
+// so for now iPhone players use the web version in Safari
+// before building it runs the pending stage setup (StageWaveLayouts), sets the app icon and makes
+// the window portrait (540 x 960) instead of the default landscape size.
+// how to start a build:
+// - from the Bumper Beast menu in Unity
+// - or make a file called build-windows.request / build-web.request / build-android.request in Builds/
+// while the editor is open (it switches platform if needed and deletes the file when it starts)
+// - or from the command line with the editor closed:
+// Unity.exe -batchmode -projectPath <project> -buildTarget Android -executeMethod BumperBeastBuild.BuildAndroidFromCommandLine
+// (use BuildWebFromCommandLine with -buildTarget WebGL, or BuildFromCommandLine for Windows)
 [InitializeOnLoad]
 public static class BumperBeastBuild
 {
-    // App icon: a square crop of the cover art (logo + Beasts). Android 8+ launchers mask "adaptive"
-    // icons to their middle 2/3, so that layer has the same crop filling exactly that middle part.
+    // app icon: a square crop of the cover art. android 8+ cuts "adaptive" icons down to the middle 2/3,
+    // so that layer uses the same crop sized to fit that middle part
     public const string IconPath = "Assets/Sprites/AppIconCover.png";
     private const string AdaptiveBackPath = "Assets/Sprites/AppIconAdaptiveBack.png";
     private const string AdaptiveFrontPath = "Assets/Sprites/AppIconAdaptiveFront.png";
-    // Launch screen: the full cover art instead of the "Made with Unity" logo (optional since Unity 6).
-    // The clear spacer "logo" keeps the picture on screen for SplashSeconds.
+    // launch screen: our cover art instead of the "Made with Unity" logo (Unity 6 lets us turn it off).
+    // the invisible spacer "logo" just keeps the picture up for SplashSeconds
     private const string SplashPath = "Assets/Sprites/SplashCover.png";
     private const string SplashSpacerPath = "Assets/Sprites/SplashSpacer.png";
     private const float SplashSeconds = 2f;
-    // Browser tab / iPhone home-screen icon for the Web build (outside Assets, so not in the game).
+    // icon for the browser tab and the iPhone home screen (web version only, so it's outside Assets)
     private const string WebIconPath = "BuildAssets/web-icon.png";
     public const string RequestFile = "Builds/build-windows.request";
     public const string WebRequestFile = "Builds/build-web.request";
     public const string AndroidRequestFile = "Builds/build-android.request";
     public const string IOSRequestFile = "Builds/build-ios.request";
-    // Used only while the Android package name is unset or still the template's (whose "2D-URP" part
-    // is not a valid Android package name). Change it in Player Settings before publishing to a store.
+    // only used if the android package name is empty or still the template one ("2D-URP" isn't allowed
+    // on android). change it in Player Settings before putting the game on a store
     private const string DefaultAndroidPackage = "com.bumperbeasts.game";
     private const string WindowsFolder = "Builds/Windows";
     private const string WebFolder = "Builds/Web";
@@ -84,8 +78,8 @@ public static class BumperBeastBuild
             HandleRequest(IOSRequestFile, BuildTargetGroup.iOS, BuildTarget.iOS);
     }
 
-    // Builds once the editor is on the request's platform; otherwise starts the switch and keeps the
-    // request, so the build runs after the switch and its script reload.
+    // if the editor is already on the right platform it builds now. if not, it switches first and keeps
+    // the request file, so the build runs after the switch
     private static void HandleRequest(string request, BuildTargetGroup group, BuildTarget target)
     {
         if (!BuildPipeline.IsBuildTargetSupported(group, target))
@@ -178,8 +172,8 @@ public static class BumperBeastBuild
         EditorApplication.Exit(zip != null ? 0 : 1);
     }
 
-    // The app id and version shared by the phone builds: the same id on Android and iOS, and the
-    // iOS build number follows the Android version code so each upload is newer than the last.
+    // app id and version for the phone builds. android and iOS use the same id, and the iOS build number
+    // copies the android version code so every new upload counts as newer
     private static void ApplyPhoneIdentity()
     {
         string package = PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android);
@@ -193,8 +187,8 @@ public static class BumperBeastBuild
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.Portrait;
     }
 
-    // An Xcode project for iPhone and iPad, zipped for copying to a Mac. Returns the zip path, or
-    // null when the build failed (the reason is logged).
+    // makes an Xcode project for iPhone and iPad and zips it so we can copy it to a Mac.
+    // gives back the zip path, or null if the build failed (the reason goes in the log)
     public static string BuildIOS()
     {
         StageWaveLayouts.ApplyPendingChanges();
@@ -205,8 +199,8 @@ public static class BumperBeastBuild
         PlayerSettings.iOS.requiresFullScreen = true;
         PlayerSettings.iOS.appleEnableAutomaticSigning = true;
         PlayerSettings.statusBarHidden = true;
-        // A swipe up from the bottom edge (aiming pulls down!) should not send the game home on the
-        // first try: iOS asks for a second swipe instead.
+        // aiming means dragging down, so a swipe up from the bottom shouldn't close the game right away.
+        // with this iOS asks for a second swipe first
         PlayerSettings.iOS.deferSystemGesturesMode = UnityEngine.iOS.SystemGestureDeferMode.BottomEdge;
         ApplyIcon();
         AssetDatabase.SaveAssets();
@@ -214,21 +208,21 @@ public static class BumperBeastBuild
         return BuildPackage(BuildTargetGroup.iOS, BuildTarget.iOS, IOSFolder, IOSFolder, "iOS-Xcode");
     }
 
-    // Leaves the project on the desktop platform it is normally edited on.
+    // puts the project back on the PC platform we normally work on
     private static void SwitchBackToDesktop()
     {
         if (BuildPipeline.IsBuildTargetSupported(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64))
             EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
     }
 
-    // An installable app for Android phones (sideloaded APK, not a Play Store bundle). Returns the APK
-    // path, or null when the build failed (the reason is logged).
+    // builds the android app (an APK you install directly, not a Play Store bundle).
+    // gives back the APK path, or null if the build failed (the reason goes in the log)
     public static string BuildAndroid()
     {
         StageWaveLayouts.ApplyPendingChanges();
         ApplyPhoneIdentity();
         PlayerSettings.SetScriptingBackend(NamedBuildTarget.Android, ScriptingImplementation.IL2CPP);
-        // 64-bit is required by current phones (many cannot run 32-bit apps at all).
+        // phones need 64-bit now (a lot of them can't run 32-bit apps at all)
         PlayerSettings.Android.targetArchitectures |= AndroidArchitecture.ARM64;
         EditorUserBuildSettings.buildAppBundle = false;
         ApplyIcon();
@@ -239,7 +233,7 @@ public static class BumperBeastBuild
         return BuildPackage(BuildTargetGroup.Android, BuildTarget.Android, null, apk, "Android");
     }
 
-    // Returns the zip path, or null when the build failed (the reason is logged).
+    // gives back the zip path, or null if the build failed (the reason goes in the log)
     public static string BuildWindows()
     {
         StageWaveLayouts.ApplyPendingChanges();
@@ -255,7 +249,7 @@ public static class BumperBeastBuild
             WindowsFolder + "/" + PlayerSettings.productName + ".exe", "Windows");
     }
 
-    // Returns the zip path, or null when the build failed (the reason is logged).
+    // gives back the zip path, or null if the build failed (the reason goes in the log)
     public static string BuildWeb()
     {
         StageWaveLayouts.ApplyPendingChanges();
@@ -263,12 +257,12 @@ public static class BumperBeastBuild
         PlayerSettings.defaultWebScreenHeight = ViewHeight;
         PlayerSettings.WebGL.template = "APPLICATION:Default";
         PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
-        // itch.io and most simple hosts do not send the Content-Encoding header compressed Unity files
-        // need; with the fallback the loader decompresses them itself.
+        // itch.io doesn't send the Content-Encoding header that compressed Unity files need,
+        // so with this the loader unzips the files by itself
         PlayerSettings.WebGL.decompressionFallback = true;
         PlayerSettings.WebGL.dataCaching = true;
-        // Phones (iPhone Safari, Android Chrome) play this build on itch.io: no diagnostics overlay,
-        // and the default template fills the phone's screen with the canvas.
+        // phones play this version on itch.io (iPhone Safari, Android Chrome), so no debug overlay,
+        // and the default template makes the game fill the whole phone screen
         PlayerSettings.WebGL.showDiagnostics = false;
         PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
         ApplyIcon();
@@ -277,8 +271,8 @@ public static class BumperBeastBuild
         return BuildPackage(BuildTargetGroup.WebGL, BuildTarget.WebGL, WebFolder, WebFolder, "Web");
     }
 
-    // Builds into "folder" and zips it (Windows, Web), or, with no folder, builds the single file at
-    // "location" (the Android APK). Returns the file to share, or null when the build failed.
+    // builds into "folder" and zips it (Windows, Web), or if there's no folder it builds one file
+    // at "location" (the android APK). gives back the file to share, or null if it failed
     private static string BuildPackage(BuildTargetGroup group, BuildTarget target, string folder, string location, string label)
     {
         List<string> scenes = new List<string>();
@@ -296,14 +290,14 @@ public static class BumperBeastBuild
         if (folder != null)
         {
             if (Directory.Exists(folder))
-                Directory.Delete(folder, true);   // only ever holds the previous build made by this script
+                Directory.Delete(folder, true); // this folder only has the last build this script made
             Directory.CreateDirectory(folder);
         }
         else
         {
             Directory.CreateDirectory(Path.GetDirectoryName(location));
             if (File.Exists(location))
-                File.Delete(location);            // the previous APK made by this script
+                File.Delete(location); // the last APK this script made
         }
 
         BuildPlayerOptions options = new BuildPlayerOptions
@@ -328,7 +322,7 @@ public static class BumperBeastBuild
             BrandWebPage(folder);
         if (folder != null)
         {
-            // Debug-symbol folders that must not ship with the game.
+            // debug symbol folders, we don't ship these with the game
             foreach (string child in Directory.GetDirectories(folder))
             {
                 string name = Path.GetFileName(child);
@@ -355,9 +349,9 @@ public static class BumperBeastBuild
         return shared;
     }
 
-    // The Default web template titles the page "Unity Web Player | <product>" and shows Unity's logo
-    // while loading. Use the game's name and icon instead; the loading background is already the
-    // cover art (the launch-screen picture), so the bar moves low to keep the logo and Beasts visible.
+    // the default web page is titled "Unity Web Player | <game>" and shows Unity's logo while loading.
+    // we use our own name and icon instead. the loading background is already our cover art,
+    // so we move the loading bar down to keep the logo and the Beasts visible
     private static void BrandWebPage(string folder)
     {
         string product = PlayerSettings.productName;
@@ -382,9 +376,9 @@ public static class BumperBeastBuild
                 "#unity-loading-bar { top: auto; bottom: 9%; transform: translate(-50%, 0) }\n");
     }
 
-    // App icon on every platform, then the launch screen. Unity 6 Android builds ignore the default
-    // icon and use their own Legacy / Round / Adaptive slots, so those are filled explicitly (an
-    // empty set left the phone showing Unity's logo).
+    // sets the app icon on every platform, then the launch screen. Unity 6 android ignores the default
+    // icon and uses its own Legacy / Round / Adaptive slots, so we fill those ourselves
+    // (when they were empty the phone showed Unity's logo)
     private static void ApplyIcon()
     {
         Texture2D icon = LoadIconTexture(IconPath);
@@ -404,7 +398,7 @@ public static class BumperBeastBuild
                 foreach (PlatformIcon slot in icons)
                 {
                     if (adaptive && adaptiveBack != null && adaptiveFront != null && slot.maxLayerCount >= 2)
-                        slot.SetTextures(adaptiveBack, adaptiveFront);   // layer 0 background, 1 foreground
+                        slot.SetTextures(adaptiveBack, adaptiveFront); // layer 0 is the background, layer 1 is the front
                     else if (adaptive)
                         slot.SetTextures(icon, icon);
                     else
@@ -440,7 +434,7 @@ public static class BumperBeastBuild
             Debug.LogWarning("Bumper Beast: this Unity license keeps the Unity logo on the launch screen.");
     }
 
-    // Icons are read at full quality: no compression, no mipmaps, no power-of-two resize.
+    // load the icons at full quality: no compression, no mipmaps, no power-of-two resize
     private static Texture2D LoadIconTexture(string path)
     {
         TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
