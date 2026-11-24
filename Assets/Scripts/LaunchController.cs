@@ -571,13 +571,15 @@ public class LaunchController : MonoBehaviour
         Sprite idle = PlaceholderArt.BeastIdle(beast);
         Sprite ball = PlaceholderArt.BeastBall(beast);
         Sprite curled = ball != null ? ball : idle;
+        // the idle animation (bobbing bits and a blink) from Placeholders/Frames, if it's there
+        Sprite[] idleFrames = PlaceholderArt.BeastIdleFrames(beast);
         BeastAnimSet placeholder = idle == null ? null : new BeastAnimSet
         {
             beast = beast,
-            idle = new[] { idle },
+            idle = idleFrames != null ? idleFrames : new[] { idle },
             curl = new[] { curled },
             spin = new[] { curled },
-            fps = 10f
+            fps = idleFrames != null ? 8f : 10f
         };
         placeholderAnimationSets[beast] = placeholder;
         return placeholder;

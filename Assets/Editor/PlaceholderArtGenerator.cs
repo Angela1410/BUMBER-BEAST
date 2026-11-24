@@ -48,7 +48,48 @@ public static class PlaceholderArtGenerator
             if (sprite != null)
                 sprites[name] = sprite;
         }
+        FitBeastFrames(beastSize, problems);
         return sprites;
+    }
+
+    // the Beasts' idle animation frames (Placeholders/Frames/Beast_<name>_Idle_NN.png) get the same
+    // size on screen as the Beast's idle picture: pixels per unit from the width
+    private static void FitBeastFrames(float beastSize, List<string> problems)
+    {
+        string folder = Folder + "/Frames";
+        if (!Directory.Exists(folder))
+            return;
+        foreach (string file in Directory.GetFiles(folder, "Beast_*_Idle_*.png"))
+        {
+            string path = file.Replace('\\', '/');
+            TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null)
+                continue;
+            if (!TryReadPngSize(path, out int width, out int height))
+            {
+                problems.Add(path + " is not a readable PNG; its size was left as it is.");
+                continue;
+            }
+            float wanted = width / beastSize;
+            int largest = Mathf.NextPowerOfTwo(Mathf.Max(width, height));
+            bool changed = importer.textureType != TextureImporterType.Sprite ||
+                importer.spriteImportMode != SpriteImportMode.Single ||
+                Mathf.Abs(importer.spritePixelsPerUnit - wanted) > wanted * 0.005f ||
+                importer.mipmapEnabled ||
+                importer.textureCompression != TextureImporterCompression.CompressedHQ ||
+                importer.maxTextureSize < largest;
+            if (!changed)
+                continue;
+            importer.textureType = TextureImporterType.Sprite;
+            importer.spriteImportMode = SpriteImportMode.Single;
+            importer.spritePixelsPerUnit = wanted;
+            importer.alphaIsTransparency = true;
+            importer.mipmapEnabled = false;
+            importer.filterMode = FilterMode.Bilinear;
+            importer.textureCompression = TextureImporterCompression.CompressedHQ;
+            importer.maxTextureSize = Mathf.Max(importer.maxTextureSize, largest);
+            importer.SaveAndReimport();
+        }
     }
 
     // real art saved over a placeholder (same file name) stays the same size on screen: its pixels per unit

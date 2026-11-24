@@ -34,6 +34,41 @@ public static class PlaceholderArt
         return Get("Beast_" + beast + "_Ball");
     }
 
+    // the idle animation in Placeholders/Frames: Beast_<name>_Idle_00 ... _07 bob the floating bits
+    // (rocks, sparks, water drops), _08 to _10 are a blink. it plays 00-07 twice with a blink at
+    // the end, like Thistle's idle. null if the frames aren't there (the single picture is used)
+    private static readonly Dictionary<BeastId, Sprite[]> IdleFrames = new Dictionary<BeastId, Sprite[]>();
+
+    public static Sprite[] BeastIdleFrames(BeastId beast)
+    {
+        if (IdleFrames.TryGetValue(beast, out Sprite[] cached))
+            return cached;
+
+        List<Sprite> found = new List<Sprite>();
+        for (int index = 0; index < 32; index++)
+        {
+            Sprite frame = Resources.Load<Sprite>(Folder + "Frames/Beast_" + beast + "_Idle_" + index.ToString("00"));
+            if (frame == null)
+                break;
+            found.Add(frame);
+        }
+
+        Sprite[] sequence = null;
+        if (found.Count >= 11)
+        {
+            int[] order = { 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 8, 9, 10, 7 };
+            sequence = new Sprite[order.Length];
+            for (int i = 0; i < order.Length; i++)
+                sequence[i] = found[order[i]];
+        }
+        else if (found.Count > 0)
+        {
+            sequence = found.ToArray();
+        }
+        IdleFrames[beast] = sequence;
+        return sequence;
+    }
+
     // "VOLTREX" / "Voltrex" -> Boss_Voltrex
     public static Sprite Boss(string bossName)
     {
