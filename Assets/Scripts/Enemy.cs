@@ -562,6 +562,14 @@ public class Enemy : MonoBehaviour
 
         bossHealthRect = bossHealthText.rectTransform;
         Transform canvasParent = bossHealthRect.parent;
+        // a boss before this one (Pyrax before it rose again) left the label inside its old panel,
+        // which hides when that boss goes away. this boss takes the label back out and makes its own
+        Transform oldPanel = null;
+        if (canvasParent != null && canvasParent.name == "BossHealthPanel")
+        {
+            oldPanel = canvasParent;
+            canvasParent = canvasParent.parent;
+        }
         if (canvasParent == null)
             return;
 
@@ -618,6 +626,8 @@ public class Enemy : MonoBehaviour
         // Canvas and stretched, which moved it away from the bar on some phone screens
         bossHealthRect.SetParent(panelObject.transform, false);
         bossHealthRect.SetAsLastSibling();
+        if (oldPanel != null)
+            Destroy(oldPanel.gameObject);
 
         bossHealthText.enableAutoSizing = true;
         bossHealthText.fontSize = 30f;
@@ -748,5 +758,50 @@ public class Enemy : MonoBehaviour
             default:
                 return new Color(0.34f, 0.4f, 0.31f);
         }
+    }
+
+    // --- used by the boss moves (they live down here so the lines above keep their numbers) ---
+
+    // gets health back (Thornmaw's Overgrowth), never above "limit" (0 = full health). returns how much
+    public int Heal(int amount, int limit = 0)
+    {
+        if (isDead || amount <= 0)
+            return 0;
+        int cap = limit > 0 ? Mathf.Min(limit, MaxHealthTotal) : MaxHealthTotal;
+        int before = currentHealth;
+        currentHealth = Mathf.Max(currentHealth, Mathf.Min(cap, currentHealth + amount));
+        if (currentHealth != before)
+            UpdateHealthText();
+        return currentHealth - before;
+    }
+
+    // a boss coming back to life (Pyrax's rebirth) starts with this much health
+    public void SetHealth(int health)
+    {
+        if (isDead)
+            return;
+        currentHealth = Mathf.Clamp(health, 1, MaxHealthTotal);
+        UpdateHealthText();
+    }
+
+    // steps sideways and keeps walking in the new lane (Voltrex's Thunder Blink)
+    public void ShiftLane(float distance)
+    {
+        if (isDead)
+            return;
+        routeLaneOffset += distance;
+        Vector2 next = (Vector2)transform.position + Vector2.right * distance;
+        if (body != null)
+            body.position = next;
+        transform.position = new Vector3(next.x, next.y, transform.position.z);
+    }
+
+    // Maelith's water copies: a weak look-alike that pops after one or two hits
+    public void MakeDecoy(int health)
+    {
+        maxHealth = Mathf.Max(1, health);
+        waveHealthBonus = 0;
+        ApplyWaveStats();
+        UpdateHealthText();
     }
 }

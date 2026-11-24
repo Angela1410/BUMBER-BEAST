@@ -14,7 +14,8 @@ public static class GameTuningAsset
     // values already in the file are kept, new settings start at the numbers written in GameTuning
     // 2: v1.4 settings (screen fit, bounce power, recall, return, power meter, waves, aiming, idle)
     // 3: return when nothing is hit, help for new players
-    private const int FileVersion = 3;
+    // 4: the bosses' moves and rage modes
+    private const int FileVersion = 4;
 
     public static void Ensure()
     {

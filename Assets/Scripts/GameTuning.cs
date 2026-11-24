@@ -89,6 +89,68 @@ public class GameTuning : ScriptableObject
     [Tooltip("Speed for each Beast: Choma, Thistle, Mossback, Voltis, Ripple (different, so they never move together).")]
     public float[] idleSpeed = { 1f, 1.15f, 0.75f, 1.3f, 0.9f };
 
+    [Header("Bosses: rage mode")]
+    [Tooltip("A boss starts its own rage mode when its health drops to this part of full (0.3 = 30%).")]
+    public float bossRageAt = 0.3f;
+
+    [Header("Thornmaw (stage 4, Grass): Bramble Drop, rage OVERGROWTH")]
+    [Tooltip("In rage, every this many seconds Thornmaw heals from the brambles that are still standing.")]
+    public float thornmawRegrowSeconds = 3f;
+    [Tooltip("Most health one regrow gives back (1 per standing bramble, up to this).")]
+    public int thornmawRegrowMax = 2;
+    [Tooltip("Regrowing never takes Thornmaw above this part of its health.")]
+    public float thornmawRegrowCap = 0.45f;
+    [Tooltip("In rage the brambles drop this much more often (0.6 = every 60% of the normal time).")]
+    public float thornmawRageDropTime = 0.6f;
+
+    [Header("Terrathorn (stage 8, Earth): Stone Wall, rage AVALANCHE")]
+    [Tooltip("Seconds between Stone Walls (the wall goes up in front of Terrathorn and blocks straight shots).")]
+    public float terrathornWallEvery = 8f;
+    [Tooltip("Hits each wall rock takes before it breaks.")]
+    public int terrathornWallHits = 2;
+    [Tooltip("Seconds a wall stands before it crumbles by itself.")]
+    public float terrathornWallSeconds = 5f;
+    [Tooltip("In rage Terrathorn curls up and rolls this much faster.")]
+    public float terrathornRollSpeed = 1.8f;
+    [Tooltip("How far (world units) a hit pushes the rolling Terrathorn back up its path.")]
+    public float terrathornRollPushBack = 0.9f;
+
+    [Header("Voltrex (stage 12, Electric): Overcharge + Thunder Blink, rage THUNDERSTORM")]
+    [Tooltip("Seconds between Overcharges.")]
+    public float voltrexOverchargeEvery = 5.5f;
+    [Tooltip("Overcharge speeds up every enemy on the field (and Voltrex) this much...")]
+    public float voltrexOverchargeSpeed = 1.9f;
+    [Tooltip("...for this many seconds.")]
+    public float voltrexOverchargeSeconds = 3.5f;
+    [Tooltip("How far Voltrex jumps sideways after an Overcharge (world units). 0 = no jump.")]
+    public float voltrexBlinkDistance = 1.8f;
+    [Tooltip("In rage, lightning strikes the bumpers every this many seconds.")]
+    public float voltrexStormEvery = 6f;
+    [Tooltip("Bumpers each storm charges (a charged bumper sparks; touching it zaps the Beast back to the pad).")]
+    public int voltrexStormStrikes = 2;
+    [Tooltip("Seconds the yellow mark shows on a bumper before the lightning hits it.")]
+    public float voltrexStrikeWarning = 1f;
+    [Tooltip("Seconds a bumper stays charged.")]
+    public float voltrexChargedSeconds = 4f;
+
+    [Header("Maelith (stage 16, Water): Tide Shield, rage MIRROR MIST")]
+    [Tooltip("Hits the Tide Shield blocks.")]
+    public int maelithShieldHits = 2;
+    [Tooltip("Seconds between shields (in rage it comes back faster, 60% of this).")]
+    public float maelithShieldEvery = 5.5f;
+    [Tooltip("Water copies Maelith makes in rage (they pop after one hit and waste your shot).")]
+    public int maelithCopies = 2;
+    [Tooltip("Seconds before new copies come when the old ones are gone.")]
+    public float maelithCopyEvery = 6f;
+
+    [Header("Pyrax (stage 20, Fire): Ember Call, rage PHOENIX")]
+    [Tooltip("Seconds between Ember Calls (two imps come out of fire next to Pyrax).")]
+    public float pyraxCallEvery = 7f;
+    [Tooltip("Seconds between Ember Calls in rage.")]
+    public float pyraxRageCallEvery = 4f;
+    [Tooltip("In rage, Pyrax comes back to life once with this part of its health (0 = no rebirth).")]
+    public float pyraxRebornHealth = 0.3f;
+
     // the editor uses this to save the file again when new settings are added (GameTuningAsset)
     [HideInInspector] public int fileVersion;
 

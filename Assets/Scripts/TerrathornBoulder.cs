@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// the Rockfall obstacle made by TerrathornAbility. it drops in with a squash, cracks when a Beast
-// hits it, and breaks after enough hits or when its time runs out
+// a rock of Terrathorn's Stone Wall. it comes up with a squash, walks along with Terrathorn,
+// cracks when a Beast hits it, and breaks after enough hits or when its time runs out
 public class TerrathornBoulder : MonoBehaviour
 {
     private int hitsRemaining = 2;
@@ -11,6 +11,10 @@ public class TerrathornBoulder : MonoBehaviour
     private float hitPunchUntil;
     private SpriteRenderer spriteRenderer;
     private bool crumbling;
+    private Transform followTarget;
+    private Vector2 followOffset;
+    private bool following;
+    private Rigidbody2D body;
 
     public void Initialise(int hits, float lifetime, float scale)
     {
@@ -19,6 +23,37 @@ public class TerrathornBoulder : MonoBehaviour
         spawnedAt = Time.time;
         expiresAt = Time.time + Mathf.Max(1f, lifetime);
         spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    // stays at the same spot next to "target" (the wall moves with Terrathorn)
+    public void Follow(Transform target, Vector2 offset)
+    {
+        followTarget = target;
+        followOffset = offset;
+        following = target != null;
+        body = GetComponent<Rigidbody2D>();
+    }
+
+    public void CrumbleNow()
+    {
+        if (!crumbling)
+            Crumble();
+    }
+
+    void FixedUpdate()
+    {
+        if (!following || crumbling)
+            return;
+        if (followTarget == null)
+        {
+            Crumble();
+            return;
+        }
+        Vector2 spot = (Vector2)followTarget.position + followOffset;
+        if (body != null)
+            body.MovePosition(spot);
+        else
+            transform.position = new Vector3(spot.x, spot.y, transform.position.z);
     }
 
     void Update()
@@ -70,7 +105,8 @@ public class TerrathornBoulder : MonoBehaviour
         if (boulderCollider != null)
             boulderCollider.enabled = false;
 
-        // a few rock chips burst out
+        // a puff of dust and a few rock chips burst out
+        FxArt.Play("DustBurst", transform.position, 1.3f, 18f, FxArt.BossOrder);
         Sprite chip = HudVisualUtility.CircleSprite();
         for (int index = 0; index < 6; index++)
         {

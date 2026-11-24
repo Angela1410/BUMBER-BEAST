@@ -67,4 +67,29 @@ MonoBehaviour:
   - 0.75
   - 1.3
   - 0.9
-  fileVersion: 3
+  bossRageAt: 0.3
+  thornmawRegrowSeconds: 3
+  thornmawRegrowMax: 2
+  thornmawRegrowCap: 0.45
+  thornmawRageDropTime: 0.6
+  terrathornWallEvery: 8
+  terrathornWallHits: 2
+  terrathornWallSeconds: 5
+  terrathornRollSpeed: 1.8
+  terrathornRollPushBack: 0.9
+  voltrexOverchargeEvery: 5.5
+  voltrexOverchargeSpeed: 1.9
+  voltrexOverchargeSeconds: 3.5
+  voltrexBlinkDistance: 1.8
+  voltrexStormEvery: 6
+  voltrexStormStrikes: 2
+  voltrexStrikeWarning: 1
+  voltrexChargedSeconds: 4
+  maelithShieldHits: 2
+  maelithShieldEvery: 5.5
+  maelithCopies: 2
+  maelithCopyEvery: 6
+  pyraxCallEvery: 7
+  pyraxRageCallEvery: 4
+  pyraxRebornHealth: 0.3
+  fileVersion: 4

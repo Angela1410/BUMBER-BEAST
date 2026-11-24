@@ -5,39 +5,51 @@ using UnityEngine;
 
 // the Earth chapter boss. it's on the shared enemy prefab next to ThornmawAbility
 // and only turns on for a boss whose name has "Terrathorn" in it.
-// Rockfall: a shadow shows where a boulder will land, then a boulder drops into the field.
-// boulders block and bounce shots (the aim line shows the bounce) and break after a few
-// hits or a short time, so the player always has an open path
+// STONE WALL: Terrathorn stomps (dust where the rocks will come up), then three boulders rise in
+// front of it and walk with it. they block straight shots from the launch pad, so you have to bank
+// the Beast off a wall or a bumper to hit it from the side (that also gives bounce power), or break
+// a rock (two hits). the wall crumbles by itself after a few seconds
+// RAGE (AVALANCHE, at 30% health): no more walls. it charges at your barrier much faster, shaking
+// and kicking up dust, but every hit pushes it back up its path
 [RequireComponent(typeof(Enemy))]
-public class TerrathornAbility : MonoBehaviour
+public class TerrathornAbility : MonoBehaviour, IBossRage
 {
     [Header("Boss Look")]
     public Sprite bossSprite;
     public float bossScale = 3f;
     public Color stoneTint = new Color(0.86f, 0.68f, 0.5f, 1f);
 
-    [Header("Rockfall")]
+    [Header("Stone Wall")]
     public Sprite boulderSprite;
-    public int maxBoulders = 3;
-    public float firstDropDelay = 4f;
-    public float dropInterval = 5.5f;
+    public float firstWallDelay = 4f;
     public float warningTime = 0.9f;
-    public float boulderLifetime = 10f;
-    public int boulderHits = 2;
-    public float boulderRadius = 0.55f;
+    public float rockRadius = 0.5f;
+    // the rocks stand on an arc below Terrathorn (toward the barrier), these angles in degrees
+    public float[] wallAngles = { -132f, -90f, -48f };
 
-    [Header("Rockfall Area")]
-    public Vector2 areaMin = new Vector2(-3.2f, -1.4f);
-    public Vector2 areaMax = new Vector2(3.2f, 3.4f);
-    public float minDistanceFromBoss = 1.6f;
-    public float clearanceRadius = 1.05f;
+    private static readonly Color EarthColor = new Color(0.86f, 0.62f, 0.32f, 1f);
+    private static readonly Color AvalancheColor = new Color(1f, 0.55f, 0.2f, 1f);
 
-    private readonly List<GameObject> activeBoulders = new List<GameObject>();
+    private readonly List<TerrathornBoulder> wall = new List<TerrathornBoulder>();
     private SpriteRenderer sr;
     private Enemy enemy;
+    private EnemyHitFeedback hitFeedback;
+    private CircleCollider2D bossCollider;
+    private bool isTerrathorn;
+    private bool raging;
+    private Coroutine wallRoutine;
+    private int lastHealth;
+    private int lastShield;
+    private float nextPush;
+    private float nextDust;
     // the painted Terrathorn art (Assets/Resources/Art) keeps its own colors, the stone tint is only
     // for the borrowed sprite on the prefab
     private Color baseColor;
+
+    public bool HasRage => isTerrathorn;
+    public string RageName => "AVALANCHE!";
+    public string RageHint => "Terrathorn charges! Every hit pushes it back.";
+    public Color RageColor => AvalancheColor;
 
     public static bool IsTerrathorn(Enemy candidate)
     {
@@ -52,11 +64,14 @@ public class TerrathornAbility : MonoBehaviour
         if (!IsTerrathorn(enemy))
             return;
 
+        isTerrathorn = true;
         enemy.destroysBarrierOnReach = true;
         sr = GetComponent<SpriteRenderer>();
+        hitFeedback = GetComponent<EnemyHitFeedback>();
+        bossCollider = GetComponent<CircleCollider2D>();
         baseColor = stoneTint;
         StartCoroutine(ApplyBossLook());
-        StartCoroutine(RockfallRoutine());
+        wallRoutine = StartCoroutine(StoneWallRoutine());
     }
 
     IEnumerator ApplyBossLook()
@@ -72,7 +87,6 @@ public class TerrathornAbility : MonoBehaviour
             baseColor = painted != null ? Color.white : stoneTint;
             enemy.SetHitFlashBaseColor(baseColor);
 
-            CircleCollider2D bossCollider = GetComponent<CircleCollider2D>();
             if (bossCollider != null && sr.sprite != null)
             {
                 Bounds spriteBounds = sr.sprite.bounds;
@@ -82,132 +96,186 @@ public class TerrathornAbility : MonoBehaviour
         }
 
         transform.localScale = Vector3.one * bossScale;
-        EnemyHitFeedback hitFeedback = GetComponent<EnemyHitFeedback>();
         if (hitFeedback != null)
             hitFeedback.SetBasePose(transform.localScale, transform.localRotation);
     }
 
-    IEnumerator RockfallRoutine()
+    // --- STONE WALL ---
+
+    IEnumerator StoneWallRoutine()
     {
-        yield return new WaitForSeconds(firstDropDelay);
+        yield return new WaitForSeconds(firstWallDelay);
+        GameTuning tuning = GameTuning.Get;
 
-        while (enemy != null)
+        while (enemy != null && !raging)
         {
-            activeBoulders.RemoveAll(item => item == null);
-            if (activeBoulders.Count < Mathf.Max(1, maxBoulders) &&
-                TryPickLandingSpot(out Vector2 landing))
-            {
-                yield return StartCoroutine(DropBoulder(landing));
-            }
-
-            yield return new WaitForSeconds(Mathf.Max(0.5f, dropInterval - warningTime));
+            wall.RemoveAll(rock => rock == null);
+            if (wall.Count == 0)
+                yield return StartCoroutine(RaiseWall(tuning));
+            yield return new WaitForSeconds(Mathf.Max(1f, tuning.terrathornWallEvery));
         }
     }
 
-    bool TryPickLandingSpot(out Vector2 landing)
+    IEnumerator RaiseWall(GameTuning tuning)
     {
-        for (int attempt = 0; attempt < 20; attempt++)
-        {
-            Vector2 candidate = new Vector2(
-                UnityEngine.Random.Range(areaMin.x, areaMax.x),
-                UnityEngine.Random.Range(areaMin.y, areaMax.y));
-            // never outside the screen or too close to a wall
-            candidate = CameraFit.ClampToField(candidate, boulderRadius);
-
-            if (Vector2.Distance(candidate, transform.position) < minDistanceFromBoss)
-                continue;
-
-            // stay away from bumpers, walls, other boulders and the Beast
-            bool blocked = false;
-            foreach (Collider2D overlap in Physics2D.OverlapCircleAll(candidate, clearanceRadius))
-            {
-                if (overlap == null || overlap.isTrigger || overlap.GetComponentInParent<Enemy>() != null)
-                    continue;
-
-                blocked = true;
-                break;
-            }
-
-            if (blocked)
-                continue;
-
-            landing = candidate;
-            return true;
-        }
-
-        landing = Vector2.zero;
-        return false;
-    }
-
-    IEnumerator DropBoulder(Vector2 landing)
-    {
-        // warning: the boss glows and a shadow grows where the rock will land
+        // warning: Terrathorn glows and dust puffs where each rock will come up
         if (sr != null)
             sr.color = new Color(1f, 0.62f, 0.3f, 1f);
-
-        GameObject shadow = new GameObject("RockfallWarning");
-        shadow.transform.position = new Vector3(landing.x, landing.y, 0f);
-        SpriteRenderer shadowRenderer = shadow.AddComponent<SpriteRenderer>();
-        shadowRenderer.sprite = HudVisualUtility.CircleSprite();
-        shadowRenderer.sortingOrder = 1;
-
         float elapsed = 0f;
-        while (elapsed < warningTime)
+        float nextPuff = 0f;
+        while (elapsed < warningTime && enemy != null && !raging)
         {
+            if (elapsed >= nextPuff)
+            {
+                nextPuff += 0.3f;
+                foreach (Vector2 spot in WallSpots())
+                    FxArt.Play("DustBurst", spot, rockRadius * 2.2f, 16f, FxArt.BossOrder);
+            }
             elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / warningTime);
-            float pulse = 0.5f + 0.5f * Mathf.Sin(elapsed * 18f);
-            float diameter = boulderRadius * 2f * Mathf.Lerp(0.4f, 1.1f, t);
-            shadow.transform.localScale = new Vector3(diameter, diameter * 0.55f, 1f);
-            shadowRenderer.color = new Color(0.12f, 0.06f, 0.02f, Mathf.Lerp(0.15f, 0.5f, t) + pulse * 0.1f);
             yield return null;
         }
-
-        Destroy(shadow);
         if (sr != null && enemy != null)
             sr.color = baseColor;
-
-        if (enemy == null)
+        if (enemy == null || raging)
             yield break;
 
-        GameObject boulder = new GameObject("TerrathornBoulder");
-        boulder.transform.position = new Vector3(landing.x, landing.y, 0f);
-        SpriteRenderer boulderRenderer = boulder.AddComponent<SpriteRenderer>();
         Sprite paintedBoulder = GameArt.Find("Terrathorn_Boulder");
         Sprite rock = paintedBoulder != null ? paintedBoulder : boulderSprite;
+        foreach (Vector2 spot in WallSpots())
+            wall.Add(MakeRock(spot, rock, tuning));
+
+        DamagePopup.ShowText(transform.position + Vector3.up * 1.2f, "STONE WALL!", EarthColor);
+        GameAudio.Play(Sfx.Block, 0.8f);
+        CameraShake.Shake(true);
+    }
+
+    List<Vector2> WallSpots()
+    {
+        List<Vector2> spots = new List<Vector2>(wallAngles.Length);
+        Vector2 center = BodyCenter();
+        float arc = BodyRadius() + rockRadius + 0.2f;
+        foreach (float angle in wallAngles)
+        {
+            float radians = angle * Mathf.Deg2Rad;
+            spots.Add(center + new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * arc);
+        }
+        return spots;
+    }
+
+    Vector2 BodyCenter()
+    {
+        if (bossCollider == null)
+            return transform.position;
+        return transform.TransformPoint(bossCollider.offset);
+    }
+
+    float BodyRadius()
+    {
+        return CameraFit.WorldRadius(bossCollider, 1f);
+    }
+
+    TerrathornBoulder MakeRock(Vector2 spot, Sprite rock, GameTuning tuning)
+    {
+        GameObject boulder = new GameObject("TerrathornWallRock");
+        boulder.transform.position = new Vector3(spot.x, spot.y, 0f);
+        SpriteRenderer boulderRenderer = boulder.AddComponent<SpriteRenderer>();
         boulderRenderer.sprite = rock != null ? rock : HudVisualUtility.CircleSprite();
         boulderRenderer.color = rock != null ? Color.white : new Color(0.55f, 0.45f, 0.36f, 1f);
-        boulderRenderer.sortingOrder = 2;
+        boulderRenderer.sortingOrder = (sr != null ? sr.sortingOrder : 5) + 6;
 
         // scale the art so the rock you see matches the collider
         Vector2 spriteSize = boulderRenderer.sprite.bounds.size;
         float spriteDiameter = Mathf.Max(0.01f, Mathf.Max(spriteSize.x, spriteSize.y));
-        float scale = boulderRadius * 2.2f / spriteDiameter;
+        float scale = rockRadius * 2.2f / spriteDiameter;
         boulder.transform.localScale = Vector3.one * scale;
 
         CircleCollider2D boulderCollider = boulder.AddComponent<CircleCollider2D>();
-        boulderCollider.radius = boulderRadius / scale;
+        boulderCollider.radius = rockRadius / scale;
+        // it moves with Terrathorn, so it gets a kinematic body (it never pushes the enemies)
+        Rigidbody2D body = boulder.AddComponent<Rigidbody2D>();
+        body.bodyType = RigidbodyType2D.Kinematic;
+        body.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         TerrathornBoulder boulderComponent = boulder.AddComponent<TerrathornBoulder>();
-        boulderComponent.Initialise(boulderHits, boulderLifetime, scale);
-        activeBoulders.Add(boulder);
-        CameraShake.Shake(true);
+        boulderComponent.Initialise(Mathf.Max(1, tuning.terrathornWallHits), Mathf.Max(1f, tuning.terrathornWallSeconds), scale);
+        boulderComponent.Follow(transform, spot - (Vector2)transform.position);
+        FxArt.Play("DustBurst", spot, rockRadius * 2.6f, 18f, FxArt.BossOrder);
+        return boulderComponent;
+    }
+
+    void CrumbleWall()
+    {
+        foreach (TerrathornBoulder rock in wall)
+        {
+            if (rock != null)
+                rock.CrumbleNow();
+        }
+        wall.Clear();
+    }
+
+    // --- RAGE: AVALANCHE ---
+
+    public void BeginRage()
+    {
+        if (raging || enemy == null)
+            return;
+        raging = true;
+        if (wallRoutine != null)
+            StopCoroutine(wallRoutine);
+        CrumbleWall();
+        if (sr != null)
+            sr.color = baseColor;
+        enemy.Haste(Mathf.Max(1f, GameTuning.Get.terrathornRollSpeed), 100000f);
+        lastHealth = enemy.CurrentHealth;
+        lastShield = enemy.ShieldHits;
+    }
+
+    void Update()
+    {
+        if (!raging || enemy == null || enemy.IsDead)
+            return;
+
+        // it shakes from side to side as it charges
+        if (hitFeedback != null)
+            hitFeedback.SetBasePose(Vector3.one * bossScale, Quaternion.Euler(0f, 0f, Mathf.Sin(Time.time * 15f) * 7f));
+
+        // dust behind its feet
+        if (Time.time >= nextDust)
+        {
+            nextDust = Time.time + 0.22f;
+            Vector2 feet = BodyCenter() + Vector2.down * BodyRadius() * 0.8f +
+                Vector2.right * UnityEngine.Random.Range(-0.5f, 0.5f);
+            FxArt.Play("DustBurst", feet, 1.1f, 18f, (sr != null ? sr.sortingOrder : 5) - 1);
+        }
+
+        // every hit (or blocked hit) pushes it back up its path
+        bool hit = enemy.CurrentHealth < lastHealth || enemy.ShieldHits < lastShield;
+        lastHealth = enemy.CurrentHealth;
+        lastShield = enemy.ShieldHits;
+        if (hit && Time.time >= nextPush)
+        {
+            nextPush = Time.time + 0.15f;
+            enemy.KnockBack(Vector2.up, Mathf.Max(0f, GameTuning.Get.terrathornRollPushBack), 0.18f);
+            FxArt.Play("DustBurst", BodyCenter(), 2f, 18f, FxArt.BossOrder);
+            CameraShake.Shake(false);
+        }
     }
 
     void OnDestroy()
     {
-        foreach (GameObject boulder in activeBoulders)
+        foreach (TerrathornBoulder rock in wall)
         {
-            if (boulder != null)
-                Destroy(boulder);
+            if (rock != null)
+                Destroy(rock.gameObject);
         }
     }
 
     void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(0.9f, 0.6f, 0.3f, 0.9f);
-        Vector3 center = (Vector3)((areaMin + areaMax) * 0.5f);
-        Vector3 size = (Vector3)(areaMax - areaMin);
-        Gizmos.DrawWireCube(center, size);
+        if (bossCollider == null)
+            bossCollider = GetComponent<CircleCollider2D>();
+        foreach (Vector2 spot in WallSpots())
+            Gizmos.DrawWireSphere(spot, rockRadius);
     }
 }
