@@ -79,8 +79,11 @@ public class BumperBeastSmokeTest
         yield return CheckStagger();
         CheckAim();
         yield return CheckIdleAndArt(shots);
+        yield return CheckSkillEffects(shots);
         yield return CheckLaunchHint(shots);
         yield return CheckBeastsTab(shots);
+        foreach (string[] boss in Bosses)
+            yield return CheckBoss(boss[0], boss[1], shots);
 
         Application.logMessageReceived -= CollectErrors;
         string summary = "SMOKE TEST REPORT\n" + report + "\nerrors logged: " + errors.Count +
@@ -463,7 +466,7 @@ public class BumperBeastSmokeTest
         else
             report.AppendLine("idle: bobs " + bob.ToString("0.000") + " units on the pad");
 
-        foreach (BeastId id in new[] { BeastId.Voltis, BeastId.Mossback })
+        foreach (BeastId id in new[] { BeastId.Voltis, BeastId.Mossback, BeastId.Ripple })
         {
             beast.SetActiveBeast(id);
             launcher.PlaySwapPop();
@@ -471,10 +474,32 @@ public class BumperBeastSmokeTest
                 yield return null;
             SpriteRenderer look = beast.GetComponent<SpriteRenderer>();
             Sprite art = PlaceholderArt.BeastIdle(id);
-            if (art == null || look == null || (look.sprite != art && look.sprite != PlaceholderArt.BeastBall(id)))
-                problems.Add("art: " + id + " on the pad doesn't use Beast_" + id + "_Idle");
+            Sprite[] frames = PlaceholderArt.BeastIdleFrames(id);
+            if (frames == null || frames.Length < 16)
+                problems.Add("art: " + id + " has no idle animation frames in Placeholders/Frames");
+            // the idle animation plays on the pad: the picture changes within a second
+            HashSet<Sprite> seen = new HashSet<Sprite>();
+            float watchUntil = Time.time + 1.2f;
+            while (Time.time < watchUntil && look != null)
+            {
+                seen.Add(look.sprite);
+                yield return null;
+            }
+            bool fromFrames = frames != null && look != null && System.Array.IndexOf(frames, look.sprite) >= 0;
+            Sprite ball = PlaceholderArt.BeastBall(id);
+            if (art == null || look == null || (!fromFrames && look.sprite != art && look.sprite != ball))
+                problems.Add("art: " + id + " on the pad doesn't use Beast_" + id + "_Idle or its frames");
             else if (Mathf.Abs(art.bounds.size.x - 1.22f) > 0.02f)
                 problems.Add("art: " + id + " is " + art.bounds.size.x.ToString("0.00") + " wide, Choma is 1.22");
+            else if (frames != null && Mathf.Abs(frames[0].bounds.size.x - art.bounds.size.x) > 0.02f)
+                problems.Add("art: " + id + "'s idle frames are " + frames[0].bounds.size.x.ToString("0.00") +
+                    " wide, its picture is " + art.bounds.size.x.ToString("0.00"));
+            else if (seen.Count < 3)
+                problems.Add("art: " + id + "'s idle animation isn't playing (" + seen.Count + " pictures in 1.2 s)");
+            else
+                report.AppendLine("art: " + id + " plays " + seen.Count + " idle pictures in 1.2 s on the pad");
+            if (ball == null || Mathf.Abs(ball.bounds.size.x - 1.22f) > 0.02f)
+                problems.Add("art: " + id + "'s ball picture is missing or not 1.22 wide");
             RenderTexture target = new RenderTexture(540, 1200, 24);
             camera.targetTexture = target;
             for (int frame = 0; frame < 3; frame++)
@@ -483,7 +508,304 @@ public class BumperBeastSmokeTest
             camera.targetTexture = null;
             Object.Destroy(target);
         }
-        report.AppendLine("art: Voltis and Mossback use the new pictures on the pad (1.22 wide, like Choma)");
+        report.AppendLine("art: Voltis, Mossback and Ripple use the new pictures on the pad (1.22 wide, like Choma)");
+    }
+
+    // every Beast's skill shows its effect pictures (Assets/Resources/Fx), with a picture of each
+    IEnumerator CheckSkillEffects(string shots)
+    {
+        BeastController beast = BeastController.Active;
+        LaunchController launcher = beast != null ? beast.GetComponent<LaunchController>() : null;
+        Rigidbody2D body = beast != null ? beast.GetComponent<Rigidbody2D>() : null;
+        Camera camera = Camera.main;
+        if (beast == null || launcher == null || body == null || camera == null)
+        {
+            problems.Add("skills: no Beast in stage 5");
+            yield break;
+        }
+        // the first picture of each Beast's effect (Thistle uses its own vine frames)
+        string[] wanted = { "FlameBurst", "Thistle", "HeavyKnock", "ZapImpact", "SplashWave" };
+        System.Reflection.PropertyInfo cooldown = typeof(BeastController).GetProperty("CooldownRemaining");
+        for (int index = 0; index < BeastRoster.AllBeasts.Length; index++)
+        {
+            BeastId id = BeastRoster.AllBeasts[index];
+            while (beast.State != BeastState.AtPad)
+                yield return null;
+            beast.SetActiveBeast(id);
+            launcher.PlaySwapPop();
+            yield return null;
+            body.linearVelocity = new Vector2(0.5f, 6f);
+            beast.NotifyLaunched();
+            float flyUntil = Time.time + 0.25f;
+            while (Time.time < flyUntil)
+                yield return null;
+            if (cooldown != null)
+                cooldown.SetValue(beast, 0f);
+            beast.ActivateSkill();
+            float until = Time.time + 0.18f;
+            while (Time.time < until)
+                yield return null;
+
+            int shown = 0;
+            foreach (SpriteFlipbookFx fx in Object.FindObjectsByType<SpriteFlipbookFx>())
+            {
+                Sprite sprite = fx.Renderer != null ? fx.Renderer.sprite : null;
+                if (sprite != null && (sprite.name.StartsWith(wanted[index]) || sprite.texture.name.StartsWith(wanted[index])))
+                    shown++;
+            }
+            if (shown == 0)
+                problems.Add("skills: " + id + "'s skill showed no effect picture");
+            else
+                report.AppendLine("skills: " + id + " (" + BeastRoster.GetAbilityName(id) + ") shows " + shown + " effect picture(s)");
+            yield return CaptureNow(shots, "skill_" + id + ".png", 1);
+            beast.BeginReturn();
+        }
+        while (beast.State != BeastState.AtPad)
+            yield return null;
+        beast.SetActiveBeast(BeastId.Choma);
+        launcher.PlaySwapPop();
+    }
+
+    // stage scene and boss name of every chapter boss
+    private static readonly string[][] Bosses =
+    {
+        new[] { "Assets/Scenes/stage-4.unity", "Thornmaw" },
+        new[] { "Assets/Scenes/stage-8_Earth.unity", "Terrathorn" },
+        new[] { "Assets/Scenes/stage-12_Electric.unity", "Voltrex" },
+        new[] { "Assets/Scenes/stage-16_Water.unity", "Maelith" },
+        new[] { "Assets/Scenes/stage-20_Fire.unity", "Pyrax" }
+    };
+
+    // each boss: its move happens (with its effect pictures), then at 30% health its own rage mode
+    // starts. the boss is made straight away (READY is never pressed, so no other enemies come)
+    IEnumerator CheckBoss(string scene, string bossName, string shots)
+    {
+        AsyncOperation loading = EditorSceneManager.LoadSceneAsyncInPlayMode(scene, new LoadSceneParameters(LoadSceneMode.Single));
+        while (!loading.isDone)
+            yield return null;
+        for (int frame = 0; frame < 10; frame++)
+            yield return null;
+
+        WaveManager waves = Object.FindAnyObjectByType<WaveManager>();
+        EnemyWave bossWave = null;
+        if (waves != null && waves.waves != null)
+        {
+            foreach (EnemyWave wave in waves.waves)
+            {
+                if (wave != null && (wave.isBoss || wave.bossSpawnsLast || wave.bossSpawnIndex >= 0))
+                    bossWave = wave;
+            }
+        }
+        if (bossWave == null || bossWave.enemyPrefabs == null || bossWave.enemyPrefabs.Length == 0)
+        {
+            problems.Add(bossName + ": no boss wave in " + scene);
+            yield break;
+        }
+        int prefabIndex = bossWave.bossSpawnIndex >= 0 ? bossWave.bossSpawnIndex
+            : bossWave.bossSpawnsLast ? bossWave.enemyCount - 1 : 0;
+        Enemy prefab = bossWave.enemyPrefabs[Mathf.Max(0, prefabIndex) % bossWave.enemyPrefabs.Length];
+        Enemy boss = Object.Instantiate(prefab, waves.spawnPoint.position, Quaternion.identity);
+        boss.ApplyWaveData(bossWave.element, bossWave.extraHealth, bossWave.speedMultiplier);
+        boss.SetRoute(waves.routeWaypoints, 0f);
+        boss.SetBoss(bossWave.bossName, bossWave.bossHealthBonus, bossWave.speedMultiplier);
+        boss.transform.localScale = Vector3.one * 1.5f;
+        ChapterBossAbility.AttachIfChapterBoss(boss, waves, bossWave);
+        if (boss.bossName.IndexOf(bossName, System.StringComparison.OrdinalIgnoreCase) < 0)
+            problems.Add(bossName + ": the boss wave's boss is called " + boss.bossName);
+
+        // its move: wait until it has done it once (the real-time limit is in case the stage ends)
+        float until = Time.time + 14f, realUntil = Time.unscaledTime + 40f;
+        string move = null;
+        while (Time.time < until && Time.unscaledTime < realUntil && move == null && boss != null)
+        {
+            move = BossMoveSeen(bossName, boss);
+            yield return null;
+        }
+        if (move == null)
+            problems.Add(bossName + ": its move didn't happen in 14 s");
+        else
+            report.AppendLine(bossName + ": " + move);
+        // press READY so the plan card is out of the way of the pictures (wave 1 starts too)
+        System.Reflection.MethodInfo ready = typeof(WaveManager).GetMethod("ConfirmPlan",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        if (ready != null && waves.IsAwaitingReady)
+            ready.Invoke(waves, null);
+        yield return CaptureNow(shots, "boss_" + bossName + "_move.png", 25);
+
+        // rage: hit it down to just under 30% (the armor at 60% takes three of the hits)
+        BossPhases phases = boss != null ? boss.GetComponent<BossPhases>() : null;
+        int guard = 0;
+        while (boss != null && !boss.IsDead && guard++ < 200 &&
+            boss.CurrentHealth > boss.MaxHealthTotal * (GameTuning.Get.bossRageAt - 0.02f))
+        {
+            boss.TakeDamage(1);
+            yield return null;
+        }
+        for (int frame = 0; frame < 5; frame++)
+            yield return null;
+        if (phases == null || !phases.IsEnraged)
+        {
+            problems.Add(bossName + ": the rage mode didn't start at 30% health");
+            yield break;
+        }
+        until = Time.time + 12f;
+        realUntil = Time.unscaledTime + 40f;
+        string rage = null;
+        while (Time.time < until && Time.unscaledTime < realUntil && rage == null && boss != null)
+        {
+            rage = BossRageSeen(bossName, boss);
+            yield return null;
+        }
+        if (rage == null)
+            problems.Add(bossName + ": nothing from its rage mode showed in 12 s");
+        else
+            report.AppendLine(bossName + " rage: " + rage);
+        // Maelith's copies come out of a splash: wait for it to clear so the copies show
+        if (bossName == "Maelith")
+        {
+            float settle = Time.time + 1f;
+            while (Time.time < settle && Time.unscaledTime < realUntil)
+                yield return null;
+        }
+        yield return CaptureNow(shots, "boss_" + bossName + "_rage.png", 6);
+
+        if (bossName == "Pyrax" && boss != null)
+            yield return CheckPhoenix(boss, shots);
+    }
+
+    static string BossMoveSeen(string bossName, Enemy boss)
+    {
+        switch (bossName)
+        {
+            case "Thornmaw":
+                foreach (Bumper bumper in Bumper.All)
+                {
+                    if (bumper != null && bumper.isBramble)
+                        return "dropped a bramble (a thorn sprout grows first)";
+                }
+                return null;
+            case "Terrathorn":
+                int rocks = Object.FindObjectsByType<TerrathornBoulder>().Length;
+                return rocks >= 3 ? "raised a Stone Wall of " + rocks + " rocks" : null;
+            case "Voltrex":
+                return boss.IsHasted && CountFx("ElectricAura") > 0 ? "Overcharge (electric aura on)" : null;
+            case "Maelith":
+                return boss.ShieldHits > 0 && CountFx("Bubble") > 0 ? "Tide Shield bubble up (" + boss.ShieldHits + " hits)" : null;
+            default:
+                int imps = 0;
+                foreach (Enemy enemy in Enemy.ActiveEnemies)
+                {
+                    if (enemy != null && !enemy.isBoss)
+                        imps++;
+                }
+                return imps > 0 ? "Ember Call brought " + imps + " imp(s)" : null;
+        }
+    }
+
+    static string BossRageSeen(string bossName, Enemy boss)
+    {
+        if (CountFx("RageAura") == 0)
+            return null;
+        switch (bossName)
+        {
+            case "Thornmaw":
+                return GameObject.Find("OvergrowthVine") != null ? "OVERGROWTH vines heal it from the brambles" : null;
+            case "Terrathorn":
+                return boss.IsHasted && Object.FindObjectsByType<TerrathornBoulder>().Length == 0 ? "AVALANCHE charge, wall gone" : null;
+            case "Voltrex":
+                int charged = Object.FindObjectsByType<ChargedBumper>().Length;
+                return charged > 0 ? "THUNDERSTORM charged " + charged + " bumper(s)" : null;
+            case "Maelith":
+                int copies = Object.FindObjectsByType<MaelithCopy>().Length;
+                return copies > 0 ? "MIRROR MIST made " + copies + " water copies" : null;
+            default:
+                return "PHOENIX aura on";
+        }
+    }
+
+    // Pyrax in rage: beat it, it comes back once with 30% health, beat it again and it stays down
+    IEnumerator CheckPhoenix(Enemy boss, string shots)
+    {
+        int guard = 0;
+        while (boss != null && !boss.IsDead && guard++ < 200)
+        {
+            boss.TakeDamage(50);
+            yield return null;
+        }
+        for (int frame = 0; frame < 5; frame++)
+            yield return null;
+        Enemy phoenix = null;
+        foreach (Enemy enemy in Enemy.ActiveEnemies)
+        {
+            if (enemy != null && enemy.isBoss && !enemy.IsDead)
+                phoenix = enemy;
+        }
+        if (phoenix == null)
+        {
+            problems.Add("Pyrax: it didn't rise from the ashes");
+            yield break;
+        }
+        float until = Time.time + 1f, realUntil = Time.unscaledTime + 10f;
+        while (Time.time < until && Time.unscaledTime < realUntil)
+            yield return null;
+        // its health bar is back at the top of the screen
+        int shownBars = 0;
+        foreach (UnityEngine.UI.Image image in Object.FindObjectsByType<UnityEngine.UI.Image>())
+        {
+            if (image.name == "BossHealthPanel" && image.gameObject.activeInHierarchy)
+                shownBars++;
+        }
+        GameObject label = GameObject.Find("BossHealthText");
+        if (shownBars != 1 || label == null || !label.GetComponent<TMPro.TMP_Text>().enabled)
+            problems.Add("Pyrax: after rising again " + shownBars + " health bar(s) show (expected 1, with its label)");
+        float health = phoenix.CurrentHealth / (float)phoenix.MaxHealthTotal;
+        report.AppendLine("Pyrax: rose again with " + Mathf.RoundToInt(health * 100f) + "% health");
+        if (Mathf.Abs(health - GameTuning.Get.pyraxRebornHealth) > 0.06f)
+            problems.Add("Pyrax: came back with " + Mathf.RoundToInt(health * 100f) + "% health, expected " +
+                Mathf.RoundToInt(GameTuning.Get.pyraxRebornHealth * 100f) + "%");
+        yield return CaptureNow(shots, "boss_Pyrax_reborn.png", 3);
+
+        guard = 0;
+        while (phoenix != null && !phoenix.IsDead && guard++ < 200)
+        {
+            phoenix.TakeDamage(50);
+            yield return null;
+        }
+        for (int frame = 0; frame < 10; frame++)
+            yield return null;
+        foreach (Enemy enemy in Enemy.ActiveEnemies)
+        {
+            if (enemy != null && enemy.isBoss && !enemy.IsDead)
+            {
+                problems.Add("Pyrax: it came back a second time");
+                break;
+            }
+        }
+    }
+
+    static int CountFx(string name)
+    {
+        int count = 0;
+        foreach (SpriteFlipbookFx fx in Object.FindObjectsByType<SpriteFlipbookFx>())
+        {
+            if (fx.Renderer != null && fx.Renderer.sprite != null && fx.Renderer.sprite.name.StartsWith(name))
+                count++;
+        }
+        return count;
+    }
+
+    IEnumerator CaptureNow(string shots, string file, int framesFirst)
+    {
+        Camera camera = Camera.main;
+        if (camera == null)
+            yield break;
+        RenderTexture target = new RenderTexture(540, 1200, 24);
+        camera.targetTexture = target;
+        for (int frame = 0; frame < framesFirst; frame++)
+            yield return null;
+        Capture(camera, target, Path.Combine(shots, file));
+        camera.targetTexture = null;
+        Object.Destroy(target);
     }
 
     // help for new players: in chapter 1, standing still on the pad during a wave brings up the
