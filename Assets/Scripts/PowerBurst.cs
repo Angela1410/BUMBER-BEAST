@@ -142,6 +142,7 @@ public class PowerBurst : MonoBehaviour
 
         Destroy(glow.gameObject);
         Destroy(core.gameObject);
+        FxArt.Play("FlameBurst", end, FireballBlastRadius * 1.7f, 20f, SortingOrder + 2);
         BumperExplosionRing.Spawn(end, FireballBlastRadius, fire, SortingOrder);
         GameAudio.Play(Sfx.BumperExplode, 0.8f);
         CameraShake.Shake(false);
@@ -180,12 +181,14 @@ public class PowerBurst : MonoBehaviour
     {
         Color earth = ElementVisuals.GetColor(ElementType.Earth);
         CameraShake.Shake(true);
+        FxArt.Play("HeavyKnock", origin, 5f, 16f, SortingOrder + 2);
         BumperExplosionRing.Spawn(origin, 4.5f, earth, SortingOrder);
         yield return new WaitForSeconds(0.08f);
         foreach (Enemy enemy in Targets(origin))
         {
             enemy.KnockBack(Vector2.up, 2.2f, 0.3f);
             Hit(enemy, 1);
+            FxArt.Play("DustBurst", enemy.transform.position, 1.4f, 18f, SortingOrder + 2);
             BumperExplosionRing.Spawn(enemy.transform.position, 0.8f, earth, SortingOrder);
         }
         Finish();
@@ -221,6 +224,8 @@ public class PowerBurst : MonoBehaviour
             points.Add(to);
             line.positionCount = points.Count;
             line.SetPositions(points.ToArray());
+            FxArt.Bolt(current, to, 0.6f, 0.35f, SortingOrder + 2);
+            FxArt.Play("ZapImpact", to, 1.4f, 20f, SortingOrder + 3);
             Hit(next, 2);
             BumperExplosionRing.Spawn(to, 0.7f, bolt, SortingOrder);
             current = to;
@@ -251,6 +256,7 @@ public class PowerBurst : MonoBehaviour
         float radius = 0f;
         int next = 0;
         float ringTimer = 0f;
+        bool waveShown = false;
         while (next < targets.Count)
         {
             radius += speed * Time.deltaTime;
@@ -259,6 +265,11 @@ public class PowerBurst : MonoBehaviour
             {
                 BumperExplosionRing.Spawn(origin, Mathf.Max(1f, radius * 0.6f), water, SortingOrder);
                 ringTimer = 0.12f;
+            }
+            if (!waveShown)
+            {
+                waveShown = true;
+                FxArt.Play("SplashWave", origin, 7f, 14f, SortingOrder + 2);
             }
             while (next < targets.Count)
             {
@@ -269,6 +280,7 @@ public class PowerBurst : MonoBehaviour
                 {
                     enemy.KnockBack(Vector2.up, 1f, 0.2f);
                     Hit(enemy, 1);
+                    FxArt.Play("SplashWave", enemy.transform.position, 1.2f, 22f, SortingOrder + 2);
                     BumperExplosionRing.Spawn(enemy.transform.position, 0.8f, water, SortingOrder);
                 }
                 next++;

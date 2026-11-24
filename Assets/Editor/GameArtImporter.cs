@@ -3,11 +3,12 @@ using UnityEditor;
 using UnityEngine;
 
 // import settings for the painted art in Assets/Resources/Art that GameArt loads in the game
-// (barrier states, launcher, Terrathorn and its boulder). runs on every import so the files
+// (barrier states, launcher, Terrathorn and its boulder) and the effect frames in Assets/Resources/Fx. runs on every import so the files
 // always come in as clean, compressed sprites with no mipmaps
 public class GameArtImporter : AssetPostprocessor
 {
     public const string Folder = "Assets/Resources/Art/";
+    public const string FxFolder = "Assets/Resources/Fx/";
 
     void OnPreprocessTexture()
     {
@@ -21,6 +22,22 @@ public class GameArtImporter : AssetPostprocessor
             icon.alphaIsTransparency = true;
             icon.textureCompression = TextureImporterCompression.Uncompressed;
             icon.maxTextureSize = 1024;
+            return;
+        }
+
+        if (assetPath.StartsWith(FxFolder))
+        {
+            // skill and boss effect frames (FxArt): sprites, sized by code
+            TextureImporter fx = (TextureImporter)assetImporter;
+            fx.textureType = TextureImporterType.Sprite;
+            fx.spriteImportMode = SpriteImportMode.Single;
+            fx.spritePixelsPerUnit = 100f;
+            fx.alphaIsTransparency = true;
+            fx.mipmapEnabled = false;
+            fx.filterMode = FilterMode.Bilinear;
+            fx.wrapMode = TextureWrapMode.Clamp;
+            fx.textureCompression = TextureImporterCompression.CompressedHQ;
+            fx.maxTextureSize = 1024;
             return;
         }
 

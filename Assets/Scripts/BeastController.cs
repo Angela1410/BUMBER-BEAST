@@ -460,6 +460,8 @@ public class BeastController : MonoBehaviour
         foreach (Enemy enemy in FindEnemiesInRadius())
             ApplyElementalDamage(enemy, 2);
 
+        // the fire blast picture (Assets/Resources/Fx/FlameBurst) plus the ring
+        FxArt.Play("FlameBurst", transform.position, skillRadius * 1.6f, 20f);
         ShowSkillRing(FlameRingColor);
         stoppedTime = 0f;
     }
@@ -502,8 +504,11 @@ public class BeastController : MonoBehaviour
             Vector2 direction = (enemy.transform.position - transform.position).normalized;
             enemy.KnockBack(direction + Vector2.up * 0.75f, 2f, 0.25f);
             ApplyElementalDamage(enemy);
+            FxArt.Play("DustBurst", enemy.transform.position, 1.2f, 18f);
         }
 
+        // the ground cracks and rocks fly out (Fx/HeavyKnock)
+        FxArt.Play("HeavyKnock", transform.position, skillRadius * 1.8f, 18f);
         ShowSkillRing(KnockRingColor);
         CameraShake.Shake(true);
     }
@@ -542,21 +547,31 @@ public class BeastController : MonoBehaviour
                 zapPoints[zapCount++] = Vector3.Lerp(from, to, step / 4f) + side * Random.Range(-0.28f, 0.28f);
             zapPoints[zapCount++] = to;
 
+            // a lightning bolt picture jumps to the target and sparks on it (Fx/ZapBolt, Fx/ZapImpact)
+            FxArt.Bolt(from, to, 0.5f, 0.3f);
+            FxArt.Play("ZapImpact", to, 1.3f, 20f);
             currentPosition = closest.transform.position;
             ApplyElementalDamage(closest);
             candidates.Remove(closest);
         }
 
         ShowSkillRing(ZapColor);
-        if (zapCount > 1)
+        FxArt.Play("ZapImpact", transform.position, 1.6f, 20f);
+        // the plain line is only for when the bolt pictures are missing
+        if (zapCount > 1 && !FxArt.Has("ZapBolt"))
             ShowZap(zapCount);
     }
 
     void SplashNearbyEnemies()
     {
         foreach (Enemy enemy in FindEnemiesInRadius())
+        {
             ApplyElementalDamage(enemy);
+            FxArt.Play("SplashWave", enemy.transform.position, 1f, 22f);
+        }
 
+        // a ring of water rolls out from Ripple (Fx/SplashWave)
+        FxArt.Play("SplashWave", transform.position, skillRadius * 2f, 18f);
         ShowSkillRing(SplashRingColor);
     }
 
