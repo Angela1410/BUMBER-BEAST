@@ -48,6 +48,16 @@ public class GameTuning : ScriptableObject
         "around comes back sooner). 0 = off.")]
     public float returnWhenNothingHit = 1.5f;
 
+    [Header("Help for new players")]
+    [Tooltip("In stages up to this one, a hand shows how to launch when you wait on the pad during a wave.")]
+    public int hintUpToStage = 4;
+    [Tooltip("Seconds of waiting on the pad (with enemies coming) before the hand shows up.")]
+    public float hintAfterIdleSeconds = 3f;
+    [Tooltip("Game speed during the stage 1 skill lesson (1 = normal).")]
+    public float skillLessonSlowMotion = 0.4f;
+    [Tooltip("Longest the stage 1 skill lesson waits for the tap, in real seconds.")]
+    public float skillLessonSeconds = 4f;
+
     [Header("Power meter")]
     [Tooltip("Green bumper hits needed to fill the POWER meter. Full = a green bumper turns into the Power Bumper.")]
     public int powerMeterHits = 6;

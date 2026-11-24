@@ -46,6 +46,11 @@ MonoBehaviour:
   returnAfterBounces: 6
   returnAfterSeconds: 3
   returnFlightTime: 0.3
+  returnWhenNothingHit: 1.5
+  hintUpToStage: 4
+  hintAfterIdleSeconds: 3
+  skillLessonSlowMotion: 0.4
+  skillLessonSeconds: 4
   powerMeterHits: 6
   enemiesPerGroup: 4
   breakBetweenGroups: 2
@@ -62,4 +67,4 @@ MonoBehaviour:
   - 0.75
   - 1.3
   - 0.9
-  fileVersion: 2
+  fileVersion: 3

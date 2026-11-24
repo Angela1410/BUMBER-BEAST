@@ -118,7 +118,11 @@ public class CoachMark : MonoBehaviour
     // heightFraction: 0 = bottom of the screen, 1 = top.
     // 0.8 or more puts it just under the wave bar at the top (so the field stays clear),
     // lower numbers put the bubble's center at that height on the screen
-    public void Say(string text, float heightFraction)
+    // true while the bubble or the hand is on screen
+    public bool IsShowing => (bubble != null && bubble.gameObject.activeSelf) || (hand != null && hand.gameObject.activeSelf);
+
+    // playSound false: no "tutorial" ding (for a hint that can come back many times)
+    public void Say(string text, float heightFraction, bool playSound = true)
     {
         bubble.gameObject.SetActive(true);
         Canvas.ForceUpdateCanvases();
@@ -150,7 +154,8 @@ public class CoachMark : MonoBehaviour
         HudVisualUtility.ApplyTextStyle(bubbleText);
         bubbleText.color = UiTheme.Cream;
         bubbleShownAt = Time.unscaledTime;
-        GameAudio.Play(Sfx.Tutorial);
+        if (playSound)
+            GameAudio.Play(Sfx.Tutorial);
     }
 
     public void HideBubble()

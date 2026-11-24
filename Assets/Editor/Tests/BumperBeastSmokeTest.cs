@@ -79,6 +79,7 @@ public class BumperBeastSmokeTest
         yield return CheckStagger();
         CheckAim();
         yield return CheckIdleAndArt(shots);
+        yield return CheckLaunchHint(shots);
         yield return CheckBeastsTab(shots);
 
         Application.logMessageReceived -= CollectErrors;
@@ -483,6 +484,61 @@ public class BumperBeastSmokeTest
             Object.Destroy(target);
         }
         report.AppendLine("art: Voltis and Mossback use the new pictures on the pad (1.22 wide, like Choma)");
+    }
+
+    // help for new players: in chapter 1, standing still on the pad during a wave brings up the
+    // "pull down, then let go" hand (picture too)
+    IEnumerator CheckLaunchHint(string shots)
+    {
+        AsyncOperation loading = EditorSceneManager.LoadSceneAsyncInPlayMode("Assets/Scenes/stage-3.unity",
+            new LoadSceneParameters(LoadSceneMode.Single));
+        while (!loading.isDone)
+            yield return null;
+
+        // wait for the plan card, then press READY like a player would
+        WaveManager waves = null;
+        float until = Time.unscaledTime + 10f;
+        while (Time.unscaledTime < until && (waves == null || !waves.IsAwaitingReady || waves.ReadyButtonRect == null))
+        {
+            waves = WaveManager.Current;
+            yield return null;
+        }
+        System.Reflection.MethodInfo ready = typeof(WaveManager).GetMethod("ConfirmPlan",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        if (waves == null || ready == null)
+        {
+            problems.Add("launch hint: no plan card in stage 3");
+            yield break;
+        }
+        ready.Invoke(waves, null);
+
+        // then do nothing: the hint should show up a few seconds after the first enemy walks in
+        LaunchHint hint = null;
+        until = Time.unscaledTime + 20f + GameTuning.Get.hintAfterIdleSeconds;
+        while (Time.unscaledTime < until && (hint == null || !hint.IsShowing))
+        {
+            hint = Object.FindAnyObjectByType<LaunchHint>();
+            yield return null;
+        }
+        if (hint == null || !hint.IsShowing)
+        {
+            problems.Add("launch hint: it didn't show while the player waited in stage 3");
+            yield break;
+        }
+        report.AppendLine("launch hint: shows the pull-down hand after " + GameTuning.Get.hintAfterIdleSeconds +
+            " s of waiting in chapter 1");
+
+        Camera camera = Camera.main;
+        if (camera != null)
+        {
+            RenderTexture target = new RenderTexture(540, 1200, 24);
+            camera.targetTexture = target;
+            for (int frame = 0; frame < 20; frame++)
+                yield return null;
+            Capture(camera, target, Path.Combine(shots, "launch_hint.png"));
+            camera.targetTexture = null;
+            Object.Destroy(target);
+        }
     }
 
     // fix 8: the Beasts tab portraits breathe and bob (picture of the tab too)

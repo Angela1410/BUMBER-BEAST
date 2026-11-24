@@ -133,6 +133,8 @@ public class StageManager : MonoBehaviour
         pauseMenu = PauseMenu.Create(this);
         // the POWER meter above the barrier: green bumper hits fill it, full = a Power Bumper
         PowerMeter.Attach(gameObject);
+        // chapter 1: a hand shows how to launch when a new player stands still
+        LaunchHint.Attach(this);
         TutorialDirector.StartIfNeeded(this);
         if (barrierVisuals != null)
             barrierVisuals.ShowHealth(barrierHealth, barrierMaxHealth);

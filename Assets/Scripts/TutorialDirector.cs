@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 // the guided first steps, played once (Settings > REPLAY TUTORIAL plays them again):
-// stage 1: READY on the plan card -> drag back and launch (the field freezes until the first shot)
+// stage 1: READY on the plan card -> pull down and launch (the field freezes until the first shot)
 // -> bounce to hit -> element advantage -> the skill button (in slow motion) -> guard the barrier
 // -> wave clear.
 // stage 2: bumper colors -> the POWER BUMPER (we make sure there's one) and what each Beast's power does.
@@ -17,7 +17,12 @@ public class TutorialDirector : MonoBehaviour
     private const float FrozenScale = 0f;
     // bubbles sit at the top under the wave bar, so the field stays clear
     private const float BubbleTop = 0.865f;
-    private const float SlowScale = 0.25f;
+
+    // the tutorial that's running (only one at a time)
+    private static TutorialDirector current;
+
+    // true while the tutorial shows a bubble or a hand, so the launch hint (LaunchHint) waits its turn
+    public static bool IsCoaching => current != null && current.coach != null && current.coach.IsShowing;
 
     private StageManager stage;
     private CoachMark coach;
@@ -63,6 +68,7 @@ public class TutorialDirector : MonoBehaviour
 
     void OnEnable()
     {
+        current = this;
         LaunchController.Launched += OnLaunched;
         StageStats.EnemyHit += OnEnemyHit;
         WaveManager.WaveCleared += OnWaveCleared;
@@ -71,6 +77,8 @@ public class TutorialDirector : MonoBehaviour
 
     void OnDisable()
     {
+        if (current == this)
+            current = null;
         LaunchController.Launched -= OnLaunched;
         StageStats.EnemyHit -= OnEnemyHit;
         WaveManager.WaveCleared -= OnWaveCleared;
@@ -122,8 +130,9 @@ public class TutorialDirector : MonoBehaviour
         if (waves == null)
             yield break;
 
-        coach.Say("Welcome, <color=#FFCC42>" + GameSettings.PlayerName + "</color>! Thorn Pups are coming.\n" +
-            "The card shows who beats them. Tap <color=#FFCC42>READY!</color>", BubbleTop);
+        // first say what the goal is, then what to tap
+        coach.Say("Welcome, <color=#FFCC42>" + GameSettings.PlayerName + "</color>! Stop the Thorn Pups before they\n" +
+            "reach your <color=#FFCC42>BARRIER</color>. Tap <color=#FFCC42>READY!</color> to start.", BubbleTop);
         coach.PointAt(waves.ReadyButtonRect);
         while (waves != null && waves.IsAwaitingReady)
             yield return null;
@@ -140,17 +149,17 @@ public class TutorialDirector : MonoBehaviour
         {
             SetTime(FrozenScale);
             Vector3 pad = beast.transform.position;
-            coach.Say(GameSettings.DragAnywhere
-                ? "<color=#FFCC42>DRAG BACK</color> anywhere to aim, then let go!\nThe dots show your path."
-                : "Touch your Beast, <color=#FFCC42>DRAG BACK</color>, then let go!\nThe dots show your path.", BubbleTop);
-            coach.DragGesture(pad + new Vector3(0f, 0.2f, 0f), pad + new Vector3(0.5f, -1.7f, 0f));
+            // players kept asking "what do I drag?", so: pull DOWN like a slingshot, then let go
+            coach.Say(LaunchHint.HowToLaunch(beast.ActiveBeast) + "\nThe dots show where it will fly.", BubbleTop);
+            coach.DragGesture(pad + new Vector3(0f, 0.2f, 0f), pad + new Vector3(0.3f, -1.6f, 0f));
             while (!launched)
                 yield return null;
             RestoreTime();
         }
         coach.HideAll();
 
-        coach.Say("Bounce off walls and bumpers.\nHit several in one shot for a <color=#FFCC42>COMBO!</color>", BubbleTop);
+        coach.Say("Every wall and bumper you bounce off makes the hit <color=#FFCC42>STRONGER</color>.\n" +
+            "Hit several enemies in one shot for a <color=#FFCC42>COMBO!</color>", BubbleTop);
         until = Time.unscaledTime + 7f;
         while (!enemyHit && Time.unscaledTime < until)
             yield return null;
@@ -179,11 +188,12 @@ public class TutorialDirector : MonoBehaviour
         BeastSkillButton skill = FindAnyObjectByType<BeastSkillButton>();
         if (beast != null && beast.CanUseSkill && skill != null)
         {
-            SetTime(SlowScale);
+            // a short, gentle slow-mo (GameTuning: Skill Lesson), so the Beast doesn't crawl around for ages
+            SetTime(GameTuning.Get.skillLessonSlowMotion);
             coach.Say("Tap <color=#FFCC42>" + BeastRoster.GetAbilityName(beast.ActiveBeast).ToUpperInvariant() +
                 "</color> while flying!\nEvery Beast has its own skill.", BubbleTop);
             coach.PointAt(skill.transform as RectTransform);
-            until = Time.unscaledTime + 7f;
+            until = Time.unscaledTime + GameTuning.Get.skillLessonSeconds;
             while (beast != null && beast.IsSkillReady && beast.State == BeastState.Flying && Time.unscaledTime < until)
                 yield return null;
             RestoreTime();
