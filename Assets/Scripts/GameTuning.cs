@@ -44,6 +44,9 @@ public class GameTuning : ScriptableObject
     public float returnAfterSeconds = 3f;
     [Tooltip("How long the flight back to the pad takes, in seconds.")]
     public float returnFlightTime = 0.3f;
+    [Tooltip("...or when it hasn't hit an enemy or a bumper for this many seconds (a shot that's just flying " +
+        "around comes back sooner). 0 = off.")]
+    public float returnWhenNothingHit = 1.5f;
 
     [Header("Power meter")]
     [Tooltip("Green bumper hits needed to fill the POWER meter. Full = a green bumper turns into the Power Bumper.")]

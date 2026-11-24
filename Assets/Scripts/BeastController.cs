@@ -50,6 +50,8 @@ public class BeastController : MonoBehaviour
     private float assistTurnDegrees = 190f;
     private float stoppedTime;
     private float flightTime;
+    // seconds since the Beast last hit an enemy or a bumper (or used its skill) in this shot
+    private float sinceUsefulHit;
     private float bumperSpeedCap;
     private Vector2 chargedBounceNormal;
     private bool chargedBouncePending;
@@ -170,17 +172,19 @@ public class BeastController : MonoBehaviour
         if (State == BeastState.Flying)
         {
             flightTime += Time.deltaTime;
+            sinceUsefulHit += Time.deltaTime;
 
             if (rb == null || rb.linearVelocity.magnitude <= autoReturnSpeed)
                 stoppedTime += Time.deltaTime;
             else
                 stoppedTime = 0f;
 
-            // fly back to the pad when it stopped moving, or after enough bounces or enough time
-            // (whichever comes first)
+            // fly back to the pad when it stopped moving, after enough bounces or enough time, or when it
+            // hasn't hit anything useful for a while (whichever comes first)
             GameTuning tuning = GameTuning.Get;
             bool enoughBounces = tuning.returnAfterBounces > 0 && ShotBounces >= tuning.returnAfterBounces;
-            if (stoppedTime >= stopDelay || flightTime >= tuning.returnAfterSeconds || enoughBounces)
+            bool nothingHit = tuning.returnWhenNothingHit > 0f && sinceUsefulHit >= tuning.returnWhenNothingHit;
+            if (stoppedTime >= stopDelay || flightTime >= tuning.returnAfterSeconds || enoughBounces || nothingHit)
                 BeginReturn();
         }
     }
@@ -232,6 +236,11 @@ public class BeastController : MonoBehaviour
                 GainBouncePower();
                 GameAudio.Play(Sfx.Bounce, Mathf.Clamp01(collision.relativeVelocity.magnitude / 12f) * 0.8f + 0.2f);
             }
+            else
+            {
+                // an enemy or a bumper: the shot is still doing something, so it keeps flying
+                sinceUsefulHit = 0f;
+            }
         }
 
         if (!IsDoubleBounceActive || rb == null || collision.collider == null ||
@@ -265,6 +274,7 @@ public class BeastController : MonoBehaviour
         State = BeastState.Flying;
         stoppedTime = 0f;
         flightTime = 0f;
+        sinceUsefulHit = 0f;
         // a new shot starts with no bounce power
         BouncePower = 0;
         ShotBounces = 0;
@@ -377,6 +387,8 @@ public class BeastController : MonoBehaviour
         if (!CanUseSkill)
             return;
 
+        // using the skill counts as doing something, so the Beast doesn't fly back right after
+        sinceUsefulHit = 0f;
         StartCoroutine(UseSelectedSkill());
     }
 
